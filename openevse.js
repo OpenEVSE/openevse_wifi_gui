@@ -354,7 +354,7 @@ function OpenEVSE(endpoint)
     var request = self._request("GA", function(data) {
       if(data.length >= 2) {
         var scaleFactor = parseInt(data[0]);
-        var offset = parseInt(data[0]);
+        var offset = parseInt(data[1]);
 
         if(!isNaN(scaleFactor) && !isNaN(offset)) {
           callback(scaleFactor, offset);
@@ -475,8 +475,10 @@ function OpenEVSE(endpoint)
     var request = self._request("GS", function(data) {
       if(data.length >= 1) {
         var state = parseInt(data[0]);
-        if(!isNaN(state)) {
-          callback(state);
+        var elapsed = parseInt(data[1]);
+
+        if(!isNaN(state) && !isNaN(elapsed)) {
+          callback(state, elapsed);
         } else {
           request._error(new OpenEVSEError("ParseError", "Could not parse \""+data.join(" ")+"\" arguments"));
         }
@@ -667,7 +669,7 @@ function OpenEVSE(endpoint)
     var request = self._request("GO", function(data) {
       if(data.length >= 2) {
         var ambientthresh = parseInt(data[0]);
-        var irthresh = parseInt(data[0]);
+        var irthresh = parseInt(data[1]);
 
         if(!isNaN(ambientthresh) && !isNaN(irthresh)) {
           callback(ambientthresh, irthresh);
