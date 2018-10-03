@@ -1,8 +1,10 @@
-/* global $, ko */
-/* exported BaseViewModel */
+import ko from 'knockout'
+import 'knockout-mapping'
+import $ from 'jquery'
 
-function BaseViewModel(defaults, remoteUrl, mappings = {}) {
-  "use strict";
+"use strict";
+
+export function BaseViewModel(defaults, remoteUrl, mappings = {}) {
   var self = this;
   self.remoteUrl = remoteUrl;
 
@@ -12,7 +14,6 @@ function BaseViewModel(defaults, remoteUrl, mappings = {}) {
 }
 
 BaseViewModel.prototype.update = function (after = function () { }) {
-  "use strict";
   var self = this;
   self.fetching(true);
   $.get(self.remoteUrl(), function (data) {

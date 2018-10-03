@@ -1,7 +1,10 @@
-/* global ko, BaseViewModel */
-/* exported ConfigViewModel */
+import ko from 'knockout'
+import 'knockout-mapping'
+import $ from 'jquery'
 
-function ConfigViewModel(baseEndpoint) {
+import BaseViewModel from './BaseViewModel'
+
+export function ConfigViewModel(baseEndpoint) {
   "use strict";
   var endpoint = ko.pureComputed(function () { return baseEndpoint() + "/config"; });
   BaseViewModel.call(this, {

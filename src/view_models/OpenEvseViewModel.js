@@ -1,7 +1,14 @@
 /* global ko, OpenEVSE, TimeViewModel */
 /* exported OpenEvseViewModel */
 
-function OpenEvseViewModel(baseEndpoint, statusViewModel) {
+import ko from 'knockout'
+import 'knockout-mapping'
+import $ from 'jquery'
+
+import OpenEVSE from '../openevse'
+import TimeViewModel from './TimeViewModel'
+
+export function OpenEvseViewModel(baseEndpoint, statusViewModel) {
   "use strict";
   var self = this;
   var endpoint = ko.pureComputed(function () { return baseEndpoint() + "/r"; });

@@ -1,7 +1,13 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, WiFiScanViewModel, WiFiConfigViewModel */
-/* exported WiFiPortalViewModel */
+import ko from 'knockout'
+import 'knockout-mapping'
+import $ from 'jquery'
 
-function WiFiPortalViewModel(baseHost, basePort)
+import ConfigViewModel from './ConfigViewModel'
+import StatusViewModel from './StatusViewModel'
+import WiFiScanViewModel from './WiFiScanViewModel'
+import WiFiConfigViewModel from './WiFiConfigViewModel'
+
+export function WiFiPortalViewModel(baseHost, basePort)
 {
   "use strict";
   var self = this;

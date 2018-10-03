@@ -1,7 +1,8 @@
-/* global $, ko */
-/* exported WiFiConfigViewModel */
+import ko from 'knockout'
+import 'knockout-mapping'
+import $ from 'jquery'
 
-function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
+export function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
   "use strict";
   var self = this;
 
