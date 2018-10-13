@@ -1,8 +1,6 @@
-import ko from 'knockout'
+/* global ko, BaseViewModel */
 
-import BaseViewModel from './BaseViewModel'
-
-export function StatusViewModel(baseEndpoint) {
+function StatusViewModel(baseEndpoint) {
   "use strict";
   var self = this;
   var endpoint = ko.pureComputed(function () { return baseEndpoint() + "/status"; });

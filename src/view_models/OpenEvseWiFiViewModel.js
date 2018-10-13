@@ -1,15 +1,7 @@
-import ko from 'knockout'
-import 'knockout-mapping'
-import $ from 'jquery'
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel */
+/* exported OpenEvseWiFiViewModel */
 
-import ConfigViewModel from './ConfigViewModel'
-import StatusViewModel from './StatusViewModel'
-import RapiViewModel from './RapiViewModel'
-import WiFiScanViewModel from './WiFiScanViewModel'
-import WiFiConfigViewModel from './WiFiConfigViewModel'
-import OpenEvseViewModel from './OpenEvseViewModel'
-
-export function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
+function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 {
   "use strict";
   var self = this;

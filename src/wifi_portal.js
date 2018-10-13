@@ -1,8 +1,4 @@
-import ko from 'knockout'
-import 'knockout-mapping'
-import $ from 'jquery'
-
-import './view_models/WiFiPortalViewModel'
+/* global $, ko, WiFiPortalViewModel */
 
 (function() {
   "use strict";

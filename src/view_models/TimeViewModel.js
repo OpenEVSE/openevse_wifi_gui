@@ -1,8 +1,7 @@
-import ko from 'knockout'
-import 'knockout-mapping'
-import $ from 'jquery'
+/* global ko */
+/* exported TimeViewModel */
 
-export function TimeViewModel(openevse)
+function TimeViewModel(openevse)
 {
   "use strict";
   var self = this;

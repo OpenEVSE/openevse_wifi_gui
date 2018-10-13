@@ -1,6 +1,5 @@
-import ko from 'knockout'
-import 'knockout-mapping'
-import $ from 'jquery'
+/* global $, ko */
+/* exported WiFiScanViewModel */
 
 function WiFiScanResultViewModel(data)
 {
@@ -9,7 +8,7 @@ function WiFiScanResultViewModel(data)
   ko.mapping.fromJS(data, {}, self);
 }
 
-export function WiFiScanViewModel(baseEndpoint)
+function WiFiScanViewModel(baseEndpoint)
 {
   "use strict";
   var self = this;

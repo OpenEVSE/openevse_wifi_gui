@@ -1,10 +1,9 @@
-import ko from 'knockout'
-import 'knockout-mapping'
-import $ from 'jquery'
+/* global $, ko */
+/* exported BaseViewModel */
 
 "use strict";
 
-export function BaseViewModel(defaults, remoteUrl, mappings = {}) {
+function BaseViewModel(defaults, remoteUrl, mappings = {}) {
   var self = this;
   self.remoteUrl = remoteUrl;
 

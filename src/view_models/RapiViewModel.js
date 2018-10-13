@@ -1,8 +1,7 @@
-import ko from 'knockout'
-import 'knockout-mapping'
-import $ from 'jquery'
+/* global $, ko */
+/* exported RapiViewModel */
 
-export function RapiViewModel(baseEndpoint) {
+function RapiViewModel(baseEndpoint) {
   "use strict";
   var self = this;
 
