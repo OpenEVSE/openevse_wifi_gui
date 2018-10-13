@@ -58,7 +58,7 @@ module.exports = {
     ]
   },
   plugins: [
-    //new CleanWebpackPlugin(['dist']),
+    new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       filename: 'home.html',
       template: './src/home.htm',
@@ -74,7 +74,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: "[name].css",
+      filename: "style.css",
       chunkFilename: "[id].css"
     }),
     new MergeIntoSingleFilePlugin({
@@ -100,9 +100,6 @@ module.exports = {
         "wifi_portal.js": [
           "src/view_models/WiFiPortalViewModel.js",
           "src/wifi_portal.js"
-        ],
-        "style.css": [
-          'src/style.css'
         ]
       },
       transform: {
