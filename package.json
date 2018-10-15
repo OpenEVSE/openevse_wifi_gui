@@ -32,7 +32,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open",
-    "build": "webpack"
+    "build": "webpack",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -46,5 +47,8 @@
   "bugs": {
     "url": "https://github.com/jeremypoulter/openevse_wifi_gui/issues"
   },
-  "homepage": "https://github.com/jeremypoulter/openevse_wifi_gui#readme"
+  "homepage": "https://github.com/jeremypoulter/openevse_wifi_gui#readme",
+  "files": [
+    "dist/"
+  ]
 }
