@@ -16,9 +16,6 @@ var htmlMinify = {
   collapseWhitespace: true,
   conservativeCollapse: true
 };
-var jsMinify = {
-  warnings: true
-};
 
 module.exports = {
   mode: 'production',
@@ -58,7 +55,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(['dist']),
+    //new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       filename: 'home.html',
       template: './src/home.htm',
@@ -103,9 +100,9 @@ module.exports = {
         ]
       },
       transform: {
-        'lib.js': code => uglify(code),
-        'home.js': code => uglify(code),
-        'wifi_portal.js': code => uglify(code),
+        'lib.js': code => uglify('lib.js', code),
+        'home.js': code => uglify('home.js', code),
+        'wifi_portal.js': code => uglify('wifi_portal.js', code),
       }
     })
   ],
@@ -117,12 +114,19 @@ module.exports = {
   }
 };
 
-function uglify(code)
+function uglify(name, code)
 {
   var compiled = babel.transformSync(code, {
-    "presets": ["@babel/preset-env"]
+    presets: ["@babel/preset-env"],
+    sourceMaps: true
   });
-  var ugly = UglifyJS.minify(compiled.code, jsMinify);
+  var ugly = UglifyJS.minify(compiled.code, {
+    warnings: true,
+    sourceMap: {
+      content: compiled.map,
+      url: name+'.map'
+    }
+  });
   if(ugly.error) {
     console.log(ugly.error);
     return code;
