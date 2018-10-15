@@ -49,6 +49,8 @@
   },
   "homepage": "https://github.com/jeremypoulter/openevse_wifi_gui#readme",
   "files": [
-    "dist/"
-  ]
+    "dist/",
+    "lib/"
+  ],
+  "main": "lib/index.js"
 }
