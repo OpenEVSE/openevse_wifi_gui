@@ -79,7 +79,7 @@ function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
     } else {
       self.stopScan();
     }
-  }
+  };
 
   self.forceConfig = ko.observable(false);
   self.canConfigure = ko.pureComputed(function () {
@@ -113,22 +113,22 @@ function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
       self.saveNetworkFetching(true);
       self.saveNetworkSuccess(false);
       $.post(self.baseEndpoint() + "/savenetwork", { ssid: self.config.ssid(), pass: self.config.pass() }, function () {
-          // HACK: Almost certainly won't get a status update with client connected set to false so manually clear it here
-          self.status.wifi_client_connected(false);
+        // HACK: Almost certainly won't get a status update with client connected set to false so manually clear it here
+        self.status.wifi_client_connected(false);
 
-          // Done with setting the config
-          self.forceConfig(false);
+        // Done with setting the config
+        self.forceConfig(false);
 
-          // Wait for a new WiFi connection
-          self.wifiConnecting(true);
+        // Wait for a new WiFi connection
+        self.wifiConnecting(true);
 
-          // And indiccate the save was successful
-          self.saveNetworkSuccess(true);
-        }).fail(function () {
-          alert("Failed to save WiFi config");
-        }).always(function () {
-          self.saveNetworkFetching(false);
-        });
+        // And indiccate the save was successful
+        self.saveNetworkSuccess(true);
+      }).fail(function () {
+        alert("Failed to save WiFi config");
+      }).always(function () {
+        self.saveNetworkFetching(false);
+      });
     }
   };
 

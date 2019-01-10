@@ -85,7 +85,7 @@ function OpenEvseViewModel(baseEndpoint, statusViewModel) {
            self.tempCheckEnabled() &&
            self.diodeCheckEnabled() &&
            self.ventRequiredEnabled();
-    });
+  });
 
   self.tempCheckSupported = ko.observable(false);
 

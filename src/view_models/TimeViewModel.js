@@ -85,8 +85,8 @@ function TimeViewModel(openevse)
   });
 
   openevse.status.elapsed.subscribe(function (val) {
-      self.elapsedNow(new Date(val * 1000));
-      self.elapsedLocal(new Date());
+    self.elapsedNow(new Date(val * 1000));
+    self.elapsedLocal(new Date());
   });
 
   self.divert_update = ko.pureComputed(function () {
@@ -98,8 +98,8 @@ function TimeViewModel(openevse)
   });
 
   openevse.status.divert_update.subscribe(function (val) {
-      self.divertUpdateNow(new Date(val * 1000));
-      self.divertUpdateLocal(new Date());
+    self.divertUpdateNow(new Date(val * 1000));
+    self.divertUpdateLocal(new Date());
   });
 
   var timeUpdateTimeout = null;

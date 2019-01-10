@@ -226,13 +226,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       self.saveNetworkFetching(true);
       self.saveNetworkSuccess(false);
       $.post(self.baseEndpoint() + "/savenetwork", { ssid: self.config.ssid(), pass: self.config.pass() }, function () {
-          self.saveNetworkSuccess(true);
-          self.wifiConnecting(true);
-        }).fail(function () {
-          alert("Failed to save WiFi config");
-        }).always(function () {
-          self.saveNetworkFetching(false);
-        });
+        self.saveNetworkSuccess(true);
+        self.wifiConnecting(true);
+      }).fail(function () {
+        alert("Failed to save WiFi config");
+      }).always(function () {
+        self.saveNetworkFetching(false);
+      });
     }
   };
 

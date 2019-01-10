@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, WiFiScanViewModel, WiFiConfigViewModel */
+/* global ko, ConfigViewModel, StatusViewModel, WiFiScanViewModel, WiFiConfigViewModel */
 /* exported WiFiPortalViewModel */
 
 function WiFiPortalViewModel(baseHost, basePort)
