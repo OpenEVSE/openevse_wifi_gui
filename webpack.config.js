@@ -21,9 +21,6 @@ module.exports = {
   entry: {
     assets: "./src/assets.js"
   },
-  optimization: {
-    splitChunks: {}
-  },
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js"
@@ -106,6 +103,7 @@ module.exports = {
     })
   ],
   optimization: {
+    splitChunks: {},
     minimizer: [
       new UglifyJsPlugin({}),
       new OptimizeCssAssetsPlugin({})
