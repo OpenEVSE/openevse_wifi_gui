@@ -110,9 +110,9 @@ function TimeViewModel(openevse)
     openevse.openevse.time(self.timeUpdate, newTime);
   };
   self.timeUpdate = function (date,valid=true) {
-    self.hasRTC(vali);
+    self.hasRTC(valid);
     stopTimeUpdate();
-    self.evseTimedate(dat);
+    self.evseTimedate(date);
     self.nowTimedate(date);
     self.localTimedate(new Date());
     startTimeUpdate();
