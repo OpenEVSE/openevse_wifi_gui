@@ -38,7 +38,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jeremypoulter/openevse_wifi_gui.git"
+    "url": "git+https://github.com/openevse/openevse_wifi_gui.git"
   },
   "keywords": [
     "evse"
@@ -46,9 +46,9 @@
   "author": "Jeremy Poulter <jeremy@bigjungle.net>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jeremypoulter/openevse_wifi_gui/issues"
+    "url": "https://github.com/openevse/openevse_wifi_gui/issues"
   },
-  "homepage": "https://github.com/jeremypoulter/openevse_wifi_gui#readme",
+  "homepage": "https://github.com/openevse/openevse_wifi_gui#readme",
   "files": [
     "dist/",
     "lib/"
