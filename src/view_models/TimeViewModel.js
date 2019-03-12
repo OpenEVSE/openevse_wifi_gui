@@ -76,11 +76,11 @@ function TimeViewModel(openevse)
       return "0:00:00";
     }
     var time = self.elapsedNow().getTime();
-    time = Math.round(time / 1000);
+    time = Math.floor(time / 1000);
     var seconds = time % 60;
-    time = Math.round(time / 60);
+    time = Math.floor(time / 60);
     var minutes = time % 60;
-    var hours = Math.round(time / 60);
+    var hours = Math.floor(time / 60);
     return hours+":"+addZero(minutes)+":"+addZero(seconds);
   });
 
@@ -94,7 +94,7 @@ function TimeViewModel(openevse)
       return false;
     }
     var time = self.divertUpdateNow().getTime();
-    return Math.round(time / 1000);
+    return Math.floor(time / 1000);
   });
 
   openevse.status.divert_update.subscribe(function (val) {
@@ -109,7 +109,6 @@ function TimeViewModel(openevse)
     // IMPROVE: set a few times and work out an average transmission delay, PID loop?
     openevse.openevse.time(self.timeUpdate, newTime);
   };
-
   self.timeUpdate = function (date,valid=true) {
     self.hasRTC(valid);
     stopTimeUpdate();
