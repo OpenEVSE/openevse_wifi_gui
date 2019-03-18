@@ -27,5 +27,8 @@
         ]
       }
     ]
+  },
+  "parserOptions": {
+      "sourceType": "module"
   }
 }

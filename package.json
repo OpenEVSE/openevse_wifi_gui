@@ -12,8 +12,8 @@
     "@babel/preset-env": "^7.1.0",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
+    "eslint": "^5.12.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
-    "favicons-webpack-plugin": "0.0.9",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
     "imports-loader": "^0.8.0",
@@ -21,10 +21,11 @@
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "style-loader": "^0.23.0",
     "uglify-js": "^3.4.9",
+    "uglifyjs-webpack-plugin": "^2.1.1",
     "webpack": "^4.20.2",
     "webpack-bundle-analyzer": "^3.0.2",
     "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.1.9",
+    "webpack-dev-server": "^3.1.14",
     "webpack-merge-and-include-globally": "^2.0.11"
   },
   "scripts": {
@@ -32,11 +33,12 @@
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open",
     "build": "webpack",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jeremypoulter/openevse_wifi_gui.git"
+    "url": "git+https://github.com/openevse/openevse_wifi_gui.git"
   },
   "keywords": [
     "evse"
@@ -44,9 +46,9 @@
   "author": "Jeremy Poulter <jeremy@bigjungle.net>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jeremypoulter/openevse_wifi_gui/issues"
+    "url": "https://github.com/openevse/openevse_wifi_gui/issues"
   },
-  "homepage": "https://github.com/jeremypoulter/openevse_wifi_gui#readme",
+  "homepage": "https://github.com/openevse/openevse_wifi_gui#readme",
   "files": [
     "dist/",
     "lib/"

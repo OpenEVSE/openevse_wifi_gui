@@ -1,13 +1,12 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
-const MergeIntoSingleFilePlugin = require('webpack-merge-and-include-globally');
-const webpack = require('webpack'); //to access built-in plugins
-const path = require('path');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
+const webpack = require("webpack"); //to access built-in plugins
+const path = require("path");
 const UglifyJS = require("uglify-js");
 const babel = require("@babel/core");
 
@@ -18,19 +17,16 @@ var htmlMinify = {
 };
 
 module.exports = {
-  mode: 'production',
+  mode: "production",
   entry: {
     assets: "./src/assets.js"
   },
-  optimization: {
-    splitChunks: {}
-  },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js'
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].js"
   },
   devServer: {
-    contentBase: './dist'
+    contentBase: "./dist"
   },
   module: {
     rules: [
@@ -45,9 +41,9 @@ module.exports = {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              name: '[name].[ext]'
+              name: "[name].[ext]"
             }
           }
         ]
@@ -57,14 +53,14 @@ module.exports = {
   plugins: [
     //new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
-      filename: 'home.html',
-      template: './src/home.htm',
+      filename: "home.html",
+      template: "./src/home.htm",
       inject: false,
       minify: htmlMinify
     }),
     new HtmlWebpackPlugin({
-      filename: 'wifi_portal.html',
-      template: './src/wifi_portal.htm',
+      filename: "wifi_portal.html",
+      template: "./src/wifi_portal.htm",
       inject: false,
       minify: htmlMinify
     }),
@@ -100,13 +96,14 @@ module.exports = {
         ]
       },
       transform: {
-        'lib.js': code => uglify('lib.js', code),
-        'home.js': code => uglify('home.js', code),
-        'wifi_portal.js': code => uglify('wifi_portal.js', code),
+        "lib.js": code => uglify("lib.js", code),
+        "home.js": code => uglify("home.js", code),
+        "wifi_portal.js": code => uglify("wifi_portal.js", code),
       }
     })
   ],
   optimization: {
+    splitChunks: {},
     minimizer: [
       new UglifyJsPlugin({}),
       new OptimizeCssAssetsPlugin({})
@@ -124,12 +121,12 @@ function uglify(name, code)
     warnings: true,
     sourceMap: {
       content: compiled.map,
-      url: name+'.map'
+      url: name+".map"
     }
   });
   if(ugly.error) {
     console.log(ugly.error);
     return code;
   }
-  return ugly.code
+  return ugly.code;
 }

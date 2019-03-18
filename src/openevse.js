@@ -67,7 +67,7 @@ function OpenEVSE(endpoint)
 
   self.CORRECT_RESPONSE_PREFIXES = ("$OK", "$NK");
 
-  self.regex = /\$([^\^]*)(\^..)?/;
+  self.regex = /\$([^^]*)(\^..)?/;
 
   self._request = function(args, callback = function() {})
   {
@@ -185,10 +185,8 @@ function OpenEVSE(endpoint)
 
         if(!isNaN(year) && !isNaN(month) && !isNaN(day) && !isNaN(hour) && !isNaN(minute) && !isNaN(second)) {
           if (year==165 && month==165 && day==165 && hour==165 && minute==165 && second==85){
-            var date = new Date(0);
-            callback(date,false);//this pattern occurs when no RTC is connected to openevse
-          }
-          else{
+            callback(new Date(0), false);//this pattern occurs when no RTC is connected to openevse
+          } else {
             var date = new Date(2000+year, month - 1, day, hour, minute, second);
             callback(date,true);
           }
@@ -284,9 +282,9 @@ function OpenEVSE(endpoint)
   self.time_limit = function(callback, limit = false) {
     if(false !== limit) {
       return self._request(["S3", Math.round(limit/15.0)],
-      function() {
-        self.time_limit(callback);
-      });
+        function() {
+          self.time_limit(callback);
+        });
     }
 
     var request = self._request("G3", function(data) {
@@ -315,9 +313,9 @@ function OpenEVSE(endpoint)
   self.charge_limit = function(callback, limit = false) {
     if(false !== limit) {
       return self._request(["SH", limit],
-      function() {
-        self.charge_limit(callback);
-      });
+        function() {
+          self.charge_limit(callback);
+        });
     }
 
     var request = self._request("GH", function(data) {
@@ -346,9 +344,9 @@ function OpenEVSE(endpoint)
   self.ammeter_settings = function(callback, scaleFactor = false, offset = false) {
     if(false !== scaleFactor && false !== offset) {
       return self._request(["SA", scaleFactor, offset],
-      function() {
-        callback(scaleFactor, offset);
-      });
+        function() {
+          callback(scaleFactor, offset);
+        });
     }
 
     var request = self._request("GA", function(data) {
@@ -378,9 +376,9 @@ function OpenEVSE(endpoint)
   self.current_capacity = function(callback, capacity = false) {
     if(false !== capacity) {
       return self._request(["SC", capacity],
-      function() {
-        self.current_capacity(callback);
-      });
+        function() {
+          self.current_capacity(callback);
+        });
     }
 
     var request = self._request("GE", function(data) {
@@ -414,9 +412,9 @@ function OpenEVSE(endpoint)
   self.service_level = function(callback, level = false) {
     if(false !== level) {
       return self._request(["SL", self._service_levels[level]],
-      function() {
-        self.service_level(callback);
-      });
+        function() {
+          self.service_level(callback);
+        });
     }
 
     var request = self._flags(function(flags) {
@@ -465,11 +463,11 @@ function OpenEVSE(endpoint)
    */
   self.status = function(callback, action = false) {
     if(false !== action) {
-      var cmd = self._status_functions[action]
+      var cmd = self._status_functions[action];
       return self._request([cmd],
-      function() {
-        self.status(callback);
-      });
+        function() {
+          self.status(callback);
+        });
     }
 
     var request = self._request("GS", function(data) {
@@ -502,9 +500,9 @@ function OpenEVSE(endpoint)
       return self._request(["FF", "D", enabled ? "1" : "0"],
       // OLD API < 4.0.1
       // return self._request(["SD", enabled ? "1" : "0"],
-      function() {
-        self.diode_check(callback);
-      });
+        function() {
+          self.diode_check(callback);
+        });
     }
 
     var request = self._flags(function(flags) {
@@ -525,9 +523,9 @@ function OpenEVSE(endpoint)
       return self._request(["FF F", enabled ? "1" : "0"],
       // OLD API < 4.0.1
       // return self._request(["SF", enabled ? "1" : "0"],
-      function() {
-        self.gfi_self_test(callback);
-      });
+        function() {
+          self.gfi_self_test(callback);
+        });
     }
 
     var request = self._flags(function(flags) {
@@ -548,9 +546,9 @@ function OpenEVSE(endpoint)
       return self._request(["FF G", enabled ? "1" : "0"],
       // OLD API < 4.0.1
       // return self._request(["SG", enabled ? "1" : "0"],
-      function() {
-        self.ground_check(callback);
-      });
+        function() {
+          self.ground_check(callback);
+        });
     }
 
     var request = self._flags(function(flags) {
@@ -571,9 +569,9 @@ function OpenEVSE(endpoint)
       return self._request(["FF R", enabled ? "1" : "0"],
       // OLD API < 4.0.1
       // return self._request(["SR", enabled ? "1" : "0"],
-      function() {
-        self.stuck_relay_check(callback);
-      });
+        function() {
+          self.stuck_relay_check(callback);
+        });
     }
 
     var request = self._flags(function(flags) {
@@ -594,9 +592,9 @@ function OpenEVSE(endpoint)
       return self._request(["FF V", enabled ? "1" : "0"],
       // OLD API < 4.0.1
       // return self._request(["SV", enabled ? "1" : "0"],
-      function() {
-        self.vent_required(callback);
-      });
+        function() {
+          self.vent_required(callback);
+        });
     }
 
     var request = self._flags(function(flags) {
@@ -616,9 +614,9 @@ function OpenEVSE(endpoint)
   self.temp_check = function(callback, enabled = null) {
     if(null !== enabled) {
       return self._request(["FF T", enabled ? "1" : "0"],
-      function() {
-        self.temp_check(callback);
-      });
+        function() {
+          self.temp_check(callback);
+        });
     }
 
     var request = self._flags(function(flags) {
@@ -661,9 +659,9 @@ function OpenEVSE(endpoint)
   self.over_temperature_thresholds = function(callback, ambientthresh = false, irthresh = false) {
     if(false !== ambientthresh && false !== irthresh) {
       return self._request(["SO", ambientthresh, irthresh],
-      function() {
-        self.over_temperature_thresholds(callback);
-      });
+        function() {
+          self.over_temperature_thresholds(callback);
+        });
     }
 
     var request = self._request("GO", function(data) {
