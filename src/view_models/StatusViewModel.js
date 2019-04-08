@@ -47,6 +47,9 @@ function StatusViewModel(baseEndpoint) {
   self.isWifiAccessPoint = ko.pureComputed(function () {
     return ("AP" === self.mode()) || ("STA+AP" === self.mode());
   });
+  self.isWired = ko.pureComputed(() => {
+    return ("Wired" === self.mode());
+  });
   self.fullMode = ko.pureComputed(function () {
     switch (self.mode()) {
     case "AP":
@@ -55,6 +58,8 @@ function StatusViewModel(baseEndpoint) {
       return "Client (STA)";
     case "STA+AP":
       return "Client + Access Point (STA+AP)";
+    case "Wired":
+      return "Wired Ethernet";
     }
 
     return "Unknown (" + self.mode() + ")";
