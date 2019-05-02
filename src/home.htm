@@ -47,7 +47,17 @@
             <h2>WiFi Setup</h2>
             <p><b>Mode:</b> <span id="mode" data-bind="text: status.fullMode"></span></p>
 
-            <div id="client-view" data-bind="visible: !wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting()">
+            <div id="wired-view" data-bind="visible: status.isWired">
+              <p><b>IP Address:</b><br><a data-bind="text: status.ipaddress, attr: {href: 'http://'+status.ipaddress()}"></a></p>
+              <p>
+                <b>Successful packets:</b><br>
+                <span data-bind="text: status.packets_success"></span> of <span data-bind="text: status.packets_sent"></span>
+              </p>
+              <p><b>OpenEVSE</b></p>
+              <p><b>RAPI packets:</b><br><span data-bind="text: status.comm_success"></span> of <span data-bind="text: status.comm_sent"></span></p>
+            </div>
+
+            <div id="client-view" data-bind="visible: !wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting() &amp;&amp; !status.isWired()">
               <table>
                 <tr>
                   <th>Network</th>
@@ -71,7 +81,7 @@
               <button id="apoff" data-bind="visible: status.isWifiAccessPoint, click: wifi.turnOffAccessPoint, disable: wifi.turnOffAccessPointFetching">Turn off Access Point</button>
             </div>
 
-            <div id="ap-view" data-bind="visible: wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting()">
+            <div id="ap-view" data-bind="visible: wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting() &amp;&amp; !status.isWired()">
               <p>Connect to network:</p>
               <table>
                 <tr>
