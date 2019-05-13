@@ -183,6 +183,7 @@ button.on {
 }
 
 input[type="text"],
+input[type="number"],
 input[type="password"],
 input[type="file"],
 input[type="time"],
@@ -231,6 +232,7 @@ input[type="time"] {
 
 @media screen and (max-width: 420px) {
   input[type="text"],
+  input[type="number"],
   input[type="password"],
   select {
     width: 240px;
