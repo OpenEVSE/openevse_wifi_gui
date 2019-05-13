@@ -294,7 +294,10 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.saveMqtt = function () {
     var mqtt = {
       enable: self.config.mqtt_enabled(),
+      protocol: self.config.mqtt_protocol(),
       server: self.config.mqtt_server(),
+      port: self.config.mqtt_port(),
+      reject_unauthorized: self.config.mqtt_reject_unauthorized(),
       topic: self.config.mqtt_topic(),
       user: self.config.mqtt_user(),
       pass: self.config.mqtt_pass(),
