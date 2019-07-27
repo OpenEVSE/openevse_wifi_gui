@@ -254,6 +254,37 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   };
 
   // -----------------------------------------------------------------------
+  // Event: Advanced save
+  // -----------------------------------------------------------------------
+  self.saveAdvancedFetching = ko.observable(false);
+  self.saveAdvancedSuccess = ko.observable(false);
+  self.saveAdvanced = function () {
+    self.saveAdvancedFetching(true);
+    self.saveAdvancedSuccess(false);
+    $.post(self.baseEndpoint() + "/saveadvanced", { hostname: self.config.hostname() }, function () {
+      self.saveAdvancedSuccess(true);
+      if (confirm("These changes require a reboot to take effect. Reboot now?")) {
+        $.post(self.baseEndpoint() + "/restart", { }, function () {
+          setTimeout(() => {
+            var newLocation = "http://" + self.config.hostname() + ".local";
+            if(80 != self.basePort()) {
+              newLocation += ":" + self.basePort();
+            }
+            newLocation += "/";
+            window.location.replace(newLocation);
+          }, 5*1000);
+        }).fail(function () {
+          alert("Failed to restart");
+        });
+      }  
+    }).fail(function () {
+      alert("Failed to save Advanced config");
+    }).always(function () {
+      self.saveAdvancedFetching(false);
+    });
+  };
+
+  // -----------------------------------------------------------------------
   // Event: Emoncms save
   // -----------------------------------------------------------------------
   self.saveEmonCmsFetching = ko.observable(false);

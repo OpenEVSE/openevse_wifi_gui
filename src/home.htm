@@ -144,6 +144,18 @@
             </p>
           </div>
 
+          <div class="box380 left" data-bind="visible: advancedMode()">
+            <h2>Advanced Settings</h2>
+            <p>
+              <b>Hostname:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
+              <span class="small-text validMessage">31 characters max</span>
+            </p>
+            <p>
+              <button data-bind="click: saveAdvanced, text: (saveAdvancedFetching() ? 'Saving' : (saveAdvancedSuccess() ? 'Saved' : 'Save')), disable: saveAdvancedFetching">Save</button>
+            </p>
+          </div>
+
           <div class="box380 left">
             <h2>Developer Mode</h2>
             <div>
