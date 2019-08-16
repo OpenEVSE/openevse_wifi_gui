@@ -30,6 +30,7 @@ function ConfigViewModel(baseEndpoint) {
     "ohmkey": "",
     "www_username": "",
     "www_password": "",
+    "hostname": "openevse",
     "firmware": "-",
     "protocol": "-",
     "espflash": 0,
