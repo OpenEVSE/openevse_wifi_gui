@@ -276,7 +276,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
         }).fail(function () {
           alert("Failed to restart");
         });
-      }  
+      }
     }).fail(function () {
       alert("Failed to save Advanced config");
     }).always(function () {
@@ -477,6 +477,56 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
         self.restartFetching(false);
       });
     }
+  };
+
+  // -----------------------------------------------------------------------
+  // Event: Update
+  // -----------------------------------------------------------------------
+
+  // Support for OTA update of the OpenEVSE
+  self.updateFetching = ko.observable(false);
+  self.updateComplete = ko.observable(false);
+  self.updateError = ko.observable("");
+  self.updateLoaded = ko.observable(0);
+  self.updateTotal = ko.observable(1);
+  self.updateProgress = ko.pureComputed(function () {
+    return (self.updateLoaded() / self.updateTotal()) * 100;
+  });
+
+  self.otaUpdate = function() {
+
+    self.updateFetching(true);
+    var form = $("#upload_form")[0];
+    var data = new FormData(form);
+
+    $.ajax({
+      url: "/update",
+      type: "POST",
+      data: data,
+      contentType: false,
+      processData:false,
+      xhr: function() {
+        var xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener("progress", function(evt) {
+          if (evt.lengthComputable) {
+            self.updateLoaded(evt.loaded);
+            self.updateTotal(evt.total);
+          }
+        }, false);
+        return xhr;
+      }
+    }).done(function(msg) {
+      console.log(msg);
+      if("OK" == msg) {
+        self.updateComplete(true);
+      } else {
+        self.updateError(msg);
+      }
+    }).fail(function () {
+      self.updateError("HTTP Update failed");
+    }).always(function () {
+      self.updateFetching(false);
+    });
   };
 
   // -----------------------------------------------------------------------

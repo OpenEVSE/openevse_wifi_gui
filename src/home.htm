@@ -136,8 +136,21 @@
             <h2>WiFi Firmware</h2>
             <span class="small-text">ESP8266</span><br>
             <p><b>Version: </b><span data-bind="text: config.version"></span></p>
-            <iframe style="width:380px; height:50px;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" data-bind="attr: {src: upgradeUrl}">
-            </iframe>
+            <div data-bind="visible: !updateFetching() && !updateComplete()">
+              <form action="#" method="post" enctype="multipart/form-data" id="upload_form" data-bind="submit: otaUpdate">
+                <input type="file" name="update">
+                <button data-bind="click: otaUpdate, text: (updateFetching() ? 'Updating...' : 'Update')">Update</button>
+              </form>
+            </div>
+            <div  data-bind="visible: updateFetching() && !updateComplete()">
+              Updating... <br/>
+              <div id="progressBack">
+                <div id="progressBar" data-bind="style: { width: updateProgress()+'%' }"></div>
+              </div>
+            </div>
+            <div  data-bind="visible: updateComplete">
+              Firmware update completed ok
+            </div>
             <p>
               <button data-bind="click: restart, text: (restartFetching() ? 'Restarting...' : 'Restart'), disable: restartFetching">Restart</button>
               <button data-bind="click: factoryReset, text: (factoryResetFetching() ? 'Resetting...' : 'Factory Reset'), disable: factoryResetFetching">Factory Reset</button>
