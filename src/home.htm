@@ -38,7 +38,7 @@
         <input id="tab-2" type="radio" name="tab-group" data-bind="checked: tab" value="services" />
         <label for="tab-2">Services</label>
         <input id="tab-4" type="radio" name="tab-group" data-bind="checked: tab" value="rapi" />
-        <label for="tab-4" data-bind="visible: developerMode">RAPI</label>
+        <label for="tab-4" data-bind="visible: developerMode() &amp;&amp; status.rapi_connected()">RAPI</label>
       </div>
 
       <div id="content">
@@ -358,7 +358,12 @@
             <span data-bind="text: status.estate"></span>
           </div>
 
-          <div data-bind="visible: !openevse.isError(),
+          <div data-bind="visible: !status.rapi_connected()" class="box box-full left error">
+            <h4>EVSE Error</h4>
+            <span>OpenEVSE not responding or not connected</span>
+          </div>
+
+          <div data-bind="visible: !openevse.isError() &amp;&amp; status.rapi_connected(),
                           css: { ready: openevse.isReady(),
                                  connected: openevse.isConnected() &amp;&amp; !openevse.isCharging(),
                                  charging: openevse.isCharging(),
@@ -383,9 +388,8 @@
             </table>
           </div>
 
-
           <!-- Session Options -->
-          <div class="box380 left">
+          <div class="box380 left" data-bind="visible: status.rapi_connected">
             <h2>Charge Options</h2>
 
             <p data-bind="with: openevse, visible: !openevse.isError()">
@@ -432,7 +436,7 @@
           </div>
 
           <!-- Energy -->
-          <div class="box380 right" data-bind="visible: advancedMode">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
             <h2>Energy</h2>
             <table>
               <tr>
@@ -451,7 +455,7 @@
           </div>
 
           <!-- Divert Mode -->
-          <div class="box380 right">
+          <div class="box380 right" data-bind="visible: status.rapi_connected">
             <h2>Charge Mode <span class="info" data-bind="click: toggle.bind($data, showSolarDivert)"></span></h2>
 
             <div class="box error" data-bind="visible: !isEcoModeAvailable()">
@@ -498,7 +502,7 @@
           </div>
 
           <!-- Sensor Values -->
-          <div class="box380 right" data-bind="visible: advancedMode">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
             <h2>Sensor Values</h2>
             <table>
               <tr>
@@ -529,7 +533,7 @@
           </div>
 
           <!-- Settings -->
-          <div class="box380 setup" data-bind="with: openevse, css: { right: !advancedMode(), left: advancedMode() }">
+          <div class="box380 setup" data-bind="visible: $root.status.rapi_connected, with: openevse, css: { right: !advancedMode(), left: advancedMode() }">
             <h2>Setup</h2>
             <p data-bind="with: time, visible: !time.hasRTC()">
               <b>Time: No RTC detected</b>
@@ -571,9 +575,8 @@
             </p>
           </div>
 
-
           <!-- Current -->
-          <div class="box380 right" data-bind="visible: advancedMode">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
             <h2>Current</h2>
             <table>
               <tr>
@@ -611,7 +614,7 @@
           </div>
 
           <!-- Safety -->
-          <div class="box380 left" data-bind="visible: advancedMode() || !openevse.allTestsEnabled()">
+          <div class="box380 left" data-bind="visible: status.rapi_connected() &amp;&amp; (advancedMode() || !openevse.allTestsEnabled())">
             <h2>Safety<span class="info" data-bind="click: toggle.bind($data, showSafety)"></span></h2>
 
             <div class="box" data-bind="visible: showSafety()">
@@ -709,7 +712,7 @@
           </div>
 
           <!-- Hardware -->
-          <div class="box380 right" data-bind="visible: advancedMode">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
             <h2>Hardware</h2>
             <table>
               <tr>
@@ -753,7 +756,8 @@
             </table>
           </div>
 
-          <div class="box380" data-bind="css: { right: !advancedMode() &amp;&amp; !openevse.allTestsEnabled(),
+          <div class="box380" data-bind="visible: status.rapi_connected, 
+                                         css: { right: !advancedMode() &amp;&amp; !openevse.allTestsEnabled(),
                                                 left: advancedMode() || openevse.allTestsEnabled() }">
             <h2>Display</h2>
             <div>
@@ -769,7 +773,7 @@
         <!--end tab 3-->
 
         <!--TAB 4    -->
-        <div id="content-4" data-bind="visible: isRapi">
+        <div id="content-4" data-bind="visible: isRapi() &amp;&amp; status.rapi_connected()">
           <div class="box380 left">
             <form method='get' action='r' data-bind="with: rapi">
               <p>

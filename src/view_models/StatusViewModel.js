@@ -20,6 +20,7 @@ function StatusViewModel(baseEndpoint) {
     "free_heap": 0,
     "comm_sent": 0,
     "comm_success": 0,
+    "rapi_connected": false,
     "amp": 0,
     "pilot": 0,
     "temp1": 0,

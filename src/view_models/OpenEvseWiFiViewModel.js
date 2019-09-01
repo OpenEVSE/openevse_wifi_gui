@@ -124,23 +124,19 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
             window.location.replace("http://" + self.status.ipaddress() + ":" + self.basePort());
           }
         }
-        self.openevse.update(function () {
-          self.initialised(true);
-          updateTimer = setTimeout(self.update, updateTime);
-
-          // Load the upgrade frame
-          self.upgradeUrl(self.baseEndpoint() + "/update");
-
-          // Load the images
-          var imgDefer = document.getElementsByTagName("img");
-          for (var i=0; i<imgDefer.length; i++) {
-            if(imgDefer[i].getAttribute("data-src")) {
-              imgDefer[i].setAttribute("src", imgDefer[i].getAttribute("data-src"));
+        if(self.status.rapi_connected()) {
+          self.openevse.update(self.finishedStarting);
+        } else {
+          self.finishedStarting();
+          self.status.rapi_connected.subscribe((val) => {
+            if(val) {
+              self.config.update(() => {
+                self.openevse.update(() => {
+                });
+              });
             }
-          }
-
-          self.updating(false);
-        });
+          });
+        }
       });
       self.connect();
     });
@@ -148,6 +144,24 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     // Set the advanced and developer modes from Cookies
     self.advancedMode(self.getCookie("advancedMode", "false") === "true");
     self.developerMode(self.getCookie("developerMode", "false") === "true");
+  };
+
+  self.finishedStarting = function () {
+    self.initialised(true);
+    updateTimer = setTimeout(self.update, updateTime);
+
+    // Load the upgrade frame
+    self.upgradeUrl(self.baseEndpoint() + "/update");
+
+    // Load the images
+    var imgDefer = document.getElementsByTagName("img");
+    for (var i=0; i<imgDefer.length; i++) {
+      if(imgDefer[i].getAttribute("data-src")) {
+        imgDefer[i].setAttribute("src", imgDefer[i].getAttribute("data-src"));
+      }
+    }
+
+    self.updating(false);
   };
 
   // -----------------------------------------------------------------------
