@@ -138,11 +138,15 @@
             <p><b>Version: </b><span data-bind="text: config.version"></span></p>
             <div data-bind="visible: !updateFetching() && !updateComplete()">
               <form action="#" method="post" enctype="multipart/form-data" id="upload_form" data-bind="submit: otaUpdate">
-                <input type="file" name="update">
-                <button data-bind="click: otaUpdate, text: (updateFetching() ? 'Updating...' : 'Update')">Update</button>
+                <input type="file" name="update" data-bind="value: updateFilename">
+                <button data-bind="click: otaUpdate, text: (updateFetching() ? 'Updating...' : 'Update'), disable: ('' == updateFilename())">Update</button>
               </form>
             </div>
-            <div  data-bind="visible: updateFetching() && !updateComplete()">
+            <div data-bind="visible: (updateError() !== '')" class="box error">
+              <h4>Error:</h4>
+              <span data-bind="text: updateError"></span>
+            </div>
+            <div data-bind="visible: updateFetching() && !updateComplete()">
               Updating... <br/>
               <div id="progressBack">
                 <div id="progressBar" data-bind="style: { width: updateProgress()+'%' }"></div>

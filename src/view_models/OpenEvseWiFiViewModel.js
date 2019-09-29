@@ -487,6 +487,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.updateFetching = ko.observable(false);
   self.updateComplete = ko.observable(false);
   self.updateError = ko.observable("");
+  self.updateFilename = ko.observable("");
   self.updateLoaded = ko.observable(0);
   self.updateTotal = ko.observable(1);
   self.updateProgress = ko.pureComputed(function () {
@@ -494,8 +495,14 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   self.otaUpdate = function() {
+    if("" === self.updateFilename()) {
+      self.updateError("Filename not set");
+      return;
+    }
 
     self.updateFetching(true);
+    self.updateError("");
+
     var form = $("#upload_form")[0];
     var data = new FormData(form);
 
