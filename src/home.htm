@@ -144,6 +144,18 @@
             </p>
           </div>
 
+          <div class="box380 left" data-bind="visible: advancedMode()">
+            <h2>Advanced Settings</h2>
+            <p>
+              <b>Hostname:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
+              <span class="small-text validMessage">31 characters max</span>
+            </p>
+            <p>
+              <button data-bind="click: saveAdvanced, text: (saveAdvancedFetching() ? 'Saving' : (saveAdvancedSuccess() ? 'Saved' : 'Save')), disable: saveAdvancedFetching">Save</button>
+            </p>
+          </div>
+
           <div class="box380 left">
             <h2>Developer Mode</h2>
             <div>
@@ -223,9 +235,26 @@
             </div>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Host*:</b><br>
+              <select data-bind="visible: config.mqtt_protocol_enable,
+                                  options: config.mqtt_supported_protocols,
+                                  optionsText: function(item) {
+                                    return item + '://'
+                                  },
+                                  value: config.mqtt_protocol"></select>
               <input data-bind="textInput: config.mqtt_server" type="text" autocapitalize="none"><br/>
               <span class="small-text">e.g 'emonpi', 'test.mosquitto.org', '192.168.1.4'</span>
             </p>
+            <p data-bind="visible: config.mqtt_enabled() &amp;&amp; config.mqtt_port_enable()">
+              <b>Port*:</b><br>
+              <input data-bind="textInput: config.mqtt_port" type="number" autocapitalize="none"><br/>
+            </p>
+            <div data-bind="visible: config.mqtt_enabled() &amp;&amp; config.mqtt_reject_unauthorized_enable() &amp;&amp; advancedMode()">
+              <b>Reject self-signed certificates:</b>
+              <label class="switch">
+                <input type="checkbox" data-bind="checked: config.mqtt_reject_unauthorized" />
+                <div class="slider round"></div>
+              </label>
+            </div>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Username:</b><span> blank - no authentication</span>
               <input data-bind="textInput: config.mqtt_user" type="text" autocapitalize="none">
@@ -440,7 +469,7 @@
             <div data-bind="visible: isEcoModeAvailable">
               <span data-bind="css: {selected: !ecoMode() }">Normal (max)</span>
               <label class="switch">
-                <input type="checkbox" data-bind="checked: ecoMode">
+                <input type="checkbox" data-bind="checked: ecoMode" />
                 <div class="slider round"></div>
               </label>
               <span data-bind="css: {selected: ecoMode }">Eco (PV divert)</span><br/>
@@ -500,7 +529,7 @@
             <div data-bind="with: time, visible: time.hasRTC()">
               <span data-bind="css: {selected: !automaticTime() }">Manual</span>
               <label class="switch">
-                <input type="checkbox" data-bind="checked: automaticTime">
+                <input type="checkbox" data-bind="checked: automaticTime" />
                 <div class="slider round"></div>
               </label>
               <span data-bind="css: {selected: automaticTime() }">Automatic<span>
@@ -591,7 +620,7 @@
                 <td>GFI Self Test:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.gfiSelfTestEnabled">
+                    <input type="checkbox" data-bind="checked: openevse.gfiSelfTestEnabled" />
                     <div class="slider round"></div>
                   </label>
                   <span data-bind="text: openevse.gfiSelfTestEnabled() ? 'Enabled' : 'Disabled'"></span>
@@ -601,7 +630,7 @@
                 <td>Ground Monitoring:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.groundCheckEnabled">
+                    <input type="checkbox" data-bind="checked: openevse.groundCheckEnabled" />
                     <div class="slider round"></div>
                   </label>
                   <span data-bind="text: openevse.groundCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
@@ -611,7 +640,7 @@
                 <td>Stuck Contact Detection:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.stuckRelayEnabled">
+                    <input type="checkbox" data-bind="checked: openevse.stuckRelayEnabled" />
                     <div class="slider round"></div>
                   </label>
                   <span data-bind="text: openevse.stuckRelayEnabled() ? 'Enabled' : 'Disabled'"></span>
@@ -621,7 +650,7 @@
                 <td>Temperature Monitoring:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode() &amp;&amp; openevse.tempCheckSupported()">
-                    <input type="checkbox" data-bind="checked: openevse.tempCheckEnabled">
+                    <input type="checkbox" data-bind="checked: openevse.tempCheckEnabled" />
                     <div class="slider round"></div>
                   </label>
                   <span data-bind="text: openevse.tempCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
@@ -631,7 +660,7 @@
                 <td>Diode Check:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.diodeCheckEnabled">
+                    <input type="checkbox" data-bind="checked: openevse.diodeCheckEnabled" />
                     <div class="slider round"></div>
                   </label>
                   <span data-bind="text: openevse.diodeCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
@@ -641,7 +670,7 @@
                 <td>Vent Required:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.ventRequiredEnabled">
+                    <input type="checkbox" data-bind="checked: openevse.ventRequiredEnabled" />
                     <div class="slider round"></div>
                   </label>
                   <span data-bind="text: openevse.ventRequiredEnabled() ? 'Enabled' : 'Disabled'"></span>
@@ -717,7 +746,7 @@
             <div>
               <span data-bind="css: {selected: !advancedMode() }">Simple</span>
               <label class="switch">
-                <input type="checkbox" data-bind="checked: advancedMode">
+                <input type="checkbox" data-bind="checked: advancedMode" />
                 <div class="slider round"></div>
               </label>
               <span data-bind="css: {selected: advancedMode }">Advanced</span><br/>
@@ -791,6 +820,10 @@
               <tr>
                 <td>$GC</td>
                 <td>Get current capacity range, integers</td>
+              </tr>
+              <tr>
+                <td>$GD</td>
+                <td>Get delay timer, starthr startmin endhr endmin</td>
               </tr>
               <tr>
                 <td>$GE</td>

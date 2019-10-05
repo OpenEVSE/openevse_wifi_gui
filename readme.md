@@ -1,6 +1,6 @@
 # OpenEVSE WiFi GUI
 
-This is the Web UI for OpenEVSE WiFi module. It is intended to be served via the [ESP8266](https://github.com/OpenEVSE/ESP8266_WiFi_v2.x) or the [Node.JS](https://github.com/openevse/openevse_wifi_server)
+This is the Web UI for OpenEVSE WiFi module. It is intended to be served via the [ESP8266](https://github.com/OpenEVSE/ESP8266_WiFi_v2.x), [ESP32](https://github.com/OpenEVSE/ESP32_WiFi_v3.x) or the [Node.JS](https://github.com/openevse/openevse_wifi_server)
 
 ## Building the UI
 
