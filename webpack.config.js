@@ -1,3 +1,6 @@
+/* jslint node: true, esversion: 6 */
+/* eslint-env node */
+
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
@@ -9,6 +12,10 @@ const webpack = require("webpack"); //to access built-in plugins
 const path = require("path");
 const UglifyJS = require("uglify-js");
 const babel = require("@babel/core");
+
+require("dotenv").config();
+const openevseEndpoint = process.env.OPENEVSE_ENDPOINT || "http://openevse.local";
+const devHost = process.env.DEV_HOST || "localhost";
 
 var htmlMinify = {
   removeComments: true,
@@ -26,7 +33,30 @@ module.exports = {
     filename: "[name].js"
   },
   devServer: {
-    contentBase: "./dist"
+    host: devHost,
+    contentBase: "./dist",
+    index: "home.html",
+    proxy: [{
+      context: [
+        "/ws",
+        "/config",
+        "/status",
+        "/update",
+        "/r",
+        "/scan",
+        "/emoncms",
+        "/savenetwork",
+        "/saveemoncms",
+        "/savemqtt",
+        "/saveadmin",
+        "/saveohmkey",
+        "/reset",
+        "/restart",
+        "/apoff",
+        "/divertmode"
+      ],
+      target: openevseEndpoint
+    }]
   },
   module: {
     rules: [
