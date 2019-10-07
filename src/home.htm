@@ -83,26 +83,30 @@
 
             <div id="ap-view" data-bind="visible: wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting() &amp;&amp; !status.isWired()">
               <p>Connect to network:</p>
-              <table>
-                <tr>
-                  <th>Select</th>
-                  <th>Network</th>
-                  <th>RSSI dBm</th>
-                </tr>
-                <tbody id="networks" data-bind="foreach: scan.results">
-                  <tr>
-                    <td><input class='networkcheckbox' name='network' data-bind="checkedValue: bssid(), checked: $root.wifi.bssid"
+              <div id="wifiList">
+                <table class="fixed_header">
+                  <thead>
+                    <tr>
+                      <th>Select</th>
+                      <th>Network</th>
+                      <th>RSSI dBm</th>
+                    </tr>
+                  </thead>
+                  <tbody id="networks" data-bind="foreach: scan.results">
+                    <tr>
+                      <td><input class='networkcheckbox' name='network' data-bind="checkedValue: bssid(), checked: $root.wifi.bssid"
                         type='radio'></td>
-                    <td data-bind="text: ssid"></td>
-                    <td data-bind="text: rssi"></td>
-                  </tr>
-                </tbody>
-                <tfoot data-bind="visible: 0 == scan.results().length">
-                  <tr>
-                    <td colspan="3">Scanning...</td>
-                  </tr>
-                </tfoot>
-              </table>
+                      <td data-bind="text: ssid"></td>
+                      <td data-bind="text: rssi"></td>
+                    </tr>
+                  </tbody>
+                  <tfoot data-bind="visible: 0 == scan.results().length">
+                    <tr>
+                      <td colspan="3">Scanning...</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
               <p data-bind="text: config.ssid"></p>
               <p>
                 <b>Passkey:</b><br>

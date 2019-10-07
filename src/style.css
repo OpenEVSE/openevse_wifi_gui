@@ -503,3 +503,18 @@ border: none;
   height: 30px;
   background-color: #008080;
 }
+
+/* Scrollable, fixed header table. Based on https://codepen.io/vemba/pen/EvJPex */
+
+#wifiList {
+  display: inline-block;
+  height: 150px;
+  overflow: auto
+}
+
+#wifiList table th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
