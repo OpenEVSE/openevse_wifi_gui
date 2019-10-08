@@ -12,13 +12,18 @@ function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
 
   self.scanUpdating = ko.observable(false);
 
-  self.bssid = ko.observable("");
-  self.bssid.subscribe(function (bssid) {
-    for(var i = 0; i < self.scan.results().length; i++) {
-      var net = self.scan.results()[i];
-      if(bssid === net.bssid()) {
-        self.config.ssid(net.ssid());
-        return;
+  self.selectedNet = ko.observable(false);
+  self.bssid = ko.pureComputed({
+    read: () => {
+      return (false === self.selectedNet()) ? "" : self.selectedNet().bssid();
+    },
+    write: (bssid) => {
+      for(var i = 0; i < self.scan.results().length; i++) {
+        var net = self.scan.results()[i];
+        if(bssid === net.bssid()) {
+          self.selectedNet(net);
+          return;
+        }
       }
     }
   });

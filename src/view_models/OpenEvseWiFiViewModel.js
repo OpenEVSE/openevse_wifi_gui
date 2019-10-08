@@ -41,15 +41,26 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.updating = ko.observable(false);
   self.scanUpdating = ko.observable(false);
 
-  self.bssid = ko.observable("");
-  self.bssid.subscribe(function (bssid) {
+  self.wifi.selectedNet.subscribe((net) => {
+    if(false !== net) {
+      self.config.ssid(net.ssid());
+    }
+  });
+
+  self.config.ssid.subscribe((ssid) => {
+    if(false !== self.wifi.selectedNet() && ssid === self.wifi.selectedNet().ssid()) {
+      return;
+    }
+
     for(var i = 0; i < self.scan.results().length; i++) {
       var net = self.scan.results()[i];
-      if(bssid === net.bssid()) {
-        self.config.ssid(net.ssid());
+      if(ssid === net.ssid()) {
+        self.wifi.selectedNet(net);
         return;
       }
     }
+
+    self.wifi.selectedNet(false);
   });
 
   // Info text display state
