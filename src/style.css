@@ -508,7 +508,7 @@ border: none;
 
 #wifiList {
   display: inline-block;
-  height: 150px;
+  max-height: 230px;
   overflow: auto
 }
 
