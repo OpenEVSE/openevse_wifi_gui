@@ -234,6 +234,7 @@ input[type="time"] {
   input[type="text"],
   input[type="number"],
   input[type="password"],
+  input[type="file"],
   select {
     width: 240px;
   }
@@ -487,4 +488,18 @@ border: none;
 }
 .updateSlower {
   color: rgb(255,125,20);
+}
+
+#progressBack {
+  width: 100%;
+  border-color: #19a6ff;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px
+}
+
+#progressBar {
+  width: 1%;
+  height: 30px;
+  background-color: #008080;
 }
