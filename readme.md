@@ -8,3 +8,22 @@ This is the Web UI for OpenEVSE WiFi module. It is intended to be served via the
 npm install
 npm run build
 ```
+
+## Dev server
+
+To allow for easier development of the GUI there is a development server built in to Webpack. This can be configured to pass on calls to the backend to
+a real device or the simulator.
+
+### Config
+
+You can configure the dev server using [dotenv](https://www.npmjs.com/package/dotenv). An example `.env` file can be found [here](.env.example).
+
+`OPENEVSE_ENDPOINT` - URL of the OpenEVSE to test against.
+
+`DEV_HOST` - By default the dev server is only avalible to localhost. If you want to expose the server to the local network then set this to the IP address or hostname of the external network interface.
+
+### Starting
+
+To start the dev server use the command:
+
+`npm start`
