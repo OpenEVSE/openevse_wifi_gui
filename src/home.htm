@@ -92,7 +92,7 @@
                       <th>RSSI dBm</th>
                     </tr>
                   </thead>
-                  <tbody id="networks" data-bind="foreach: scan.results">
+                  <tbody id="networks" data-bind="foreach: scan.filteredResults">
                     <tr>
                       <td><input class='networkcheckbox' name='network' data-bind="checkedValue: bssid(), checked: $root.wifi.bssid"
                         type='radio'></td>
