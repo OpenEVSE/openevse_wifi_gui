@@ -27,6 +27,9 @@ function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
       }
     }
   });
+  self.select = function(item) {
+    self.selectedNet(item);
+  };
 
   var scanTimer = null;
   var scanTime = 3 * 1000;

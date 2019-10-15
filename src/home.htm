@@ -84,20 +84,17 @@
             <div id="ap-view" data-bind="visible: wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting() &amp;&amp; !status.isWired()">
               <p>Connect to network:</p>
               <div id="wifiList">
-                <table class="fixed_header">
+                <table>
                   <thead>
                     <tr>
-                      <th>Select</th>
                       <th>Network</th>
-                      <th>RSSI dBm</th>
+                      <th>Strength</th>
                     </tr>
                   </thead>
                   <tbody id="networks" data-bind="foreach: scan.filteredResults">
-                    <tr>
-                      <td><input class='networkcheckbox' name='network' data-bind="checkedValue: bssid(), checked: $root.wifi.bssid"
-                        type='radio'></td>
+                    <tr data-bind="click: $root.wifi.select, css: { wifiselected: $root.wifi.selectedNet() === $data }">
                       <td data-bind="text: ssid"></td>
-                      <td data-bind="text: rssi"></td>
+                      <td data-bind="text: strength"></td>
                     </tr>
                   </tbody>
                   <tfoot data-bind="visible: 0 == scan.results().length">
