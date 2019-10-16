@@ -512,8 +512,6 @@ border: none;
   background-color: #008080;
 }
 
-/* Scrollable, fixed header table. Based on https://codepen.io/vemba/pen/EvJPex */
-
 #wifiList {
   display: inline-block;
   width: 100%;
@@ -521,8 +519,39 @@ border: none;
   overflow: auto
 }
 
-#wifiList table th {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
+/*  Stolen from Bootstrap */
+.list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.list-group-item {
+    position: relative;
+    display: flex;
+    padding: .75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    background-color: teal;
+    border-color: teal;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+.list-group-item:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: .25rem;
+    border-bottom-left-radius: .25rem;
 }
