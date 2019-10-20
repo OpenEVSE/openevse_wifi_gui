@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -68,7 +68,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.showSolarDivert = ko.observable(false);
   self.showSafety = ko.observable(false);
 
-
   self.toggle = function (flag) {
     flag(!flag());
   };
@@ -110,6 +109,12 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
   // Upgrade URL
   self.upgradeUrl = ko.observable("about:blank");
+
+  // Show/hide password state
+  self.wifiPassword = new PasswordViewModel(self.config.pass);
+//  self.emonCmsKey = new PasswordViewModel(false);
+//  self.mqttPassword = new PasswordViewModel(false);
+//  self.ohmConnectKey = new PasswordViewModel(false);
 
   // -----------------------------------------------------------------------
   // Initialise the app

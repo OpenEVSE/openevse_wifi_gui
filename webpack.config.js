@@ -111,6 +111,7 @@ module.exports = {
           "src/view_models/StatusViewModel.js",
           "src/view_models/WiFiScanViewModel.js",
           "src/view_models/WiFiConfigViewModel.js",
+          "src/view_models/PasswordViewModel.js",
         ],
         "home.js": [
           "src/openevse.js",
