@@ -99,11 +99,11 @@
 
               <p>
                 <b>SSID:</b><br>
-                <input type="text" autocapitalize="none" autocapitalize="none" data-bind="textInput: config.ssid">
+                <input type="text" autocapitalize="none" data-bind="textInput: config.ssid">
               </p>
               <p>
                 <b>Passkey:</b><br>
-                <input type="text" autocapitalize="none" autocapitalize="none" data-bind="textInput: wifiPassword.value, attr: { type: wifiPassword.show() ? 'text' : 'password' }"><br/>
+                <input type="text" autocapitalize="none" data-bind="textInput: wifiPassword.value, attr: { type: wifiPassword.show() ? 'text' : 'password' }"><br/>
                 <div>
                   <input id="wifipassword" type="checkbox" data-bind="checked: wifiPassword.show" />
                   <label for="wifipassword">Show password</label>
@@ -128,7 +128,11 @@
             </p>
             <p>
               <b>Password:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.www_password" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="" >
+              <input type="password" autocapitalize="none" data-bind="textInput: wwwPassword.value, attr: { type: wwwPassword.show() ? 'text' : 'password' }" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="" /><br />
+              <span>
+                <input id="wwwPassword" type="checkbox" data-bind="checked: wwwPassword.show" />
+                <label for="wwwPassword">Show password</label>
+              </span><br />
               <span class="small-text validMessage">15 characters max</span><br>
               <span class="small-text">Web interface HTTP authentication.</span><br><br>
               <button data-bind="click: saveAdmin, text: (saveAdminFetching() ? 'Saving' : (saveAdminSuccess() ? 'Saved' : 'Save')), disable: saveAdminFetching">Save</button>
@@ -210,8 +214,12 @@
               <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_node">
             </p>
             <p data-bind="visible: config.emoncms_enabled">
-              <b>Emoncms write-apikey*:</b><br>
-              <input type="password" autocapitalize="none" data-bind="textInput: config.emoncms_apikey"><br>
+              <b>Emoncms write-apikey*:</b><br />
+              <input type="password" autocapitalize="none" data-bind="textInput: emoncmsApiKey.value, attr: { type: emoncmsApiKey.show() ? 'text' : 'password' }" /><br />
+              <span>
+                <input id="emoncmsApiKey" type="checkbox" data-bind="checked: emoncmsApiKey.show" />
+                <label for="emoncmsApiKey">Show password</label>
+              </span>
             </p>
             <p data-bind="visible: config.emoncms_enabled">
               <b>Emoncms SSL SHA-1 Fingerprint (optional):</b><br>
@@ -281,7 +289,11 @@
             </p>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Password:</b><span> blank - no authentication</span>
-              <input data-bind="textInput: config.mqtt_pass" type="password" autocapitalize="none"><br>
+              <input type="password" autocapitalize="none" data-bind="textInput: mqttPassword.value, attr: { type: mqttPassword.show() ? 'text' : 'password' }" /><br />
+              <span>
+                <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
+                <label for="mqttPassword">Show password</label>
+              </span>
             </p>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Base-topic*:</b><br>

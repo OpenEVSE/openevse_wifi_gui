@@ -112,9 +112,9 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
   // Show/hide password state
   self.wifiPassword = new PasswordViewModel(self.config.pass);
-//  self.emonCmsKey = new PasswordViewModel(false);
-//  self.mqttPassword = new PasswordViewModel(false);
-//  self.ohmConnectKey = new PasswordViewModel(false);
+  self.emoncmsApiKey = new PasswordViewModel(self.config.emoncms_apikey);
+  self.mqttPassword = new PasswordViewModel(self.config.mqtt_pass);
+  self.wwwPassword = new PasswordViewModel(self.config.www_password);
 
   // -----------------------------------------------------------------------
   // Initialise the app
