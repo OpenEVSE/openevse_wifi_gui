@@ -48,19 +48,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   self.config.ssid.subscribe((ssid) => {
-    if(false !== self.wifi.selectedNet() && ssid === self.wifi.selectedNet().ssid()) {
-      return;
-    }
-
-    for(var i = 0; i < self.scan.results().length; i++) {
-      var net = self.scan.results()[i];
-      if(ssid === net.ssid()) {
-        self.wifi.selectedNet(net);
-        return;
-      }
-    }
-
-    self.wifi.selectedNet(false);
+    self.wifi.setSsid(ssid);
   });
 
   // Info text display state

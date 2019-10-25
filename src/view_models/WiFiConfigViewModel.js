@@ -31,6 +31,31 @@ function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
     self.selectedNet(item);
   };
 
+  self.setSsid = function(ssid)
+  {
+    if(false !== self.selectedNet() && ssid === self.selectedNet().ssid()) {
+      return;
+    }
+
+    for(var i = 0; i < self.scan.filteredResults().length; i++) {
+      var net = self.scan.filteredResults()[i];
+      if(ssid === net.ssid()) {
+        self.selectedNet(net);
+        return;
+      }
+    }
+
+    for(var i = 0; i < self.scan.results().length; i++) {
+      var net = self.scan.results()[i];
+      if(ssid === net.ssid()) {
+        self.selectedNet(net);
+        return;
+      }
+    }
+
+    self.selectedNet(false);
+  }
+
   var scanTimer = null;
   var scanTime = 3 * 1000;
 
