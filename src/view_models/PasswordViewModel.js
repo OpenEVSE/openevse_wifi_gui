@@ -9,7 +9,7 @@ function PasswordViewModel(password)
   self.show = ko.observable(false);
   self.value = ko.computed({
     read: () => {
-      if(self.show() && "___DUMMY_PASSWORD___" === password()) {
+      if(self.show() && ["___DUMMY_PASSWORD___", "_DUMMY_PASSWORD"].includes(password())) {
         return "";
       }
 
