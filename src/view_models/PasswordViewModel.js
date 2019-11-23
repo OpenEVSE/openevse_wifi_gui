@@ -9,7 +9,7 @@ function PasswordViewModel(password)
   self.show = ko.observable(false);
   self.value = ko.computed({
     read: () => {
-      if(self.show() && ["___DUMMY_PASSWORD___", "_DUMMY_PASSWORD"].includes(password())) {
+      if(self.show() && self.isDummy()) {
         return "";
       }
 
@@ -18,5 +18,8 @@ function PasswordViewModel(password)
     write: (value) => {
       password(value);
     }
+  });
+  self.isDummy = ko.computed(() => {
+    return ["___DUMMY_PASSWORD___", "_DUMMY_PASSWORD"].includes(password());
   });
 }
