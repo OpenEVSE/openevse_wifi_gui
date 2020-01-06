@@ -104,6 +104,51 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.mqttPassword = new PasswordViewModel(self.config.mqtt_pass);
   self.wwwPassword = new PasswordViewModel(self.config.www_password);
 
+  function split_emoncms_server() {
+    var proto = self.config.emoncms_server().split("://", 2);
+    if(proto.length > 1) {
+      return proto;
+    }
+
+    return [
+      self.config.http_supported_protocols()[0],
+      proto[0]
+    ];
+  }
+
+  // EmonCMS endpoint config
+  self.emoncms_protocol = ko.computed({
+    read: function () {
+      if(0 == self.config.http_supported_protocols().length) {
+        return "";
+      }
+      return split_emoncms_server()[0];
+    },
+    write: function(val) {
+      if(self.config.http_supported_protocols().length > 0) {
+        self.config.emoncms_server(val + "://" + split_emoncms_server()[1]);
+      }
+    }
+  });
+  self.emoncms_server = ko.computed({
+    read: function () {
+      if(0 == self.config.http_supported_protocols().length) {
+        return self.config.emoncms_server();
+      }
+      return split_emoncms_server()[1];
+    },
+    write: function(val) {
+      if(self.config.http_supported_protocols().length > 0) {
+        var parts = val.split("://", 2);
+        var proto = parts.length > 1 ? parts[0] : split_emoncms_server()[0];
+        var host = parts.length > 1 ? parts[1] : val;
+        self.config.emoncms_server(proto + "://" + host);
+      } else {
+        self.config.emoncms_server();
+      }
+    }
+  });
+
   // -----------------------------------------------------------------------
   // Initialise the app
   // -----------------------------------------------------------------------

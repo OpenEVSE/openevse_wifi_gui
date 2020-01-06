@@ -202,9 +202,15 @@
             </p>
             <p data-bind="visible: config.emoncms_enabled">
               <b>Emoncms Server*:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_server"><br/>
+              <select data-bind="visible: config.http_supported_protocols().length > 0,
+                                  options: config.http_supported_protocols,
+                                  optionsText: function(item) {
+                                    return item + '://'
+                                  },
+                                  value: emoncms_protocol"></select>
+              <input type="text" autocapitalize="none" data-bind="textInput: emoncms_server"><br/>
               <span class="small-text">e.g:
-                <a href="http://data.openevse.com/emoncms">data.openevse.com/emoncms</a>,
+                <a href="https://data.openevse.com/emoncms">data.openevse.com/emoncms</a>,
                 <a href="https://emoncms.org">emoncms.org</a>,
                 <a href="http://emonpi/emoncms">emonpi/emoncms</a>
               </span><br>
@@ -221,7 +227,7 @@
                 <label for="emoncmsApiKey">Show password</label>
               </span>
             </p>
-            <p data-bind="visible: config.emoncms_enabled">
+            <p data-bind="visible: config.emoncms_enabled && visible: config.http_supported_protocols().length === 0">
               <b>Emoncms SSL SHA-1 Fingerprint (optional):</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_fingerprint"><br>
               <br><span class="small-text">HTTPS will be enabled if present e.g:</span>
