@@ -227,7 +227,7 @@
                 <label for="emoncmsApiKey">Show password</label>
               </span>
             </p>
-            <p data-bind="visible: config.emoncms_enabled && visible: config.http_supported_protocols().length === 0">
+            <p data-bind="visible: config.emoncms_enabled && config.http_supported_protocols().length === 0">
               <b>Emoncms SSL SHA-1 Fingerprint (optional):</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_fingerprint"><br>
               <br><span class="small-text">HTTPS will be enabled if present e.g:</span>
