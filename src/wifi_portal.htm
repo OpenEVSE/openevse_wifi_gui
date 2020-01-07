@@ -71,8 +71,8 @@
         <h2>Connecting to <span data-bind="text: config.ssid"></span> ...</h2>
         <p>Please connect this device to <span data-bind="text: config.ssid"></span> and navigate to the IP address displayed
           on your OpenEVSE display.</p>
-        <p>Alternatively you can use <a href="http://openevse.local/">http://openevse.local/</a> or
-          <a href="http://openevse/">http://openevse/</a></p>
+        <p>Alternatively you can use <a data-bind="attr: { href: 'http://' + config.hostname() + '.local/' }, text: 'http://' + config.hostname() + '.local/'"></a> or
+          <a data-bind="attr: { href: 'http://' + config.hostname() + '/' }, text: 'http://' + config.hostname() + '/'"></a></p>
 
         <div id="client-view" data-bind="visible: status.isWifiClient">
           <button id="apoff" data-bind="click: wifi.turnOffAccessPoint, disable: wifi.turnOffAccessPointFetching">Continue</button>
