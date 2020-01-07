@@ -555,3 +555,17 @@ border: none;
     border-bottom-right-radius: .25rem;
     border-bottom-left-radius: .25rem;
 }
+
+.protocol select {
+  width: 80px;
+}
+
+.protocol input {
+  width: 195px;
+}
+
+@media screen and (max-width: 420px) {
+  .protocol input {
+    width: 155px;
+  }  
+}

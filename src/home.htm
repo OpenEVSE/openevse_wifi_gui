@@ -201,19 +201,21 @@
               <label for="emoncms_enabled"><b>Enable Emoncms</b></label>
             </p>
             <p data-bind="visible: config.emoncms_enabled">
-              <b>Emoncms Server*:</b><br>
-              <select data-bind="visible: config.http_supported_protocols().length > 0,
-                                  options: config.http_supported_protocols,
-                                  optionsText: function(item) {
-                                    return item + '://'
-                                  },
-                                  value: emoncms_protocol"></select>
-              <input type="text" autocapitalize="none" data-bind="textInput: emoncms_server"><br/>
-              <span class="small-text">e.g:
+              <div><b>Emoncms Server*:</b></div>
+              <div class="protocol" data-bind="css: { protocol: config.http_supported_protocols().length > 0 }">
+                <select data-bind="visible: config.http_supported_protocols().length > 0,
+                  options: config.http_supported_protocols,
+                  optionsText: function(item) {
+                    return item + '://'
+                  },
+                  value: emoncms_protocol"></select>
+                <input type="text" autocapitalize="none" data-bind="textInput: emoncms_server">
+              </div>
+              <div class="small-text">e.g:
                 <a href="https://data.openevse.com/emoncms">data.openevse.com/emoncms</a>,
                 <a href="https://emoncms.org">emoncms.org</a>,
                 <a href="http://emonpi/emoncms">emonpi/emoncms</a>
-              </span><br>
+              </div>
             </p>
             <p data-bind="visible: config.emoncms_enabled">
               <b>Emoncms Node*:</b><br>
