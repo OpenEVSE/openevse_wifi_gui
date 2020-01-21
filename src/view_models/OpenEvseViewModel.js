@@ -103,7 +103,7 @@ function OpenEvseViewModel(baseEndpoint, statusViewModel) {
   });
 
   self.isError = ko.pureComputed(function () {
-    return [4, 5, 6, 7, 8, 9, 10].indexOf(self.status.state()) !== -1;
+    return [4, 5, 6, 7, 8, 9, 10, 11].indexOf(self.status.state()) !== -1;
   });
 
   self.isEnabled = ko.pureComputed(function () {

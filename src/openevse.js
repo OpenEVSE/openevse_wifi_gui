@@ -50,6 +50,7 @@ function OpenEVSE(endpoint)
     8: "stuck relay",
     9: "gfci self-test failure",
     10: "over temperature",
+    11: "over current",
     254: "sleeping",
     255: "disabled"
   };

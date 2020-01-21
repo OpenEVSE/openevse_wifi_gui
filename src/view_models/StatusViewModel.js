@@ -105,6 +105,9 @@ function StatusViewModel(baseEndpoint) {
       case 10:
         estate = "Over Temperature";
         break;
+      case 11:
+        estate = "Over Current";
+        break;
       case 254:
         estate = "Waiting";
         break;
