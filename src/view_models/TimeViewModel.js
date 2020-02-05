@@ -103,7 +103,10 @@ function TimeViewModel(openevse)
   });
 
   var timeUpdateTimeout = null;
-  self.automaticTime = ko.observable(true);
+  self.automaticTime = ko.computed(function() {
+    return self.timeSource() !== "manual";
+  });
+  self.timeSource = ko.observable("browser");
   self.setTime = function () {
     var newTime = self.automaticTime() ? new Date() : self.evseTimedate();
     // IMPROVE: set a few times and work out an average transmission delay, PID loop?

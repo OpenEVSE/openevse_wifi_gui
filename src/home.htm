@@ -170,10 +170,14 @@
 
           <div class="box380 left" data-bind="visible: advancedMode()">
             <h2>Advanced Settings</h2>
-            <p>
+            <p data-bind="visible: false !== config.hostname()">
               <b>Hostname:</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
               <span class="small-text validMessage">31 characters max</span>
+            </p>
+            <p data-bind="visible: false !== config.sntp_host()">
+              <b>NTP Server:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_server" pattern=".{31}">
             </p>
             <p>
               <button data-bind="click: saveAdvanced, text: (saveAdvancedFetching() ? 'Saving' : (saveAdvancedSuccess() ? 'Saved' : 'Save')), disable: saveAdvancedFetching">Save</button>
@@ -571,6 +575,13 @@
               <input type="time" data-bind="value: time, disable: automaticTime" /><br/>
             </p>
             <div data-bind="with: time, visible: time.hasRTC()">
+              Set time from
+              <select data-bind="timeSource">
+                <option value="manual">Manual</option>
+                <option value="browser">Browser</option>
+                <option value="ntp">NTP</option>
+              </select>
+
               <span data-bind="css: {selected: !automaticTime() }">Manual</span>
               <label class="switch">
                 <input type="checkbox" data-bind="checked: automaticTime" />

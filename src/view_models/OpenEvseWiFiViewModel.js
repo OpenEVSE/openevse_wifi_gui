@@ -324,7 +324,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.saveAdvanced = function () {
     self.saveAdvancedFetching(true);
     self.saveAdvancedSuccess(false);
-    $.post(self.baseEndpoint() + "/saveadvanced", { hostname: self.config.hostname() }, function () {
+
+    var opts = { 
+      hostname: self.config.hostname(),
+      sntp_host: self.config.sntp_host()
+    };
+
+    $.post(self.baseEndpoint() + "/saveadvanced", opts, function () {
       self.saveAdvancedSuccess(true);
       if (confirm("These changes require a reboot to take effect. Reboot now?")) {
         $.post(self.baseEndpoint() + "/restart", { }, function () {
