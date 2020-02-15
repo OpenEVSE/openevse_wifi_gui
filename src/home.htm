@@ -564,9 +564,9 @@
           </div>
 
           <!-- Settings -->
-          <div class="box380 setup" data-bind="visible: $root.status.rapi_connected, with: openevse, css: { right: !advancedMode(), left: advancedMode() }">
+          <div class="box380 setup" data-bind="with: openevse, visible: status.rapi_connected, css: { right: !advancedMode(), left: advancedMode() }">
             <h2>Setup</h2>
-            <p data-bind="with: time, visible: !time.hasRTC()">
+            <p data-bind="visible: !time.hasRTC()">
               <b>Time: No RTC detected</b>
             </p>
             <p data-bind="with: time, visible: time.hasRTC()">
@@ -574,22 +574,14 @@
               <input type="date" data-bind="value: date, disable: automaticTime" />
               <input type="time" data-bind="value: time, disable: automaticTime" /><br/>
             </p>
-            <div data-bind="with: time, visible: time.hasRTC()">
+            <div data-bind="visible: time.hasRTC()">
               Set time from
-              <select data-bind="timeSource">
+              <select data-bind="value: time.timeSource" style="width: 100px">
                 <option value="manual">Manual</option>
                 <option value="browser">Browser</option>
                 <option value="ntp">NTP</option>
               </select>
-
-              <span data-bind="css: {selected: !automaticTime() }">Manual</span>
-              <label class="switch">
-                <input type="checkbox" data-bind="checked: automaticTime" />
-                <div class="slider round"></div>
-              </label>
-              <span data-bind="css: {selected: automaticTime() }">Automatic<span>
-
-              <button style="margin-left: 30px" data-bind="click: setTime">Update</button>
+              <button data-bind="click: $root.setTime, text: ($root.setTimeFetching() ? 'Saving' : ($root.setTimeSuccess() ? 'Saved' : 'Set time')), disable: $root.setTimeFetching">Set time</button>
             </div>
             <hr>
             <p>

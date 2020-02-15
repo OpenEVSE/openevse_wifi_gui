@@ -103,15 +103,11 @@ function TimeViewModel(openevse)
   });
 
   var timeUpdateTimeout = null;
+  self.timeSource = ko.observable("browser");
   self.automaticTime = ko.computed(function() {
     return self.timeSource() !== "manual";
   });
-  self.timeSource = ko.observable("browser");
-  self.setTime = function () {
-    var newTime = self.automaticTime() ? new Date() : self.evseTimedate();
-    // IMPROVE: set a few times and work out an average transmission delay, PID loop?
-    openevse.openevse.time(self.timeUpdate, newTime);
-  };
+
   self.timeUpdate = function (date,valid=true) {
     self.hasRTC(valid);
     stopTimeUpdate();

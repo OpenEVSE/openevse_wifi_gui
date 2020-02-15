@@ -441,6 +441,39 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   };
 
   // -----------------------------------------------------------------------
+  // Event: Set the time
+  // -----------------------------------------------------------------------
+  self.setTimeFetching = ko.observable(false);
+  self.setTimeSuccess = ko.observable(false);
+  self.setTime = function () {
+    self.setTimeFetching(true);
+    self.setTimeSuccess(false);
+    
+    var sntp = "ntp" === self.openevse.time.timeSource();
+    self.config.sntp_enable(sntp);
+
+    $.post(self.baseEndpoint() + "/savesntp", { enable: sntp }, function () {
+      if(false == sntp)
+      {
+        var newTime = self.openevse.time.automaticTime() ? new Date() : self.openevse.time.evseTimedate();
+        // IMPROVE: set a few times and work out an average transmission delay, PID loop?
+        self.openevse.openevse.time((date,valid=true) => {
+          self.setTimeFetching(false);
+          self.setTimeSuccess(valid);
+      
+          self.openevse.time.timeUpdate(date, valid);
+        }, newTime);
+      } else {
+        self.setTimeFetching(false);
+        self.setTimeSuccess(true);
+      }
+    }).fail(function () {
+      alert("Failed to set time");
+      self.setTimeFetching(false);
+    });
+  };
+
+  // -----------------------------------------------------------------------
   // Event: Turn off Access Point
   // -----------------------------------------------------------------------
   self.turnOffAccessPointFetching = ko.observable(false);
