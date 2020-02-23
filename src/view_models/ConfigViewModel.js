@@ -56,6 +56,10 @@ ConfigViewModel.prototype.update = function (after = function () { }) {
     this.mqtt_protocol_enable(data.hasOwnProperty("mqtt_protocol"));
     this.mqtt_port_enable(data.hasOwnProperty("mqtt_port"));
     this.mqtt_reject_unauthorized_enable(data.hasOwnProperty("mqtt_reject_unauthorized"));
+    // HACK: not sure why this is needed
+    if(data.hasOwnProperty("mqtt_protocol")) {
+      this.mqtt_protocol(data.mqtt_protocol);
+    }
   }, "json").always(() => {
     this.fetching(false);
     after();
