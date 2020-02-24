@@ -293,6 +293,11 @@
                 <div class="slider round"></div>
               </label>
             </div>
+            <div data-bind="visible: config.mqtt_enabled() &amp;&amp; !config.mqtt_reject_unauthorized()" class="box warning" style="margin-top: 20px;">
+              <h4>Warning!!</h4>
+              Certificate validation is disabled, although the connection to MQTT server will be encrypted the connection is still
+              vunrable to man-in-the-middle attacks.
+            </div>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Username:</b><span> blank - no authentication</span>
               <input data-bind="textInput: config.mqtt_user" type="text" autocapitalize="none">
