@@ -330,7 +330,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     self.saveAdvancedFetching(true);
     self.saveAdvancedSuccess(false);
 
-    var opts = { 
+    var opts = {
       hostname: self.config.hostname(),
       sntp_host: self.config.sntp_host()
     };
@@ -453,26 +453,34 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.setTime = function () {
     self.setTimeFetching(true);
     self.setTimeSuccess(false);
-    
+
     var sntp = "ntp" === self.openevse.time.timeSource();
     self.config.sntp_enable(sntp);
 
-    $.post(self.baseEndpoint() + "/savesntp", { enable: sntp }, function () {
+    $.post(self.baseEndpoint() + "/savesntp", { enable: sntp }, () => {
       if(false == sntp)
       {
         var newTime = self.openevse.time.automaticTime() ? new Date() : self.openevse.time.evseTimedate();
-        // IMPROVE: set a few times and work out an average transmission delay, PID loop?
-        self.openevse.openevse.time((date,valid=true) => {
-          self.setTimeFetching(false);
-          self.setTimeSuccess(valid);
-      
-          self.openevse.time.timeUpdate(date, valid);
-        }, newTime);
+
+        if(false == self.status.time())
+        {
+          self.openevse.openevse.time((date,valid=true) => {
+            self.setTimeFetching(false);
+            self.setTimeSuccess(valid);
+
+            self.openevse.time.timeUpdate(date, valid);
+          }, newTime);
+        } else {
+          $.post(self.baseEndpoint() + "/settime", { time: newTime.toISOString() }, () => {
+            self.setTimeFetching(false);
+            self.setTimeSuccess(true);
+          });
+        }
       } else {
         self.setTimeFetching(false);
         self.setTimeSuccess(true);
       }
-    }).fail(function () {
+    }).fail(() => {
       alert("Failed to set time");
       self.setTimeFetching(false);
     });

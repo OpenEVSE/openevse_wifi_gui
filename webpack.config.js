@@ -51,6 +51,7 @@ module.exports = {
         "/saveadmin",
         "/saveohmkey",
         "/savesntp",
+        "/settime",
         "/reset",
         "/restart",
         "/apoff",
