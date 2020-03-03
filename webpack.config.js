@@ -50,7 +50,6 @@ module.exports = {
         "/savemqtt",
         "/saveadmin",
         "/saveohmkey",
-        "/savesntp",
         "/settime",
         "/reset",
         "/restart",

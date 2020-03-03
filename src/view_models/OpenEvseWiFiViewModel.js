@@ -454,36 +454,34 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     self.setTimeFetching(true);
     self.setTimeSuccess(false);
 
-    var sntp = "ntp" === self.openevse.time.timeSource();
-    self.config.sntp_enable(sntp);
+    var newTime = self.openevse.time.automaticTime() ? new Date() : self.openevse.time.evseTimedate();
+    if(false == self.status.time())
+    {
+      self.openevse.openevse.time((date,valid=true) => {
+        self.setTimeFetching(false);
+        self.setTimeSuccess(valid);
 
-    $.post(self.baseEndpoint() + "/savesntp", { enable: sntp }, () => {
-      if(false == sntp)
-      {
-        var newTime = self.openevse.time.automaticTime() ? new Date() : self.openevse.time.evseTimedate();
+        self.openevse.time.timeUpdate(date, valid);
+      }, newTime);
+    } else {
+      var sntp = "ntp" === self.openevse.time.timeSource();
+      self.config.sntp_enable(sntp);
 
-        if(false == self.status.time())
-        {
-          self.openevse.openevse.time((date,valid=true) => {
-            self.setTimeFetching(false);
-            self.setTimeSuccess(valid);
+      var params = {
+        ntp: sntp
+      }
+      if(false === sntp) {
+        params.time = newTime.toISOString();
+      }
 
-            self.openevse.time.timeUpdate(date, valid);
-          }, newTime);
-        } else {
-          $.post(self.baseEndpoint() + "/settime", { time: newTime.toISOString() }, () => {
-            self.setTimeFetching(false);
-            self.setTimeSuccess(true);
-          });
-        }
-      } else {
+      $.post(self.baseEndpoint() + "/settime", params, () => {
         self.setTimeFetching(false);
         self.setTimeSuccess(true);
-      }
-    }).fail(() => {
-      alert("Failed to set time");
-      self.setTimeFetching(false);
-    });
+      }).fail(() => {
+        alert("Failed to set time");
+        self.setTimeFetching(false);
+      });
+    }
   };
 
   // -----------------------------------------------------------------------
