@@ -81,6 +81,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   var scanTimer = null;
   var scanTime = 3 * 1000;
 
+  // Get time update events
+  self.status.time.subscribe((time) => {
+    self.openevse.time.timeUpdate(new Date(time));
+  });
+
   // Tabs
   var tab = "status";
   if("" !== window.location.hash) {
