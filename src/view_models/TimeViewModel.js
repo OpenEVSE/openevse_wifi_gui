@@ -50,6 +50,8 @@ function TimeViewModel(openevse)
       return (dt.getFullYear())+"-"+addZero(dt.getMonth() + 1)+"-"+addZero(dt.getDate());
     },
     write: function (val) {
+      var dt = self.evseTimedate();
+      val += " " + addZero(dt.getHours())+":"+addZero(dt.getMinutes())+":"+addZero(dt.getSeconds());
       self.evseTimedate(new Date(val));
       self.localTimedate(new Date());
     }});
