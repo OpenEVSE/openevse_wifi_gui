@@ -105,10 +105,7 @@ function TimeViewModel(openevse)
   });
 
   var timeUpdateTimeout = null;
-  self.timeSource = ko.observable("browser");
-  self.automaticTime = ko.computed(function() {
-    return self.timeSource() !== "manual";
-  });
+  self.automaticTime = ko.observable(true);
 
   self.timeUpdate = function (date,valid=true) {
     self.hasRTC(valid);

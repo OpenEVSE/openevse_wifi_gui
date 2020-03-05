@@ -86,6 +86,32 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     self.openevse.time.timeUpdate(new Date(time));
   });
 
+  // Time source
+  self.timeSource = ko.computed({
+    read: function() {
+      return self.config.sntp_enabled() ? "ntp" : (
+        self.openevse.time.automaticTime() ? "browser" : "manual"
+      );
+    },
+    write: function(val) {
+      switch(val)
+      {
+        case "ntp":
+          self.config.sntp_enabled(true);
+          self.openevse.time.automaticTime(true);
+          break;
+        case "browser":
+          self.config.sntp_enabled(false);
+          self.openevse.time.automaticTime(true);
+          break;
+        case "manual":
+          self.config.sntp_enabled(false);
+          self.openevse.time.automaticTime(false);
+          break;
+      }
+    }
+  });
+
   // Tabs
   var tab = "status";
   if("" !== window.location.hash) {
@@ -464,12 +490,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
         self.openevse.time.timeUpdate(date, valid);
       }, newTime);
     } else {
-      var sntp = "ntp" === self.openevse.time.timeSource();
-      self.config.sntp_enable(sntp);
+      var sntp = self.config.sntp_enabled();
 
       var params = {
         ntp: sntp
-      }
+      };
       if(false === sntp) {
         params.time = newTime.toISOString();
       }

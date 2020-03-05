@@ -32,7 +32,7 @@ function ConfigViewModel(baseEndpoint) {
     "www_username": "",
     "www_password": "",
     "hostname": false,
-    "sntp_enable": false,
+    "sntp_enabled": false,
     "sntp_host": false,
     "firmware": "-",
     "protocol": "-",

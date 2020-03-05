@@ -576,7 +576,7 @@
             </p>
             <div data-bind="visible: time.hasRTC()">
               Set time from
-              <select data-bind="value: time.timeSource" style="width: 100px">
+              <select data-bind="value: $root.timeSource" style="width: 100px">
                 <option value="manual">Manual</option>
                 <option value="browser">Browser</option>
                 <option value="ntp">NTP</option>
