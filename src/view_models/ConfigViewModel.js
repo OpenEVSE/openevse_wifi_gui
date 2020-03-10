@@ -45,7 +45,8 @@ function ConfigViewModel(baseEndpoint) {
     "tempt": 0,
     "scale": 1,
     "offset": 0,
-    "version": "0.0.0"
+    "version": "0.0.0",
+    "time_zone": false
   }, endpoint);
 }
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);

@@ -12,6 +12,7 @@ const webpack = require("webpack"); //to access built-in plugins
 const path = require("path");
 const UglifyJS = require("uglify-js");
 const babel = require("@babel/core");
+const CopyPlugin = require("copy-webpack-plugin");
 
 require("dotenv").config();
 const openevseEndpoint = process.env.OPENEVSE_ENDPOINT || "http://openevse.local";
@@ -67,17 +68,6 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           "css-loader"
         ]
-      },
-      {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "[name].[ext]"
-            }
-          }
-        ]
       }
     ]
   },
@@ -118,6 +108,7 @@ module.exports = {
           "src/openevse.js",
           "src/view_models/RapiViewModel.js",
           "src/view_models/TimeViewModel.js",
+          "src/view_models/ZonesViewModel.js",
           "src/view_models/OpenEvseViewModel.js",
           "src/view_models/OpenEvseWiFiViewModel.js",
           "src/home.js"
@@ -132,7 +123,11 @@ module.exports = {
         "home.js": code => uglify("home.js", code),
         "wifi_portal.js": code => uglify("wifi_portal.js", code),
       }
-    })
+    }),
+    new CopyPlugin([
+      { from: "assets/*", flatten: true },
+      { from: "posix_tz_db/zones.json", flatten: true }
+    ]) 
   ],
   optimization: {
     splitChunks: {},

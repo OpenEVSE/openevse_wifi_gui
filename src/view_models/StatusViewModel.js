@@ -39,7 +39,8 @@ function StatusViewModel(baseEndpoint) {
     "charge_rate": 0,
     "divert_update": 0,
     "ota_update": false,
-    "time": false
+    "time": false,
+    "offset": false
   }, endpoint);
 
   // Some devired values

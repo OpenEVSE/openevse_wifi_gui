@@ -564,44 +564,51 @@
           </div>
 
           <!-- Settings -->
-          <div class="box380 setup" data-bind="with: openevse, visible: status.rapi_connected, css: { right: !advancedMode(), left: advancedMode() }">
+          <div class="box380 setup" data-bind="visible: status.rapi_connected, css: { right: !advancedMode(), left: advancedMode() }">
             <h2>Setup</h2>
-            <p data-bind="visible: !time.hasRTC()">
+            <p data-bind="visible: !openevse.time.hasRTC()">
               <b>Time: No RTC detected</b>
             </p>
-            <p data-bind="with: time, visible: time.hasRTC()">
+            <p data-bind="with: openevse.time, visible: openevse.time.hasRTC()">
               <b>Time:</b><br/>
               <input type="date" data-bind="value: date, disable: automaticTime" />
               <input type="time" data-bind="value: time, disable: automaticTime" /><br/>
             </p>
-            <div data-bind="visible: time.hasRTC()">
+            <p data-bind="visible: openevse.time.hasRTC()">
+              <b>Time zone:</b><br/>
+              <select data-bind="options: zones.zones,
+                        optionsText: 'name',
+                        optionsValue: 'value',
+                        value: time_zone"></select>
+            </p>
+            <div data-bind="visible: openevse.time.hasRTC()">
               Set time from
-              <select data-bind="value: $root.timeSource" style="width: 100px">
+              <select data-bind="value: timeSource" style="width: 100px">
                 <option value="manual">Manual</option>
                 <option value="browser">Browser</option>
                 <option value="ntp">NTP</option>
               </select>
-              <button data-bind="click: $root.setTime, text: ($root.setTimeFetching() ? 'Saving' : ($root.setTimeSuccess() ? 'Saved' : 'Set time')), disable: $root.setTimeFetching">Set time</button>
+              <button data-bind="click: setTime, text: (setTimeFetching() ? 'Saving' : (setTimeSuccess() ? 'Saved' : 'Set time')), disable: setTimeFetching">Set time</button>
             </div>
             <hr>
             <p>
               <b>Service Level:</b><br/>
-              <select data-bind="options: serviceLevels,
+              <select data-bind="options: openevse.serviceLevels,
                                  optionsText: 'name',
                                  optionsValue: 'value',
-                                 value: serviceLevel,
-                                 disable: updatingServiceLevel(),
-                                 css: { saved: savedServiceLevel }"></select>
+                                 value: openevse.serviceLevel,
+                                 disable: openevse.updatingServiceLevel(),
+                                 css: { saved: openevse.savedServiceLevel }"></select>
             </p>
 
             <p>
               <b>Max Current:</b><br/>
-              <select data-bind="options: currentLevels,
+              <select data-bind="options: openevse.currentLevels,
                                   optionsText: 'name',
                                   optionsValue: 'value',
-                                  value: currentCapacity,
-                                  disable: updatingServiceLevel() || updatingCurrentCapacity(),
-                                  css: { saved: savedCurrentCapacity }"></select>
+                                  value: openevse.currentCapacity,
+                                  disable: openevse.updatingServiceLevel() || openevse.updatingCurrentCapacity(),
+                                  css: { saved: openevse.savedCurrentCapacity }"></select>
             </p>
           </div>
 

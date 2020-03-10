@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -36,6 +36,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.scan = new WiFiScanViewModel(self.baseEndpoint);
   self.wifi = new WiFiConfigViewModel(self.baseEndpoint, self.config, self.status, self.scan);
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.status);
+  self.zones = new ZonesViewModel(self.baseEndpoint);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -108,6 +109,17 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
           self.config.sntp_enabled(false);
           self.openevse.time.automaticTime(false);
           break;
+      }
+    }
+  });
+
+  self.time_zone = ko.computed({
+    read: () => {
+      return self.config.time_zone();
+    },
+    write: (val) => {
+      if(undefined !== val && false === self.zones.fetching()) {
+        self.config.time_zone(val);
       }
     }
   });
@@ -239,6 +251,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       if(imgDefer[i].getAttribute("data-src")) {
         imgDefer[i].setAttribute("src", imgDefer[i].getAttribute("data-src"));
       }
+    }
+
+    // Load the Time Zone information
+    if(false !== self.config.time_zone()) {
+      self.zones.update();
     }
 
     self.updating(false);
@@ -493,7 +510,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       var sntp = self.config.sntp_enabled();
 
       var params = {
-        ntp: sntp
+        ntp: sntp,
+        tz: self.time_zone()
       };
       if(false === sntp) {
         params.time = newTime.toISOString();
