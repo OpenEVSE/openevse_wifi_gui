@@ -25,6 +25,24 @@ function ZonesViewModel(baseEndpoint) {
     }
   });
 
+  self.initialValue = function (val) {
+    var parts = val.split("|", 2);
+    if(2 == parts.length)
+    {
+      self.zones.push(new TimeZoneViewModel({
+        name: parts[0],
+        tz: parts[1]
+      }));
+    }
+    else
+    {
+      self.zones.push(new TimeZoneViewModel({
+        name: "Default",
+        tz: parts[1]
+      }));
+    }
+  };
+
   self.update = function (after = function () { }) {
     self.fetching(true);
     $.get(endpoint(), function (data) {

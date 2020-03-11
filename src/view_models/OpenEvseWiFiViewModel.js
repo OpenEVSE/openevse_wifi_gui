@@ -255,7 +255,10 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
     // Load the Time Zone information
     if(false !== self.config.time_zone()) {
-      self.zones.update();
+      self.zones.initialValue(self.config.time_zone());
+      self.zones.update(() => {
+        self.config.time_zone.valueHasMutated();
+      });
     }
 
     self.updating(false);
