@@ -192,6 +192,23 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     }
   });
 
+  // MQTT port update
+  self.config.mqtt_protocol.subscribe((val) => {
+    switch(val)
+    {
+      case "mqtt":
+        if(self.config.mqtt_port() == "8883") {
+          self.config.mqtt_port("1883");
+        }
+        break;
+      case "mqtts":
+        if(self.config.mqtt_port() == "1883") {
+          self.config.mqtt_port("8883");
+        }
+        break;
+    }
+  });
+
   // -----------------------------------------------------------------------
   // Initialise the app
   // -----------------------------------------------------------------------
