@@ -574,7 +574,7 @@
               <input type="date" data-bind="value: date, disable: automaticTime" />
               <input type="time" data-bind="value: time, disable: automaticTime" /><br/>
             </p>
-            <p data-bind="visible: openevse.time.hasRTC()">
+            <p data-bind="visible: openevse.time.hasRTC() && false !== config.time_zone() && 'ntp' === timeSource()">
               <b>Time zone:</b><br/>
               <select data-bind="options: zones.zones,
                         optionsText: 'name',
