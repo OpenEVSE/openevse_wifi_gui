@@ -170,10 +170,14 @@
 
           <div class="box380 left" data-bind="visible: advancedMode()">
             <h2>Advanced Settings</h2>
-            <p>
+            <p data-bind="visible: false !== config.hostname()">
               <b>Hostname:</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
               <span class="small-text validMessage">31 characters max</span>
+            </p>
+            <p data-bind="visible: false !== config.sntp_host()">
+              <b>NTP Server:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_server" pattern=".{31}">
             </p>
             <p>
               <button data-bind="click: saveAdvanced, text: (saveAdvancedFetching() ? 'Saving' : (saveAdvancedSuccess() ? 'Saved' : 'Save')), disable: saveAdvancedFetching">Save</button>
@@ -567,45 +571,51 @@
           </div>
 
           <!-- Settings -->
-          <div class="box380 setup" data-bind="visible: $root.status.rapi_connected, with: openevse, css: { right: !advancedMode(), left: advancedMode() }">
+          <div class="box380 setup" data-bind="visible: status.rapi_connected, css: { right: !advancedMode(), left: advancedMode() }">
             <h2>Setup</h2>
-            <p data-bind="with: time, visible: !time.hasRTC()">
+            <p data-bind="visible: !openevse.time.hasRTC()">
               <b>Time: No RTC detected</b>
             </p>
-            <p data-bind="with: time, visible: time.hasRTC()">
+            <p data-bind="with: openevse.time, visible: openevse.time.hasRTC()">
               <b>Time:</b><br/>
               <input type="date" data-bind="value: date, disable: automaticTime" />
               <input type="time" data-bind="value: time, disable: automaticTime" /><br/>
             </p>
-            <div data-bind="with: time, visible: time.hasRTC()">
-              <span data-bind="css: {selected: !automaticTime() }">Manual</span>
-              <label class="switch">
-                <input type="checkbox" data-bind="checked: automaticTime" />
-                <div class="slider round"></div>
-              </label>
-              <span data-bind="css: {selected: automaticTime() }">Automatic<span>
-
-              <button style="margin-left: 30px" data-bind="click: setTime">Update</button>
+            <p data-bind="visible: openevse.time.hasRTC() && false !== config.time_zone() && 'ntp' === timeSource()">
+              <b>Time zone:</b><br/>
+              <select data-bind="options: zones.zones,
+                        optionsText: 'name',
+                        optionsValue: 'value',
+                        value: time_zone"></select>
+            </p>
+            <div data-bind="visible: openevse.time.hasRTC()">
+              Set time from
+              <select data-bind="value: timeSource" style="width: 100px">
+                <option value="manual">Manual</option>
+                <option value="browser">Browser</option>
+                <option value="ntp">NTP</option>
+              </select>
+              <button data-bind="click: setTime, text: (setTimeFetching() ? 'Saving' : (setTimeSuccess() ? 'Saved' : 'Set time')), disable: setTimeFetching">Set time</button>
             </div>
             <hr>
             <p>
               <b>Service Level:</b><br/>
-              <select data-bind="options: serviceLevels,
+              <select data-bind="options: openevse.serviceLevels,
                                  optionsText: 'name',
                                  optionsValue: 'value',
-                                 value: serviceLevel,
-                                 disable: updatingServiceLevel(),
-                                 css: { saved: savedServiceLevel }"></select>
+                                 value: openevse.serviceLevel,
+                                 disable: openevse.updatingServiceLevel(),
+                                 css: { saved: openevse.savedServiceLevel }"></select>
             </p>
 
             <p>
               <b>Max Current:</b><br/>
-              <select data-bind="options: currentLevels,
+              <select data-bind="options: openevse.currentLevels,
                                   optionsText: 'name',
                                   optionsValue: 'value',
-                                  value: currentCapacity,
-                                  disable: updatingServiceLevel() || updatingCurrentCapacity(),
-                                  css: { saved: savedCurrentCapacity }"></select>
+                                  value: openevse.currentCapacity,
+                                  disable: openevse.updatingServiceLevel() || openevse.updatingCurrentCapacity(),
+                                  css: { saved: openevse.savedCurrentCapacity }"></select>
             </p>
           </div>
 

@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -36,6 +36,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.scan = new WiFiScanViewModel(self.baseEndpoint);
   self.wifi = new WiFiConfigViewModel(self.baseEndpoint, self.config, self.status, self.scan);
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.status);
+  self.zones = new ZonesViewModel(self.baseEndpoint);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -80,6 +81,48 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
   var scanTimer = null;
   var scanTime = 3 * 1000;
+
+  // Get time update events
+  self.status.time.subscribe((time) => {
+    self.openevse.time.timeUpdate(new Date(time));
+  });
+
+  // Time source
+  self.timeSource = ko.computed({
+    read: function() {
+      return self.config.sntp_enabled() ? "ntp" : (
+        self.openevse.time.automaticTime() ? "browser" : "manual"
+      );
+    },
+    write: function(val) {
+      switch(val)
+      {
+        case "ntp":
+          self.config.sntp_enabled(true);
+          self.openevse.time.automaticTime(true);
+          break;
+        case "browser":
+          self.config.sntp_enabled(false);
+          self.openevse.time.automaticTime(true);
+          break;
+        case "manual":
+          self.config.sntp_enabled(false);
+          self.openevse.time.automaticTime(false);
+          break;
+      }
+    }
+  });
+
+  self.time_zone = ko.computed({
+    read: () => {
+      return self.config.time_zone();
+    },
+    write: (val) => {
+      if(undefined !== val && false === self.zones.fetching()) {
+        self.config.time_zone(val);
+      }
+    }
+  });
 
   // Tabs
   var tab = "status";
@@ -227,6 +270,14 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       }
     }
 
+    // Load the Time Zone information
+    if(false !== self.config.time_zone()) {
+      self.zones.initialValue(self.config.time_zone());
+      self.zones.update(() => {
+        self.config.time_zone.valueHasMutated();
+      });
+    }
+
     self.updating(false);
   };
 
@@ -341,7 +392,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.saveAdvanced = function () {
     self.saveAdvancedFetching(true);
     self.saveAdvancedSuccess(false);
-    $.post(self.baseEndpoint() + "/saveadvanced", { hostname: self.config.hostname() }, function () {
+
+    var opts = {
+      hostname: self.config.hostname(),
+      sntp_host: self.config.sntp_host()
+    };
+
+    $.post(self.baseEndpoint() + "/saveadvanced", opts, function () {
       self.saveAdvancedSuccess(true);
       if (confirm("These changes require a reboot to take effect. Reboot now?")) {
         $.post(self.baseEndpoint() + "/restart", { }, function () {
@@ -449,6 +506,45 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     }).always(function () {
       self.saveOhmKeyFetching(false);
     });
+  };
+
+  // -----------------------------------------------------------------------
+  // Event: Set the time
+  // -----------------------------------------------------------------------
+  self.setTimeFetching = ko.observable(false);
+  self.setTimeSuccess = ko.observable(false);
+  self.setTime = function () {
+    self.setTimeFetching(true);
+    self.setTimeSuccess(false);
+
+    var newTime = self.openevse.time.automaticTime() ? new Date() : self.openevse.time.evseTimedate();
+    if(false == self.status.time())
+    {
+      self.openevse.openevse.time((date,valid=true) => {
+        self.setTimeFetching(false);
+        self.setTimeSuccess(valid);
+
+        self.openevse.time.timeUpdate(date, valid);
+      }, newTime);
+    } else {
+      var sntp = self.config.sntp_enabled();
+
+      var params = {
+        ntp: sntp,
+        tz: self.time_zone()
+      };
+      if(false === sntp) {
+        params.time = newTime.toISOString();
+      }
+
+      $.post(self.baseEndpoint() + "/settime", params, () => {
+        self.setTimeFetching(false);
+        self.setTimeSuccess(true);
+      }).fail(() => {
+        alert("Failed to set time");
+        self.setTimeFetching(false);
+      });
+    }
   };
 
   // -----------------------------------------------------------------------

@@ -37,7 +37,10 @@ function StatusViewModel(baseEndpoint) {
     "solar": 0,
     "grid_ie": 0,
     "charge_rate": 0,
-    "divert_update": 0
+    "divert_update": 0,
+    "ota_update": false,
+    "time": false,
+    "offset": false
   }, endpoint);
 
   // Some devired values

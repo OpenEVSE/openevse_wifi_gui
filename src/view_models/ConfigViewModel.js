@@ -31,7 +31,9 @@ function ConfigViewModel(baseEndpoint) {
     "ohmkey": "",
     "www_username": "",
     "www_password": "",
-    "hostname": "openevse",
+    "hostname": false,
+    "sntp_enabled": false,
+    "sntp_host": false,
     "firmware": "-",
     "protocol": "-",
     "espflash": 0,
@@ -43,7 +45,8 @@ function ConfigViewModel(baseEndpoint) {
     "tempt": 0,
     "scale": 1,
     "offset": 0,
-    "version": "0.0.0"
+    "version": "0.0.0",
+    "time_zone": false
   }, endpoint);
 }
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);
