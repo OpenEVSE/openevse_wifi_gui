@@ -457,36 +457,52 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   // -----------------------------------------------------------------------
   // Event: MQTT save
   // -----------------------------------------------------------------------
-  self.saveMqttFetching = ko.observable(false);
-  self.saveMqttSuccess = ko.observable(false);
-  self.saveMqtt = function () {
-    var mqtt = {
-      enable: self.config.mqtt_enabled(),
-      protocol: self.config.mqtt_protocol(),
-      server: self.config.mqtt_server(),
-      port: self.config.mqtt_port(),
-      reject_unauthorized: self.config.mqtt_reject_unauthorized(),
-      topic: self.config.mqtt_topic(),
-      user: self.config.mqtt_user(),
-      pass: self.config.mqtt_pass(),
-      solar: self.config.mqtt_solar(),
-      grid_ie: self.config.mqtt_grid_ie()
+  self.mqttGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      mqtt_enabled: self.config.mqtt_enabled(),
+      divert_enabled: self.config.divert_enabled(),
+      mqtt_protocol: self.config.mqtt_protocol(),
+      mqtt_server: self.config.mqtt_server(),
+      mqtt_port: self.config.mqtt_port(),
+      mqtt_reject_unauthorized: self.config.mqtt_reject_unauthorized(),
+      mqtt_topic: self.config.mqtt_topic(),
+      mqtt_user: self.config.mqtt_user(),
+      mqtt_pass: self.config.mqtt_pass(),
+      mqtt_vrms: self.config.mqtt_vrms()
     };
-
-    if (mqtt.enable && mqtt.server === "") {
-      alert("Please enter MQTT server");
-    } else {
-      self.saveMqttFetching(true);
-      self.saveMqttSuccess(false);
-      $.post(self.baseEndpoint() + "/savemqtt", mqtt, function () {
-        self.saveMqttSuccess(true);
-      }).fail(function () {
-        alert("Failed to save MQTT config");
-      }).always(function () {
-        self.saveMqttFetching(false);
-      });
+  }, (mqtt) => {
+    if(!self.config.mqtt_enabled()) {
+      self.config.divert_enabled(false);
     }
-  };
+
+    if (mqtt.mqtt_enabled && mqtt.mqtt_server === "") {
+      alert("Please enter MQTT server");
+      return false;
+    }
+
+    return true;
+  });
+
+  // -----------------------------------------------------------------------
+  // Event: PV Divert save
+  // -----------------------------------------------------------------------
+  self.divertGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      divert_enabled: self.config.divert_enabled(),
+      mqtt_solar: self.config.mqtt_solar(),
+      mqtt_grid_ie: self.config.mqtt_grid_ie(),
+      divert_attack_smoothing_factor: self.config.divert_attack_smoothing_factor(),
+      divert_decay_smoothing_factor: self.config.divert_decay_smoothing_factor(),
+      divert_min_charge_time: self.config.divert_min_charge_time()
+    };
+  }, (divert) => {
+    if (divert.divert_enabled && divert.mqtt_solar === "" && divert.mqtt_grid_ie === "") {
+      alert("Please enter either a Solar PV or Grid I/E feed");
+      return false;
+    }
+
+    return true;
+  });
 
   // -----------------------------------------------------------------------
   // Event: Save Ohm Connect Key

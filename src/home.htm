@@ -319,36 +319,13 @@
               <input data-bind="textInput: config.mqtt_topic" type="text" autocapitalize="none"><br/>
               <span class="small-text">e.g 'openevse'</span>
             </p>
-
-            <h2 data-bind="visible: config.mqtt_enabled">Solar PV divert<span class="info" data-bind="click: toggle.bind($data, showSolarDivert)"></span></h2>
-            <div class="box" data-bind="visible: showSolarDivert() &amp;&amp; config.mqtt_enabled()">
-              <div>Dynamically adjust charge rate based on solar PV generation or excess power (grid export).</div>
-              <p>
-                <b>1. Normal (default):</b>
-                <ul>
-                  <li><span class="small-text">Charge at maximum current set by EVSE.</span></li>
-                </ul>
-                <b>2. Eco:</b>
-                <ul>
-                  <li><span class="small-text">If only solar PV feed available: charge rate is modulated based on <b>solar PV generation.</b></span></li>
-                  <li><span class="small-text">If grid +I/-E (positive Import / negative Export) feed is available: charge rate will be modulated by available  <b>excess power.</b></span></li>
-                  <li><span class="small-text">If EVSE is sleeping: charging will begin when solar PV / excess power > min charge rate.</span></li>
-                  <li><span class="small-text">Charging will not pause; this avoids excess wear on the EVSE relay and the EV.</span></li>
-                </ul>
-                <span class="small-text"><i>Note: It's assumed that EVSE power is included in the grid feed.</i></span><br>
-              </p>
-            </div>
             <p data-bind="visible: config.mqtt_enabled">
-              <b>SolarPV-gen topic:</b>
-              <input data-bind="textInput: config.mqtt_solar, enable: '' === config.mqtt_grid_ie()" type="text" autocapitalize="none" hint="emon/emonpi/power2"><br>
-              <span class="small-text">Solar PV MQTT topic to modulate charge rate based on solar
+              <b>Voltage topic:</b>
+              <input data-bind="textInput: config.mqtt_vrms" type="text" autocapitalize="none" hint="emon/emonpi/vrms"><br>
+              <span class="small-text">Voltage MQTT topic to improve power calculations
             </p>
-            <p data-bind="visible: config.mqtt_enabled">
-              <b>Grid (+I/-E) topic:</b><br>
-              <input data-bind="textInput: config.mqtt_grid_ie, enable: '' === config.mqtt_solar()" type="text" autocapitalize="none" hint="emon/emonpi/power1"><br>
-              <span class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
-            </p>
-              <button data-bind="click: saveMqtt, text: (saveMqttFetching() ? 'Saving' : (saveMqttSuccess() ? 'Saved' : 'Save')), disable: saveMqttFetching">Save</button>
+            <p>
+              <button data-bind="click: mqttGroup.save, text: (mqttGroup.fetching() ? 'Saving' : (mqttGroup.success() ? 'Saved' : 'Save')), disable: mqttGroup.fetching">Save</button>
               <span data-bind="visible: config.mqtt_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.mqtt_connected() ? 'Yes' : 'No'"></span></b></span>
             </p>
           </div>
@@ -382,6 +359,60 @@
             </p>
             <p>
               <button data-bind="click: saveOhmKey, text: (saveOhmKeyFetching() ? 'Saving' : (saveOhmKeySuccess() ? 'Saved' : 'Save')), disable: saveOhmKeyFetching">Save</button>
+            </p>
+          </div>
+
+          <!-- Divert Mode -->
+          <div class="box380 right">
+            <h2>Solar PV divert</h2>
+            
+            <p data-bind="visible: isEcoModeAvailable">
+              <input type="checkbox" id="divert_enabled" data-bind="checked: config.divert_enabled" />
+              <label for="divert_enabled"><b>Enable Solar PV Divert</b></label>
+              <span class="info" data-bind="click: toggle.bind($data, showSolarDivert)"></span>
+            </p>
+
+            <div class="box error" data-bind="visible: !isEcoModeAvailable()">
+              <h4>MQTT config not configured with Solar PV / Grid topic.</h4>
+              Solar PV Divert requires the SolarPV-gen or Grid (+I/-E) MQTT topic to be defined.
+            </div>
+
+            <div class="box" data-bind="visible: showSolarDivert()">
+              <div>Dynamically adjust charge rate based on solar PV generation or excess power (grid export).</div>
+              <p>
+                <ul>
+                  <li><span class="small-text">If only solar PV feed available: charge rate is modulated based on <b>solar PV generation.</b></span></li>
+                  <li><span class="small-text">If grid +I/-E (positive Import / negative Export) feed is available: charge rate will be modulated by available  <b>excess power.</b></span></li>
+                  <li><span class="small-text">If EVSE is sleeping: charging will begin when solar PV / excess power > min charge rate.</span></li>
+                  <li><span class="small-text">Charging will pause if the excess power drops below the nim charge rate for a period of time.</span></li>
+                </ul>
+                <span class="small-text"><i>Note: It's assumed that EVSE power is included in the grid feed</i></span><br>
+              </p>
+            </div>
+
+            <div data-bind="visible: config.divert_enabled() &amp;&amp; isEcoModeAvailable()">
+              <br>
+              <span data-bind="visible: haveSolar"><b>Solar:</b></span>
+              <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
+              <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
+              <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
+              <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
+            </div>
+            
+            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>SolarPV-gen topic:</b>
+              <input data-bind="textInput: config.mqtt_solar, enable: '' === config.mqtt_grid_ie()" type="text" autocapitalize="none" hint="emon/emonpi/power2"><br>
+              <span class="small-text">Solar PV MQTT topic to modulate charge rate based on solar
+            </p>
+
+            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>Grid (+I/-E) topic:</b><br>
+              <input data-bind="textInput: config.mqtt_grid_ie, enable: '' === config.mqtt_solar()" type="text" autocapitalize="none" hint="emon/emonpi/power1"><br>
+              <span class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
+            </p>
+
+            <p data-bind="visible: isEcoModeAvailable">
+              <button data-bind="click: divertGroup.save, text: (divertGroup.fetching() ? 'Saving' : (divertGroup.success() ? 'Saved' : 'Save')), disable: divertGroup.fetching">Save</button>
             </p>
           </div>
         </div>
@@ -424,6 +455,14 @@
                 <td><span data-bind="text: openevse.time.elapsed"></span></td>
               </tr>
             </table>
+            <div data-bind="visible: config.divert_enabled() &amp;&amp; isEcoModeAvailable()">
+              <br>
+              <span data-bind="visible: haveSolar"><b>Solar:</b></span>
+              <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
+              <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
+              <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
+              <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
+            </div>
           </div>
 
           <!-- Session Options -->
@@ -490,53 +529,6 @@
                 <td><span data-bind="text: scaleString(status.watthour(), 1000, 2)+ ' kWh'"></span></td>
               </tr>
             </table>
-          </div>
-
-          <!-- Divert Mode -->
-          <div class="box380 right" data-bind="visible: status.rapi_connected">
-            <h2>Charge Mode <span class="info" data-bind="click: toggle.bind($data, showSolarDivert)"></span></h2>
-
-            <div class="box error" data-bind="visible: !isEcoModeAvailable()">
-              <h4>MQTT config not configured with Solar PV / Grid topic.</h4>
-              Solar PV Divert requires the SolarPV-gen or Grid (+I/-E) MQTT topic to be defined on the
-              <a href="#services" data-bind="click: function() { tab('services'); config.mqtt_enabled(true); }">Services</a>
-              tab.
-            </div>
-
-            <div class="box" data-bind="visible: showSolarDivert()">
-              <div>Dynamically adjust charge rate based on solar PV generation or excess power (grid export).</div>
-              <p>
-                <b>1. Normal (default):</b>
-                <ul>
-                  <li><span class="small-text">Charge at maximum current set by EVSE.</span></li>
-                </ul>
-                <b>2. Eco (solar PV divert):</b>
-                <ul>
-                  <li><span class="small-text">If only solar PV feed available: charge rate is modulated based on <b>solar PV generation.</b></span></li>
-                  <li><span class="small-text">If grid +I/-E (positive Import / negative Export) feed is available: charge rate will be modulated by available  <b>excess power.</b></span></li>
-                  <li><span class="small-text">If EVSE is sleeping: charging will begin when solar PV / excess power > min charge rate.</span></li>
-                  <li><span class="small-text">Charging will not pause; this avoids excess wear on the EVSE relay and the EV.</span></li>
-                </ul>
-                <span class="small-text"><i>Note: It's assumed that EVSE power is included in the grid feed</i></span><br><br>
-                <span class="small-text"><i>Charging mode can also be set via MQTT:<br>{base-topic}/divertmode/set</i></span>
-              </p>
-            </div>
-            <div data-bind="visible: isEcoModeAvailable">
-              <span data-bind="css: {selected: !ecoMode() }">Normal (max)</span>
-              <label class="switch">
-                <input type="checkbox" data-bind="checked: ecoMode" />
-                <div class="slider round"></div>
-              </label>
-              <span data-bind="css: {selected: ecoMode }">Eco (PV divert)</span><br/>
-            </div>
-            <div data-bind="visible: isEcoModeAvailable">
-              <br>
-              <span data-bind="visible: haveSolar"><b>Solar:</b></span>
-              <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
-              <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
-              <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
-              <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
-            </div>
           </div>
 
           <!-- Sensor Values -->

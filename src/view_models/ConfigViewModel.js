@@ -24,6 +24,7 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_pass": "",
     "mqtt_solar": "",
     "mqtt_grid_ie": "",
+    "mqtt_vrms": "",
     "mqtt_enabled": 0,
     "mqtt_supported_protocols": ["mqtt"],
     "http_supported_protocols": [],
@@ -46,7 +47,11 @@ function ConfigViewModel(baseEndpoint) {
     "scale": 1,
     "offset": 0,
     "version": "0.0.0",
-    "time_zone": false
+    "time_zone": false,
+    "divert_enabled": false,
+    "divert_attack_smoothing_factor": 0.4,
+    "divert_decay_smoothing_factor": 0.05,
+    "divert_min_charge_time": 600
   }, endpoint);
 }
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);
