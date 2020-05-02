@@ -175,12 +175,12 @@
               <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
               <span class="small-text validMessage">31 characters max</span>
             </p>
-            <p data-bind="visible: false !== config.sntp_host()">
+            <p data-bind="visible: false !== config.sntp_hostname()">
               <b>NTP Server:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_server" pattern=".{31}">
+              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname" pattern=".{31}">
             </p>
             <p>
-              <button data-bind="click: saveAdvanced, text: (saveAdvancedFetching() ? 'Saving' : (saveAdvancedSuccess() ? 'Saved' : 'Save')), disable: saveAdvancedFetching">Save</button>
+              <button data-bind="click: advancedGroup.save, text: (advancedGroup.fetching() ? 'Saving' : (advancedGroup.success() ? 'Saved' : 'Save')), disable: advancedGroup.fetching">Save</button>
             </p>
           </div>
 

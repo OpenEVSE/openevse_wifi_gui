@@ -387,39 +387,27 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   // -----------------------------------------------------------------------
   // Event: Advanced save
   // -----------------------------------------------------------------------
-  self.saveAdvancedFetching = ko.observable(false);
-  self.saveAdvancedSuccess = ko.observable(false);
-  self.saveAdvanced = function () {
-    self.saveAdvancedFetching(true);
-    self.saveAdvancedSuccess(false);
-
-    var opts = {
-      hostname: self.config.hostname(),
-      sntp_host: self.config.sntp_host()
+  self.advancedGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      est_hostname: self.config.hostname(),
+      sntp_hostname: self.config.sntp_hostname()
     };
-
-    $.post(self.baseEndpoint() + "/saveadvanced", opts, function () {
-      self.saveAdvancedSuccess(true);
-      if (confirm("These changes require a reboot to take effect. Reboot now?")) {
-        $.post(self.baseEndpoint() + "/restart", { }, function () {
-          setTimeout(() => {
-            var newLocation = "http://" + self.config.hostname() + ".local";
-            if(80 != self.basePort()) {
-              newLocation += ":" + self.basePort();
-            }
-            newLocation += "/";
-            window.location.replace(newLocation);
-          }, 5*1000);
-        }).fail(function () {
-          alert("Failed to restart");
-        });
-      }
-    }).fail(function () {
-      alert("Failed to save Advanced config");
-    }).always(function () {
-      self.saveAdvancedFetching(false);
-    });
-  };
+  }).done(() => {
+    if (confirm("These changes require a reboot to take effect. Reboot now?")) {
+      $.post(self.baseEndpoint() + "/restart", { }, function () {
+        setTimeout(() => {
+          var newLocation = "http://" + self.config.hostname() + ".local";
+          if(80 != self.basePort()) {
+            newLocation += ":" + self.basePort();
+          }
+          newLocation += "/";
+          window.location.replace(newLocation);
+        }, 5*1000);
+      }).fail(function () {
+        alert("Failed to restart");
+      });
+    }
+  });
 
   // -----------------------------------------------------------------------
   // Event: Emoncms save
@@ -470,7 +458,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       mqtt_pass: self.config.mqtt_pass(),
       mqtt_vrms: self.config.mqtt_vrms()
     };
-  }, (mqtt) => {
+  }).validate((mqtt) => {
     if(!self.config.mqtt_enabled()) {
       self.config.divert_enabled(false);
     }
@@ -495,7 +483,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       divert_decay_smoothing_factor: self.config.divert_decay_smoothing_factor(),
       divert_min_charge_time: self.config.divert_min_charge_time()
     };
-  }, (divert) => {
+  }).validate((divert) => {
     if (divert.divert_enabled && divert.mqtt_solar === "" && divert.mqtt_grid_ie === "") {
       alert("Please enter either a Solar PV or Grid I/E feed");
       return false;

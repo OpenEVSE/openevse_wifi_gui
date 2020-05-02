@@ -34,7 +34,7 @@ function ConfigViewModel(baseEndpoint) {
     "www_password": "",
     "hostname": false,
     "sntp_enabled": false,
-    "sntp_host": false,
+    "sntp_hostname": false,
     "firmware": "-",
     "protocol": "-",
     "espflash": 0,
