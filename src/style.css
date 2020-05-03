@@ -201,7 +201,7 @@ select {
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-top: 10px;
-  width: 280px;
+  width: 100%;
   padding:5px;
 }
 
@@ -561,11 +561,25 @@ border: none;
 }
 
 .protocol input {
-  width: 195px;
+  width: 295px;
 }
 
 @media screen and (max-width: 420px) {
   .protocol input {
     width: 155px;
+  }  
+}
+
+.divert select {
+  width: 110px;
+}
+
+.divert input {
+  width: 265px;
+}
+
+@media screen and (max-width: 420px) {
+  .divert input {
+    width: 115px;
   }  
 }

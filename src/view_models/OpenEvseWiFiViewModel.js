@@ -492,6 +492,64 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     return true;
   });
 
+  self.isEcoModeAvailable = ko.pureComputed(function () {
+    return self.config.mqtt_enabled() &&
+           ("" !== self.config.mqtt_solar() ||
+            "" !== self.config.mqtt_grid_ie());
+  });
+
+  self.ecoMode = ko.pureComputed({
+    read: function () {
+      return 2 === self.status.divertmode();
+    },
+    write: function(val) {
+      self.changeDivertMode(val ? 2 : 1);
+    }
+  });
+
+  self.haveSolar =ko.pureComputed(function () {
+    return "" !== self.config.mqtt_solar();
+  });
+
+  self.haveGridIe =ko.pureComputed(function () {
+    return "" !== self.config.mqtt_grid_ie();
+  });
+
+  self._divertFeedType = "grid_ie";
+  self.divertFeedType = ko.computed({
+    read: () => {
+      var ret = self.haveSolar() ? "solar" :
+                self.haveGridIe() ? "grid_ie" : 
+                self._divertFeedType;
+      self._divertFeedType = ret;
+      return ret;
+    },
+    write: (val) => {
+      if("solar" === val && self.haveGridIe()) {
+        self.config.mqtt_solar(self.config.mqtt_grid_ie());
+        self.config.mqtt_grid_ie("");
+      } else if("grid_ie" === val && self.haveSolar()) {
+        self.config.mqtt_grid_ie(self.config.mqtt_solar());
+        self.config.mqtt_solar("");
+      }
+      self._divertFeedType = val;
+    }
+  });
+  self.divertFeedValue = ko.computed({
+    read: () => {
+      return "solar" === self.divertFeedType() ? 
+                self.config.mqtt_solar() :
+                self.config.mqtt_grid_ie();
+    },
+    write: (val) => {
+      if("solar" === self.divertFeedType()) {
+        self.config.mqtt_solar(val);
+      } else {
+        self.config.mqtt_grid_ie(val);
+      }
+    }
+  });
+
   // -----------------------------------------------------------------------
   // Event: Save Ohm Connect Key
   // -----------------------------------------------------------------------
@@ -576,49 +634,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       self.turnOffAccessPointFetching(false);
     });
   };
-
-  // -----------------------------------------------------------------------
-  // Event: Change divertmode (solar PV divert)
-  // -----------------------------------------------------------------------
-  self.changeDivertModeFetching = ko.observable(false);
-  self.changeDivertModeSuccess = ko.observable(false);
-  self.changeDivertMode = function(divertmode) {
-    if(self.status.divertmode() !== divertmode) {
-      self.status.divertmode(divertmode);
-      self.changeDivertModeFetching(true);
-      self.changeDivertModeSuccess(false);
-      $.post(self.baseEndpoint() + "/divertmode", { divertmode: divertmode }, function () {
-        self.changeDivertModeSuccess(true);
-      }).fail(function () {
-        alert("Failed to set divert mode");
-      }).always(function () {
-        self.changeDivertModeFetching(false);
-      });
-    }
-  };
-
-  self.isEcoModeAvailable = ko.pureComputed(function () {
-    return self.config.mqtt_enabled() &&
-           ("" !== self.config.mqtt_solar() ||
-            "" !== self.config.mqtt_grid_ie());
-  });
-
-  self.ecoMode = ko.pureComputed({
-    read: function () {
-      return 2 === self.status.divertmode();
-    },
-    write: function(val) {
-      self.changeDivertMode(val ? 2 : 1);
-    }
-  });
-
-  self.haveSolar =ko.pureComputed(function () {
-    return "" !== self.config.mqtt_solar();
-  });
-
-  self.haveGridIe =ko.pureComputed(function () {
-    return "" !== self.config.mqtt_grid_ie();
-  });
 
   // -----------------------------------------------------------------------
   // Event: Reset config and reboot

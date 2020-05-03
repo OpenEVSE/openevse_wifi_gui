@@ -366,15 +366,15 @@
           <div class="box380 right">
             <h2>Solar PV divert</h2>
             
-            <p data-bind="visible: isEcoModeAvailable">
+            <p data-bind="visible: config.mqtt_enabled">
               <input type="checkbox" id="divert_enabled" data-bind="checked: config.divert_enabled" />
               <label for="divert_enabled"><b>Enable Solar PV Divert</b></label>
               <span class="info" data-bind="click: toggle.bind($data, showSolarDivert)"></span>
             </p>
 
-            <div class="box error" data-bind="visible: !isEcoModeAvailable()">
-              <h4>MQTT config not configured with Solar PV / Grid topic.</h4>
-              Solar PV Divert requires the SolarPV-gen or Grid (+I/-E) MQTT topic to be defined.
+            <div class="box error" data-bind="visible: !config.mqtt_enabled()">
+              <h4>MQTT not enabled.</h4>
+              Solar PV Divert requires an SolarPV-gen or Grid (+I/-E) feed to be delivered via MQTT.
             </div>
 
             <div class="box" data-bind="visible: showSolarDivert()">
@@ -390,26 +390,27 @@
               </p>
             </div>
 
-            <div data-bind="visible: config.divert_enabled() &amp;&amp; isEcoModeAvailable()">
+            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
               <br>
-              <span data-bind="visible: haveSolar"><b>Solar:</b></span>
-              <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
-              <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
+              <span data-bind="visible: divertFeedType() === 'solar'"><b>Solar:</b></span>
+              <span data-bind="visible: divertFeedType() === 'grid_ie'"><b>Grid Import/Export:</b></span>
+              <span data-bind="text: divertFeedType() === 'grid_ie' ? status.grid_ie() : status.solar()"></span>W -
               <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
               <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
-            </div>
+            </p>
             
-            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
-              <b>SolarPV-gen topic:</b>
-              <input data-bind="textInput: config.mqtt_solar, enable: '' === config.mqtt_grid_ie()" type="text" autocapitalize="none" hint="emon/emonpi/power2"><br>
-              <span class="small-text">Solar PV MQTT topic to modulate charge rate based on solar
-            </p>
-
-            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
-              <b>Grid (+I/-E) topic:</b><br>
-              <input data-bind="textInput: config.mqtt_grid_ie, enable: '' === config.mqtt_solar()" type="text" autocapitalize="none" hint="emon/emonpi/power1"><br>
-              <span class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
-            </p>
+            <div data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>Feed*:</b><br>
+              <div class="divert">
+                <select data-bind="value: divertFeedType">
+                  <option value="solar">SolarPV-gen</option>
+                  <option value="grid_ie">Grid (+I/-E)</option>
+                </select>
+                <input data-bind="textInput: divertFeedValue" type="text" autocapitalize="none"><br/>
+                <span data-bind="visible: divertFeedType() === 'solar'" class="small-text">Solar PV MQTT topic to modulate charge rate based on solar</span>
+                <span data-bind="visible: divertFeedType() === 'grid_ie'" class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
+              </div>
+            </div>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
               <b>Divert smoothing attack:</b><br>
