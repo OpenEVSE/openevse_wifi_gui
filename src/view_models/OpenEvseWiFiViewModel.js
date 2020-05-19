@@ -389,7 +389,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   // -----------------------------------------------------------------------
   self.advancedGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
     return {
-      est_hostname: self.config.hostname(),
+      hostname: self.config.hostname(),
       sntp_hostname: self.config.sntp_hostname()
     };
   }).done(() => {
