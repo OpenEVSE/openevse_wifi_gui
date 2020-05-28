@@ -51,7 +51,8 @@ function ConfigViewModel(baseEndpoint) {
     "divert_enabled": false,
     "divert_attack_smoothing_factor": 0.4,
     "divert_decay_smoothing_factor": 0.05,
-    "divert_min_charge_time": 600
+    "divert_min_charge_time": 600,
+    "charge_mode": "full"
   }, endpoint);
 }
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);

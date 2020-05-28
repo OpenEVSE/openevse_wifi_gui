@@ -474,13 +474,27 @@
                 <td><span data-bind="text: openevse.time.elapsed"></span></td>
               </tr>
             </table>
-            <div data-bind="visible: config.divert_enabled() &amp;&amp; isEcoModeAvailable()">
+            
+            <div data-bind="visible: ecoMode() &amp;&amp; isEcoModeAvailable()">
               <br>
               <span data-bind="visible: haveSolar"><b>Solar:</b></span>
               <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
               <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
               <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
-              <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
+              |
+              <span data-bind="visible: openevse.isReady()"><b>Vehicle not connected</b></span>
+              <span data-bind="visible: openevse.isSleeping() || (openevse.isConnected() &amp;&amp; !openevse.isCharging())"><b>Waiting for solar</b></span>
+              <span data-bind="visible: openevse.isCharging()"><b>Charging from solar</b></span>
+              <!--span data-bind="visible: openevse.isCharging()"><b>Fast charging</b></span-->
+              <span data-bind="visible: openevse.isCharging()">
+                | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A
+              </span>
+              <span data-bind="visible: advancedMode">
+                <br/>
+                <b>Voltage:</b> <span data-bind="text: status.voltage"></span>V
+                <span data-bind="visible: status.avalible_current() !== false">| <b>Avalible Current:</b> <span data-bind="text: status.avalible_current"></span>A</span>
+                <span data-bind="visible: status.smoothed_avalible_current() !== false">| <b>Smoothed Current:</b> <span data-bind="text: status.smoothed_avalible_current"></span>A</span>
+              </span>
             </div>
           </div>
 
@@ -488,30 +502,43 @@
           <div class="box380 left" data-bind="visible: status.rapi_connected">
             <h2>Charge Options</h2>
 
-            <p data-bind="with: openevse, visible: !openevse.isError()">
+            <div data-bind="visible: isEcoModeAvailable">
+              <span data-bind="css: {selected: !ecoMode() }">Normal (fast)</span>
+              <label class="switch">
+                <input type="checkbox" data-bind="checked: ecoMode" />
+                <div class="slider round"></div>
+              </label>
+              <span data-bind="css: {selected: ecoMode }">Eco (PV divert)</span><br/>
+            </div>
+
+            <p data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
               <button data-bind="click: setStatus.bind($data, 'enable'), visible: !isEnabled()">Start</button>
               <button data-bind="click: setStatus.bind($data, 'sleep'), visible: !isSleeping()">Pause</button>
             </p>
-            <hr>
-            <p data-bind="with: openevse">
-              <b>Time limit:</b><br>
-              <select data-bind="options: timeLimits,
-                                 optionsText: 'name',
-                                 optionsValue: 'value',
-                                 value: timeLimit,
-                                 enable: !updatingTimeLimit() &amp;&amp; isConnected(),
-                                 css: { saved: savedTimeLimit }"></select>
-            </p>
 
-            <p data-bind="with: openevse">
-              <b>Energy limit:</b><br>
-              <select type="text" data-bind="options: chargeLimits,
-                                             optionsText: 'name',
-                                             optionsValue: 'value',
-                                             value: chargeLimit,
-                                             enable: !updatingChargeLimit() &amp;&amp; isConnected(),
-                                             css: { saved: savedChargeLimit }" ></select>
-            </p>
+            <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
+              <hr \>
+              <p>
+                <b>Time limit:</b><br\>
+                <select data-bind="options: timeLimits,
+                optionsText: 'name',
+                optionsValue: 'value',
+                value: timeLimit,
+                enable: !updatingTimeLimit() &amp;&amp; isConnected(),
+                css: { saved: savedTimeLimit }"></select>
+              </p>
+              
+              <p>
+                <b>Energy limit:</b><br\>
+                <select type="text" data-bind="options: chargeLimits,
+                optionsText: 'name',
+                optionsValue: 'value',
+                value: chargeLimit,
+                enable: !updatingChargeLimit() &amp;&amp; isConnected(),
+                css: { saved: savedChargeLimit }" ></select>
+              </p>
+            </span>
+
             <hr> <br>
             <div data-bind="with: openevse">
               <b>Timer:</b><br>

@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -492,6 +492,12 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     return true;
   });
 
+  self.chargeMode = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      charge_mode: self.config.charge_mode()
+    };
+  });
+
   self.isEcoModeAvailable = ko.pureComputed(function () {
     return self.config.mqtt_enabled() &&
            ("" !== self.config.mqtt_solar() ||
@@ -500,14 +506,23 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
   self.ecoMode = ko.pureComputed({
     read: function () {
-      return 2 === self.status.divertmode();
+      return "eco" === self.config.charge_mode();
     },
     write: function(val) {
-      self.changeDivertMode(val ? 2 : 1);
+      self.config.charge_mode((val && self.config.divert_enabled()) ? "eco" : "fast");
+      self.chargeMode.save();
     }
   });
 
-  self.haveSolar =ko.pureComputed(function () {
+  self.status.divertmode.subscribe((val) => {
+    switch(val)
+    {
+      case 1: self.config.charge_mode("fast"); break;
+      case 2: self.config.charge_mode("eco"); break;
+    }
+  });
+
+  self.haveSolar = ko.pureComputed(function () {
     return "" !== self.config.mqtt_solar();
   });
 

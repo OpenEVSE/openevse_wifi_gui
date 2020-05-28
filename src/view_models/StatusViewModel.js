@@ -22,6 +22,7 @@ function StatusViewModel(baseEndpoint) {
     "comm_success": 0,
     "rapi_connected": true,
     "amp": 0,
+    "voltage": false,
     "pilot": 0,
     "temp1": 0,
     "temp2": 0,
@@ -37,7 +38,10 @@ function StatusViewModel(baseEndpoint) {
     "solar": 0,
     "grid_ie": 0,
     "charge_rate": 0,
+    "avalible_current": false,
+    "smoothed_avalible_current": false,
     "divert_update": 0,
+    "divert_active": false,
     "ota_update": false,
     "time": false,
     "offset": false
