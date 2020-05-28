@@ -39,7 +39,6 @@ module.exports = {
     index: "home.html",
     proxy: [{
       context: [
-        "/ws",
         "/config",
         "/status",
         "/update",
@@ -58,6 +57,11 @@ module.exports = {
         "/divertmode"
       ],
       target: openevseEndpoint
+    },
+    {
+      context: [ "/ws" ],
+      target: openevseEndpoint,
+      ws: true
     }]
   },
   module: {
