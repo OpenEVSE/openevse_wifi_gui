@@ -34,7 +34,7 @@
 /* exported scaleString */
 function scaleString(string, scale, precision) {
   "use strict";
-  var tmpval = parseInt(string) / scale;
+  var tmpval = ("number" === (typeof string) ? string : parseInt(string)) / scale;
   return tmpval.toFixed(precision);
 }
 

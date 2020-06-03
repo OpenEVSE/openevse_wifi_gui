@@ -593,15 +593,19 @@
                 <td>Current Now:</td>
                 <td><span data-bind="text: scaleString(status.amp(), 1000, 2) + ' A'"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: false !== status.voltage()">
+                <td>Voltage:</td>
+                <td><span data-bind="text: scaleString(status.voltage(), 1, 2) + ' V'"></span></td>
+              </tr>
+              <tr data-bind="visible: false !== status.temp1()">
                 <td>Temp1:</td>
                 <td><span data-bind="text: scaleString(status.temp1(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: false !== status.temp2()">
                 <td>Temp2:</td>
                 <td><span data-bind="text: scaleString(status.temp2(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: false !== status.temp3()">
                 <td>Temp3:</td>
                 <td><span data-bind="text: scaleString(status.temp3(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
