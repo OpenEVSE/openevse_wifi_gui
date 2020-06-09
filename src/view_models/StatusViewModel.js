@@ -15,6 +15,7 @@ function StatusViewModel(baseEndpoint) {
     "packets_sent": 0,
     "packets_success": 0,
     "emoncms_connected": 0,
+    "emoncms_message": false,
     "mqtt_connected": 0,
     "ohm_hour": "",
     "free_heap": 0,
