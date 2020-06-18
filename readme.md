@@ -20,7 +20,7 @@ You can configure the dev server using [dotenv](https://www.npmjs.com/package/do
 
 `OPENEVSE_ENDPOINT` - URL of the OpenEVSE to test against.
 
-`DEV_HOST` - By default the dev server is only avalible to localhost. If you want to expose the server to the local network then set this to the IP address or hostname of the external network interface.
+`DEV_HOST` - By default the dev server is only available to localhost. If you want to expose the server to the local network then set this to the IP address or hostname of the external network interface.
 
 ### Starting
 
