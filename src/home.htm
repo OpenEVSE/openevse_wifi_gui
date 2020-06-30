@@ -635,7 +635,7 @@
               <select data-bind="value: timeSource" style="width: 100px">
                 <option value="manual">Manual</option>
                 <option value="browser">Browser</option>
-                <option value="ntp">NTP</option>
+                <option value="ntp" data-bind="visible: false !== config.sntp_hostname()">NTP</option>
               </select>
               <button data-bind="click: setTime, text: (setTimeFetching() ? 'Saving' : (setTimeSuccess() ? 'Saved' : 'Set time')), disable: setTimeFetching">Set time</button>
             </div>
