@@ -187,7 +187,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
         var host = parts.length > 1 ? parts[1] : val;
         self.config.emoncms_server(proto + "://" + host);
       } else {
-        self.config.emoncms_server();
+        self.config.emoncms_server(val);
       }
     }
   });
