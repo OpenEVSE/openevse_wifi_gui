@@ -39,6 +39,8 @@
         <label for="tab-2">Services</label>
         <input id="tab-4" type="radio" name="tab-group" data-bind="checked: tab" value="rapi" />
         <label for="tab-4" data-bind="visible: developerMode() &amp;&amp; status.rapi_connected()">RAPI</label>
+        <input id="tab-5" type="radio" name="tab-group" data-bind="checked: tab" value="console" />
+        <label for="tab-5" data-bind="visible: developerMode() &amp;&amp; status.rapi_connected()">Console</label>
       </div>
 
       <div id="content">
@@ -1051,6 +1053,17 @@
           </div>
         </div>
         <!--end TAB 4-->
+
+        <!--TAB 5 - consoles -->
+        <div id="content-5" data-bind="visible: isConsole">
+          <pre id="serialDebug" class="console">
+            <div data-bind="text: serialDebug.console()"></div>
+          </pre>
+          <pre id="serialEvse" class="console">
+            <div data-bind="text: serialEvse.console()"></div>
+          </pre>
+        </div>
+        <!--end TAB 4-->        
       </div>
       <!--end content-->
 
