@@ -1,4 +1,4 @@
-/* global ko, ConfigViewModel, StatusViewModel, WiFiScanViewModel, WiFiConfigViewModel */
+/* global ko, ConfigViewModel, StatusViewModel, WiFiScanViewModel, WiFiConfigViewModel, PasswordViewModel */
 /* exported WiFiPortalViewModel */
 
 function WiFiPortalViewModel(baseHost, basePort)
@@ -23,6 +23,19 @@ function WiFiPortalViewModel(baseHost, basePort)
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
+
+  self.wifi.selectedNet.subscribe((net) => {
+    if(false !== net) {
+      self.config.ssid(net.ssid());
+    }
+  });
+
+  self.config.ssid.subscribe((ssid) => {
+    self.wifi.setSsid(ssid);
+  });
+
+  // Show/hide password state
+  self.wifiPassword = new PasswordViewModel(self.config.pass);
 
   var updateTimer = null;
   var updateTime = 5 * 1000;

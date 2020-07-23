@@ -50,6 +50,8 @@ function TimeViewModel(openevse)
       return (dt.getFullYear())+"-"+addZero(dt.getMonth() + 1)+"-"+addZero(dt.getDate());
     },
     write: function (val) {
+      var dt = self.evseTimedate();
+      val += " " + addZero(dt.getHours())+":"+addZero(dt.getMinutes())+":"+addZero(dt.getSeconds());
       self.evseTimedate(new Date(val));
       self.localTimedate(new Date());
     }});
@@ -104,11 +106,7 @@ function TimeViewModel(openevse)
 
   var timeUpdateTimeout = null;
   self.automaticTime = ko.observable(true);
-  self.setTime = function () {
-    var newTime = self.automaticTime() ? new Date() : self.evseTimedate();
-    // IMPROVE: set a few times and work out an average transmission delay, PID loop?
-    openevse.openevse.time(self.timeUpdate, newTime);
-  };
+
   self.timeUpdate = function (date,valid=true) {
     self.hasRTC(valid);
     stopTimeUpdate();

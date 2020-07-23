@@ -24,13 +24,17 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_pass": "",
     "mqtt_solar": "",
     "mqtt_grid_ie": "",
+    "mqtt_vrms": "",
     "mqtt_enabled": 0,
     "mqtt_supported_protocols": ["mqtt"],
+    "http_supported_protocols": [],
     "ohm_enabled": 0,
     "ohmkey": "",
     "www_username": "",
     "www_password": "",
-    "hostname": "openevse",
+    "hostname": false,
+    "sntp_enabled": false,
+    "sntp_hostname": false,
     "firmware": "-",
     "protocol": "-",
     "espflash": 0,
@@ -42,7 +46,13 @@ function ConfigViewModel(baseEndpoint) {
     "tempt": 0,
     "scale": 1,
     "offset": 0,
-    "version": "0.0.0"
+    "version": "0.0.0",
+    "time_zone": false,
+    "divert_enabled": false,
+    "divert_attack_smoothing_factor": 0.4,
+    "divert_decay_smoothing_factor": 0.05,
+    "divert_min_charge_time": 600,
+    "charge_mode": "full"
   }, endpoint);
 }
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);
@@ -55,6 +65,10 @@ ConfigViewModel.prototype.update = function (after = function () { }) {
     this.mqtt_protocol_enable(data.hasOwnProperty("mqtt_protocol"));
     this.mqtt_port_enable(data.hasOwnProperty("mqtt_port"));
     this.mqtt_reject_unauthorized_enable(data.hasOwnProperty("mqtt_reject_unauthorized"));
+    // HACK: not sure why this is needed
+    if(data.hasOwnProperty("mqtt_protocol")) {
+      this.mqtt_protocol(data.mqtt_protocol);
+    }
   }, "json").always(() => {
     this.fetching(false);
     after();

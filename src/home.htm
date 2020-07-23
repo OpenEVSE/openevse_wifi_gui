@@ -38,7 +38,7 @@
         <input id="tab-2" type="radio" name="tab-group" data-bind="checked: tab" value="services" />
         <label for="tab-2">Services</label>
         <input id="tab-4" type="radio" name="tab-group" data-bind="checked: tab" value="rapi" />
-        <label for="tab-4" data-bind="visible: developerMode">RAPI</label>
+        <label for="tab-4" data-bind="visible: developerMode() &amp;&amp; status.rapi_connected()">RAPI</label>
       </div>
 
       <div id="content">
@@ -83,30 +83,33 @@
 
             <div id="ap-view" data-bind="visible: wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting() &amp;&amp; !status.isWired()">
               <p>Connect to network:</p>
-              <table>
-                <tr>
-                  <th>Select</th>
-                  <th>Network</th>
-                  <th>RSSI dBm</th>
-                </tr>
-                <tbody id="networks" data-bind="foreach: scan.results">
-                  <tr>
-                    <td><input class='networkcheckbox' name='network' data-bind="checkedValue: bssid(), checked: $root.wifi.bssid"
-                        type='radio'></td>
-                    <td data-bind="text: ssid"></td>
-                    <td data-bind="text: rssi"></td>
-                  </tr>
-                </tbody>
-                <tfoot data-bind="visible: 0 == scan.results().length">
-                  <tr>
-                    <td colspan="3">Scanning...</td>
-                  </tr>
-                </tfoot>
-              </table>
-              <p data-bind="text: config.ssid"></p>
+
+              <div id="wifiList">
+                <ul class="list-group" data-bind="foreach: scan.filteredResults, visible: 0 != scan.results().length">
+                  <li class="list-group-item" data-bind="click: $root.wifi.select, css: { active: $root.wifi.selectedNet() === $data }">
+                    <span  data-bind="text: ssid"></span>
+                    <img width="24px" height="24px" data-bind="attr:{src: 'wifi_signal_'+strength()+'.svg'}" />
+                  </li>
+                </ul>
+              </div>
+
+              <div data-bind="visible: 0 == scan.results().length">
+                Scanning...
+              </div>
+
+              <p>
+                <b>SSID:</b><br>
+                <input type="text" autocapitalize="none" data-bind="textInput: config.ssid">
+              </p>
               <p>
                 <b>Passkey:</b><br>
-                <input type="text" autocapitalize="none" autocapitalize="none" data-bind="textInput: config.pass">
+                <input type="text" autocapitalize="none" data-bind="textInput: wifiPassword.value, attr: { type: wifiPassword.show() ? 'text' : 'password' }"><br/>
+                <div>
+                  <input id="wifipassword" type="checkbox" data-bind="checked: wifiPassword.show" />
+                  <label for="wifipassword">Show password</label>
+                </div>
+              </p>
+              <p>
                 <button data-bind="click: wifi.saveNetwork, text: (wifi.saveNetworkFetching() ? 'Saving' : (wifi.saveNetworkSuccess() ? 'Saved' : 'Connect')), disable: wifi.saveNetworkFetching">Connect</button>
               </p>
             </div>
@@ -125,7 +128,11 @@
             </p>
             <p>
               <b>Password:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.www_password" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="" >
+              <input type="password" autocapitalize="none" data-bind="textInput: wwwPassword.value, attr: { type: wwwPassword.show() ? 'text' : 'password' }" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="" /><br />
+              <span>
+                <input id="wwwPassword" type="checkbox" data-bind="checked: wwwPassword.show" />
+                <label for="wwwPassword">Show password</label>
+              </span><br />
               <span class="small-text validMessage">15 characters max</span><br>
               <span class="small-text">Web interface HTTP authentication.</span><br><br>
               <button data-bind="click: saveAdmin, text: (saveAdminFetching() ? 'Saving' : (saveAdminSuccess() ? 'Saved' : 'Save')), disable: saveAdminFetching">Save</button>
@@ -162,13 +169,17 @@
 
           <div class="box380 left" data-bind="visible: advancedMode()">
             <h2>Advanced Settings</h2>
-            <p>
+            <p data-bind="visible: false !== config.hostname()">
               <b>Hostname:</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
               <span class="small-text validMessage">31 characters max</span>
             </p>
+            <p data-bind="visible: false !== config.sntp_hostname()">
+              <b>NTP Server:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname" pattern=".{31}">
+            </p>
             <p>
-              <button data-bind="click: saveAdvanced, text: (saveAdvancedFetching() ? 'Saving' : (saveAdvancedSuccess() ? 'Saved' : 'Save')), disable: saveAdvancedFetching">Save</button>
+              <button data-bind="click: advancedGroup.save, text: (advancedGroup.fetching() ? 'Saving' : (advancedGroup.success() ? 'Saved' : 'Save')), disable: advancedGroup.fetching">Save</button>
             </p>
           </div>
 
@@ -187,29 +198,41 @@
 
         <div id="content-2" data-bind="visible: isServices">
           <div class="box380 left">
-            <h2>&nbsp; Energy Monitoring <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="emoncms.jpg" align=left></h2>
+            <h2>&nbsp; Energy Monitoring <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="emoncms.jpg" align="left" /></h2>
             <p>
               <input type="checkbox" id="emoncms_enabled" data-bind="checked: config.emoncms_enabled" />
               <label for="emoncms_enabled"><b>Enable Emoncms</b></label>
             </p>
-            <p data-bind="visible: config.emoncms_enabled">
-              <b>Emoncms Server*:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_server"><br/>
-              <span class="small-text">e.g:
-                <a href="http://data.openevse.com/emoncms">data.openevse.com/emoncms</a>,
+            <div data-bind="visible: config.emoncms_enabled">
+              <div><b>Emoncms Server*:</b></div>
+              <div data-bind="css: { protocol: config.http_supported_protocols().length > 0 }">
+                <select data-bind="visible: config.http_supported_protocols().length > 0,
+                  options: config.http_supported_protocols,
+                  optionsText: function(item) {
+                    return item + '://'
+                  },
+                  value: emoncms_protocol"></select>
+                <input type="text" autocapitalize="none" data-bind="textInput: emoncms_server">
+              </div>
+              <div class="small-text">e.g:
+                <a href="https://data.openevse.com/emoncms">data.openevse.com/emoncms</a>,
                 <a href="https://emoncms.org">emoncms.org</a>,
                 <a href="http://emonpi/emoncms">emonpi/emoncms</a>
-              </span><br>
-            </p>
+              </div>
+            </div>
             <p data-bind="visible: config.emoncms_enabled">
               <b>Emoncms Node*:</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_node">
             </p>
             <p data-bind="visible: config.emoncms_enabled">
-              <b>Emoncms write-apikey*:</b><br>
-              <input type="password" autocapitalize="none" data-bind="textInput: config.emoncms_apikey"><br>
+              <b>Emoncms write-apikey*:</b><br />
+              <input type="password" autocapitalize="none" data-bind="textInput: emoncmsApiKey.value, attr: { type: emoncmsApiKey.show() ? 'text' : 'password' }" /><br />
+              <span>
+                <input id="emoncmsApiKey" type="checkbox" data-bind="checked: emoncmsApiKey.show" />
+                <label for="emoncmsApiKey">Show password</label>
+              </span>
             </p>
-            <p data-bind="visible: config.emoncms_enabled">
+            <p data-bind="visible: config.emoncms_enabled && config.http_supported_protocols().length === 0">
               <b>Emoncms SSL SHA-1 Fingerprint (optional):</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_fingerprint"><br>
               <br><span class="small-text">HTTPS will be enabled if present e.g:</span>
@@ -222,6 +245,7 @@
               <span data-bind="visible: config.emoncms_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.emoncms_connected() ? 'Yes' : 'No'"></span></b></span>
               <span data-bind="visible: config.emoncms_enabled() &amp;&amp; 1 === status.emoncms_connected()"><b>&nbsp; Successful posts:&nbsp;<span data-bind="text: status.packets_success"></span></b></span>
             </p>
+            <p data-bind="visible: config.emoncms_enabled() &amp;&amp; 0 === status.emoncms_connected() &amp;&amp; false !== status.emoncms_message(), text: status.emoncms_message"></p>
           </div>
 
           <div class="box380 right">
@@ -249,17 +273,19 @@
                 <span class="small-text">e.g. <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/rapi/out $OK 6 32</span><br>
               </p>
             </div>
-            <p data-bind="visible: config.mqtt_enabled">
+            <div data-bind="visible: config.mqtt_enabled">
               <b>Host*:</b><br>
-              <select data-bind="visible: config.mqtt_protocol_enable,
-                                  options: config.mqtt_supported_protocols,
-                                  optionsText: function(item) {
-                                    return item + '://'
-                                  },
-                                  value: config.mqtt_protocol"></select>
-              <input data-bind="textInput: config.mqtt_server" type="text" autocapitalize="none"><br/>
-              <span class="small-text">e.g 'emonpi', 'test.mosquitto.org', '192.168.1.4'</span>
-            </p>
+              <div data-bind="css: { protocol: config.mqtt_supported_protocols().length > 0 }">
+                <select data-bind="visible: config.mqtt_protocol_enable,
+                                    options: config.mqtt_supported_protocols,
+                                    optionsText: function(item) {
+                                      return item + '://'
+                                    },
+                                    value: config.mqtt_protocol"></select>
+                <input data-bind="textInput: config.mqtt_server" type="text" autocapitalize="none"><br/>
+                <span class="small-text">e.g 'emonpi', 'test.mosquitto.org', '192.168.1.4'</span>
+              </div>
+            </div>
             <p data-bind="visible: config.mqtt_enabled() &amp;&amp; config.mqtt_port_enable()">
               <b>Port*:</b><br>
               <input data-bind="textInput: config.mqtt_port" type="number" autocapitalize="none"><br/>
@@ -271,49 +297,35 @@
                 <div class="slider round"></div>
               </label>
             </div>
+            <div data-bind="visible: config.mqtt_enabled() &amp;&amp; !config.mqtt_reject_unauthorized()" class="box warning" style="margin-top: 20px;">
+              <h4>Warning!!</h4>
+              Certificate validation is disabled, although the connection to MQTT server will be encrypted the connection is still
+              vunrable to man-in-the-middle attacks.
+            </div>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Username:</b><span> blank - no authentication</span>
               <input data-bind="textInput: config.mqtt_user" type="text" autocapitalize="none">
             </p>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Password:</b><span> blank - no authentication</span>
-              <input data-bind="textInput: config.mqtt_pass" type="password" autocapitalize="none"><br>
+              <input type="password" autocapitalize="none" data-bind="textInput: mqttPassword.value, attr: { type: mqttPassword.show() ? 'text' : 'password' }" /><br />
+              <span>
+                <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
+                <label for="mqttPassword">Show password</label>
+              </span>
             </p>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Base-topic*:</b><br>
               <input data-bind="textInput: config.mqtt_topic" type="text" autocapitalize="none"><br/>
               <span class="small-text">e.g 'openevse'</span>
             </p>
-
-            <h2 data-bind="visible: config.mqtt_enabled">Solar PV divert<span class="info" data-bind="click: toggle.bind($data, showSolarDivert)"></span></h2>
-            <div class="box" data-bind="visible: showSolarDivert() &amp;&amp; config.mqtt_enabled()">
-              <div>Dynamically adjust charge rate based on solar PV generation or excess power (grid export).</div>
-              <p>
-                <b>1. Normal (default):</b>
-                <ul>
-                  <li><span class="small-text">Charge at maximum current set by EVSE.</span></li>
-                </ul>
-                <b>2. Eco:</b>
-                <ul>
-                  <li><span class="small-text">If only solar PV feed available: charge rate is modulated based on <b>solar PV generation.</b></span></li>
-                  <li><span class="small-text">If grid +I/-E (positive Import / negative Export) feed is available: charge rate will be modulated by available  <b>excess power.</b></span></li>
-                  <li><span class="small-text">If EVSE is sleeping: charging will begin when solar PV / excess power > min charge rate.</span></li>
-                  <li><span class="small-text">Charging will not pause; this avoids excess wear on the EVSE relay and the EV.</span></li>
-                </ul>
-                <span class="small-text"><i>Note: It's assumed that EVSE power is included in the grid feed.</i></span><br>
-              </p>
-            </div>
             <p data-bind="visible: config.mqtt_enabled">
-              <b>SolarPV-gen topic:</b>
-              <input data-bind="textInput: config.mqtt_solar, enable: '' === config.mqtt_grid_ie()" type="text" autocapitalize="none" hint="emon/emonpi/power2"><br>
-              <span class="small-text">Solar PV MQTT topic to modulate charge rate based on solar
+              <b>Voltage topic:</b>
+              <input data-bind="textInput: config.mqtt_vrms" type="text" autocapitalize="none" hint="emon/emonpi/vrms"><br>
+              <span class="small-text">Voltage MQTT topic to improve power calculations
             </p>
-            <p data-bind="visible: config.mqtt_enabled">
-              <b>Grid (+I/-E) topic:</b><br>
-              <input data-bind="textInput: config.mqtt_grid_ie, enable: '' === config.mqtt_solar()" type="text" autocapitalize="none" hint="emon/emonpi/power1"><br>
-              <span class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
-            </p>
-              <button data-bind="click: saveMqtt, text: (saveMqttFetching() ? 'Saving' : (saveMqttSuccess() ? 'Saved' : 'Save')), disable: saveMqttFetching">Save</button>
+            <p>
+              <button data-bind="click: mqttGroup.save, text: (mqttGroup.fetching() ? 'Saving' : (mqttGroup.success() ? 'Saved' : 'Save')), disable: mqttGroup.fetching">Save</button>
               <span data-bind="visible: config.mqtt_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.mqtt_connected() ? 'Yes' : 'No'"></span></b></span>
             </p>
           </div>
@@ -349,6 +361,79 @@
               <button data-bind="click: saveOhmKey, text: (saveOhmKeyFetching() ? 'Saving' : (saveOhmKeySuccess() ? 'Saved' : 'Save')), disable: saveOhmKeyFetching">Save</button>
             </p>
           </div>
+
+          <!-- Divert Mode -->
+          <div class="box380 right">
+            <h2>Solar PV divert</h2>
+            
+            <p data-bind="visible: config.mqtt_enabled">
+              <input type="checkbox" id="divert_enabled" data-bind="checked: config.divert_enabled" />
+              <label for="divert_enabled"><b>Enable Solar PV Divert</b></label>
+              <span class="info" data-bind="click: toggle.bind($data, showSolarDivert)"></span>
+            </p>
+
+            <div class="box error" data-bind="visible: !config.mqtt_enabled()">
+              <h4>MQTT not enabled.</h4>
+              Solar PV Divert requires an SolarPV-gen or Grid (+I/-E) feed to be delivered via MQTT.
+            </div>
+
+            <div class="box" data-bind="visible: showSolarDivert()">
+              <div>Dynamically adjust charge rate based on solar PV generation or excess power (grid export).</div>
+              <p>
+                <ul>
+                  <li><span class="small-text">If only solar PV feed available: charge rate is modulated based on <b>solar PV generation.</b></span></li>
+                  <li><span class="small-text">If grid +I/-E (positive Import / negative Export) feed is available: charge rate will be modulated by available  <b>excess power.</b></span></li>
+                  <li><span class="small-text">If EVSE is sleeping: charging will begin when solar PV / excess power > min charge rate.</span></li>
+                  <li><span class="small-text">Charging will pause if the excess power drops below the nim charge rate for a period of time.</span></li>
+                </ul>
+                <span class="small-text"><i>Note: It's assumed that EVSE power is included in the grid feed</i></span><br>
+              </p>
+            </div>
+
+            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <br>
+              <span data-bind="visible: divertFeedType() === 'solar'"><b>Solar:</b></span>
+              <span data-bind="visible: divertFeedType() === 'grid_ie'"><b>Grid Import/Export:</b></span>
+              <span data-bind="text: divertFeedType() === 'grid_ie' ? status.grid_ie() : status.solar()"></span>W -
+              <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
+              <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
+            </p>
+            
+            <div data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>Feed*:</b><br>
+              <div class="divert">
+                <select data-bind="value: divertFeedType">
+                  <option value="solar">SolarPV-gen</option>
+                  <option value="grid_ie">Grid (+I/-E)</option>
+                </select>
+                <input data-bind="textInput: divertFeedValue" type="text" autocapitalize="none"><br/>
+                <span data-bind="visible: divertFeedType() === 'solar'" class="small-text">Solar PV MQTT topic to modulate charge rate based on solar</span>
+                <span data-bind="visible: divertFeedType() === 'grid_ie'" class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
+              </div>
+            </div>
+
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>Divert smoothing attack:</b><br>
+              <input data-bind="textInput: config.divert_attack_smoothing_factor" type="number" autocapitalize="none" hint="0.4" min="0" max="1" step="0.01"><br>
+              <span class="small-text">The amount of the new feed value to add to the divert available power rolling average </span>
+            </p>
+
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>Divert smoothing decay:</b><br>
+              <input data-bind="textInput: config.divert_decay_smoothing_factor" type="number" autocapitalize="none" hint="0.05" min="0" max="1" step="0.01"><br>
+              <span class="small-text">The amount of the new feed value to remove to the divert available power rolling average </span>
+            </p>
+
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+              <b>Minimum charge time:</b><br>
+              <input data-bind="textInput: config.divert_min_charge_time" type="number" autocapitalize="none" hint="600" min="0" max="100000" step="10"><br>
+              <span class="small-text">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tare on the EVSE.</span>
+            </p>
+
+            <p data-bind="visible: isEcoModeAvailable">
+              <button data-bind="click: divertGroup.save, text: (divertGroup.fetching() ? 'Saving' : (divertGroup.success() ? 'Saved' : 'Save')), disable: divertGroup.fetching">Save</button>
+            </p>
+          </div>
         </div>
         <!--end TAB 2-->
 
@@ -361,7 +446,12 @@
             <span data-bind="text: status.estate"></span>
           </div>
 
-          <div data-bind="visible: !openevse.isError(),
+          <div data-bind="visible: !status.rapi_connected()" class="box box-full left error">
+            <h4>EVSE Error</h4>
+            <span>OpenEVSE not responding or not connected</span>
+          </div>
+
+          <div data-bind="visible: !openevse.isError() &amp;&amp; status.rapi_connected(),
                           css: { ready: openevse.isReady(),
                                  connected: openevse.isConnected() &amp;&amp; !openevse.isCharging(),
                                  charging: openevse.isCharging(),
@@ -384,37 +474,71 @@
                 <td><span data-bind="text: openevse.time.elapsed"></span></td>
               </tr>
             </table>
+            
+            <div data-bind="visible: ecoMode() &amp;&amp; isEcoModeAvailable()">
+              <br>
+              <span data-bind="visible: haveSolar"><b>Solar:</b></span>
+              <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
+              <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
+              <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
+              |
+              <span data-bind="visible: openevse.isReady()"><b>Vehicle not connected</b></span>
+              <span data-bind="visible: openevse.isSleeping() || (openevse.isConnected() &amp;&amp; !openevse.isCharging())"><b>Waiting for solar</b></span>
+              <span data-bind="visible: openevse.isCharging()"><b>Charging from solar</b></span>
+              <!--span data-bind="visible: openevse.isCharging()"><b>Fast charging</b></span-->
+              <span data-bind="visible: openevse.isCharging()">
+                | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A
+              </span>
+              <span data-bind="visible: advancedMode">
+                <br/>
+                <b>Voltage:</b> <span data-bind="text: status.voltage"></span>V
+                <span data-bind="visible: status.available_current() !== false">| <b>Available Current:</b> <span data-bind="text: status.available_current"></span>A</span>
+                <span data-bind="visible: status.smoothed_available_current() !== false">| <b>Smoothed Current:</b> <span data-bind="text: status.smoothed_available_current"></span>A</span>
+              </span>
+            </div>
           </div>
 
-
           <!-- Session Options -->
-          <div class="box380 left">
+          <div class="box380 left" data-bind="visible: status.rapi_connected">
             <h2>Charge Options</h2>
 
-            <p data-bind="with: openevse, visible: !openevse.isError()">
+            <div data-bind="visible: isEcoModeAvailable">
+              <span data-bind="css: {selected: !ecoMode() }">Normal (fast)</span>
+              <label class="switch">
+                <input type="checkbox" data-bind="checked: ecoMode" />
+                <div class="slider round"></div>
+              </label>
+              <span data-bind="css: {selected: ecoMode }">Eco (PV divert)</span><br/>
+            </div>
+
+            <p data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
               <button data-bind="click: setStatus.bind($data, 'enable'), visible: !isEnabled()">Start</button>
               <button data-bind="click: setStatus.bind($data, 'sleep'), visible: !isSleeping()">Pause</button>
             </p>
-            <hr>
-            <p data-bind="with: openevse">
-              <b>Time limit:</b><br>
-              <select data-bind="options: timeLimits,
-                                 optionsText: 'name',
-                                 optionsValue: 'value',
-                                 value: timeLimit,
-                                 enable: !updatingTimeLimit() &amp;&amp; isConnected(),
-                                 css: { saved: savedTimeLimit }"></select>
-            </p>
 
-            <p data-bind="with: openevse">
-              <b>Energy limit:</b><br>
-              <select type="text" data-bind="options: chargeLimits,
-                                             optionsText: 'name',
-                                             optionsValue: 'value',
-                                             value: chargeLimit,
-                                             enable: !updatingChargeLimit() &amp;&amp; isConnected(),
-                                             css: { saved: savedChargeLimit }" ></select>
-            </p>
+            <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
+              <hr \>
+              <p>
+                <b>Time limit:</b><br\>
+                <select data-bind="options: timeLimits,
+                optionsText: 'name',
+                optionsValue: 'value',
+                value: timeLimit,
+                enable: !updatingTimeLimit() &amp;&amp; isConnected(),
+                css: { saved: savedTimeLimit }"></select>
+              </p>
+              
+              <p>
+                <b>Energy limit:</b><br\>
+                <select type="text" data-bind="options: chargeLimits,
+                optionsText: 'name',
+                optionsValue: 'value',
+                value: chargeLimit,
+                enable: !updatingChargeLimit() &amp;&amp; isConnected(),
+                css: { saved: savedChargeLimit }" ></select>
+              </p>
+            </span>
+
             <hr> <br>
             <div data-bind="with: openevse">
               <b>Timer:</b><br>
@@ -435,7 +559,7 @@
           </div>
 
           <!-- Energy -->
-          <div class="box380 right" data-bind="visible: advancedMode">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
             <h2>Energy</h2>
             <table>
               <tr>
@@ -453,55 +577,8 @@
             </table>
           </div>
 
-          <!-- Divert Mode -->
-          <div class="box380 right">
-            <h2>Charge Mode <span class="info" data-bind="click: toggle.bind($data, showSolarDivert)"></span></h2>
-
-            <div class="box error" data-bind="visible: !isEcoModeAvailable()">
-              <h4>MQTT config not configured with Solar PV / Grid topic.</h4>
-              Solar PV Divert requires the SolarPV-gen or Grid (+I/-E) MQTT topic to be defined on the
-              <a href="#services" data-bind="click: function() { tab('services'); config.mqtt_enabled(true); }">Services</a>
-              tab.
-            </div>
-
-            <div class="box" data-bind="visible: showSolarDivert()">
-              <div>Dynamically adjust charge rate based on solar PV generation or excess power (grid export).</div>
-              <p>
-                <b>1. Normal (default):</b>
-                <ul>
-                  <li><span class="small-text">Charge at maximum current set by EVSE.</span></li>
-                </ul>
-                <b>2. Eco (solar PV divert):</b>
-                <ul>
-                  <li><span class="small-text">If only solar PV feed available: charge rate is modulated based on <b>solar PV generation.</b></span></li>
-                  <li><span class="small-text">If grid +I/-E (positive Import / negative Export) feed is available: charge rate will be modulated by available  <b>excess power.</b></span></li>
-                  <li><span class="small-text">If EVSE is sleeping: charging will begin when solar PV / excess power > min charge rate.</span></li>
-                  <li><span class="small-text">Charging will not pause; this avoids excess wear on the EVSE relay and the EV.</span></li>
-                </ul>
-                <span class="small-text"><i>Note: It's assumed that EVSE power is included in the grid feed</i></span><br><br>
-                <span class="small-text"><i>Charging mode can also be set via MQTT:<br>{base-topic}/divertmode/set</i></span>
-              </p>
-            </div>
-            <div data-bind="visible: isEcoModeAvailable">
-              <span data-bind="css: {selected: !ecoMode() }">Normal (max)</span>
-              <label class="switch">
-                <input type="checkbox" data-bind="checked: ecoMode" />
-                <div class="slider round"></div>
-              </label>
-              <span data-bind="css: {selected: ecoMode }">Eco (PV divert)</span><br/>
-            </div>
-            <div data-bind="visible: isEcoModeAvailable">
-              <br>
-              <span data-bind="visible: haveSolar"><b>Solar:</b></span>
-              <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
-              <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
-              <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
-              <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
-            </div>
-          </div>
-
           <!-- Sensor Values -->
-          <div class="box380 right" data-bind="visible: advancedMode">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
             <h2>Sensor Values</h2>
             <table>
               <tr>
@@ -516,15 +593,19 @@
                 <td>Current Now:</td>
                 <td><span data-bind="text: scaleString(status.amp(), 1000, 2) + ' A'"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: false !== status.voltage()">
+                <td>Voltage:</td>
+                <td><span data-bind="text: scaleString(status.voltage(), 1, 2) + ' V'"></span></td>
+              </tr>
+              <tr data-bind="visible: false !== status.temp1()">
                 <td>Temp1:</td>
                 <td><span data-bind="text: scaleString(status.temp1(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: false !== status.temp2()">
                 <td>Temp2:</td>
                 <td><span data-bind="text: scaleString(status.temp2(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: false !== status.temp3()">
                 <td>Temp3:</td>
                 <td><span data-bind="text: scaleString(status.temp3(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
@@ -532,51 +613,56 @@
           </div>
 
           <!-- Settings -->
-          <div class="box380 setup" data-bind="with: openevse, css: { right: !advancedMode(), left: advancedMode() }">
+          <div class="box380 setup" data-bind="visible: status.rapi_connected, css: { right: !advancedMode(), left: advancedMode() }">
             <h2>Setup</h2>
-            <p data-bind="with: time, visible: !time.hasRTC()">
+            <p data-bind="visible: !openevse.time.hasRTC()">
               <b>Time: No RTC detected</b>
             </p>
-            <p data-bind="with: time, visible: time.hasRTC()">
+            <p data-bind="with: openevse.time, visible: openevse.time.hasRTC()">
               <b>Time:</b><br/>
               <input type="date" data-bind="value: date, disable: automaticTime" />
               <input type="time" data-bind="value: time, disable: automaticTime" /><br/>
             </p>
-            <div data-bind="with: time, visible: time.hasRTC()">
-              <span data-bind="css: {selected: !automaticTime() }">Manual</span>
-              <label class="switch">
-                <input type="checkbox" data-bind="checked: automaticTime" />
-                <div class="slider round"></div>
-              </label>
-              <span data-bind="css: {selected: automaticTime() }">Automatic<span>
-
-              <button style="margin-left: 30px" data-bind="click: setTime">Update</button>
+            <p data-bind="visible: openevse.time.hasRTC() && false !== config.time_zone() && 'ntp' === timeSource()">
+              <b>Time zone:</b><br/>
+              <select data-bind="options: zones.zones,
+                        optionsText: 'name',
+                        optionsValue: 'value',
+                        value: time_zone"></select>
+            </p>
+            <div data-bind="visible: openevse.time.hasRTC()">
+              Set time from
+              <select data-bind="value: timeSource" style="width: 100px">
+                <option value="manual">Manual</option>
+                <option value="browser">Browser</option>
+                <option value="ntp" data-bind="visible: false !== config.sntp_hostname()">NTP</option>
+              </select>
+              <button data-bind="click: setTime, text: (setTimeFetching() ? 'Saving' : (setTimeSuccess() ? 'Saved' : 'Set time')), disable: setTimeFetching">Set time</button>
             </div>
             <hr>
             <p>
               <b>Service Level:</b><br/>
-              <select data-bind="options: serviceLevels,
+              <select data-bind="options: openevse.serviceLevels,
                                  optionsText: 'name',
                                  optionsValue: 'value',
-                                 value: serviceLevel,
-                                 disable: updatingServiceLevel(),
-                                 css: { saved: savedServiceLevel }"></select>
+                                 value: openevse.serviceLevel,
+                                 disable: openevse.updatingServiceLevel(),
+                                 css: { saved: openevse.savedServiceLevel }"></select>
             </p>
 
             <p>
               <b>Max Current:</b><br/>
-              <select data-bind="options: currentLevels,
+              <select data-bind="options: openevse.currentLevels,
                                   optionsText: 'name',
                                   optionsValue: 'value',
-                                  value: currentCapacity,
-                                  disable: updatingServiceLevel() || updatingCurrentCapacity(),
-                                  css: { saved: savedCurrentCapacity }"></select>
+                                  value: openevse.currentCapacity,
+                                  disable: openevse.updatingServiceLevel() || openevse.updatingCurrentCapacity(),
+                                  css: { saved: openevse.savedCurrentCapacity }"></select>
             </p>
           </div>
 
-
           <!-- Current -->
-          <div class="box380 right" data-bind="visible: advancedMode">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
             <h2>Current</h2>
             <table>
               <tr>
@@ -614,7 +700,7 @@
           </div>
 
           <!-- Safety -->
-          <div class="box380 left" data-bind="visible: advancedMode() || !openevse.allTestsEnabled()">
+          <div class="box380 left" data-bind="visible: status.rapi_connected() &amp;&amp; (advancedMode() || !openevse.allTestsEnabled())">
             <h2>Safety<span class="info" data-bind="click: toggle.bind($data, showSafety)"></span></h2>
 
             <div class="box" data-bind="visible: showSafety()">
@@ -712,7 +798,7 @@
           </div>
 
           <!-- Hardware -->
-          <div class="box380 right" data-bind="visible: advancedMode">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
             <h2>Hardware</h2>
             <table>
               <tr>
@@ -756,7 +842,8 @@
             </table>
           </div>
 
-          <div class="box380" data-bind="css: { right: !advancedMode() &amp;&amp; !openevse.allTestsEnabled(),
+          <div class="box380" data-bind="visible: status.rapi_connected,
+                                         css: { right: !advancedMode() &amp;&amp; !openevse.allTestsEnabled(),
                                                 left: advancedMode() || openevse.allTestsEnabled() }">
             <h2>Display</h2>
             <div>
@@ -772,7 +859,7 @@
         <!--end tab 3-->
 
         <!--TAB 4    -->
-        <div id="content-4" data-bind="visible: isRapi">
+        <div id="content-4" data-bind="visible: isRapi() &amp;&amp; status.rapi_connected()">
           <div class="box380 left">
             <form method='get' action='r' data-bind="with: rapi">
               <p>

@@ -1,6 +1,16 @@
 /* global ko, OpenEVSE, TimeViewModel */
 /* exported OpenEvseViewModel */
 
+
+function DummyRequest()
+{
+  var self = this;
+  self.always = function(fn) {
+    fn();
+    return self;
+  };
+}
+
 function OpenEvseViewModel(baseEndpoint, statusViewModel) {
   "use strict";
   var self = this;
@@ -103,7 +113,7 @@ function OpenEvseViewModel(baseEndpoint, statusViewModel) {
   });
 
   self.isError = ko.pureComputed(function () {
-    return [4, 5, 6, 7, 8, 9, 10].indexOf(self.status.state()) !== -1;
+    return [4, 5, 6, 7, 8, 9, 10, 11].indexOf(self.status.state()) !== -1;
   });
 
   self.isEnabled = ko.pureComputed(function () {
@@ -153,7 +163,12 @@ function OpenEvseViewModel(baseEndpoint, statusViewModel) {
   // List of items to update on calling update(). The list will be processed one item at
   // a time.
   var updateList = [
-    function () { return self.openevse.time(self.time.timeUpdate); },
+    function () { 
+      if(false === self.status.time()) {
+        return self.openevse.time(self.time.timeUpdate);
+      }
+      return new DummyRequest();
+    },
     function () { return self.openevse.service_level(function (level, actual) {
       self.serviceLevel(level);
       self.actualServiceLevel(actual);
@@ -392,6 +407,7 @@ function OpenEvseViewModel(baseEndpoint, statusViewModel) {
     self.updateCount(0);
     self.nextUpdate(after);
   };
+
   self.nextUpdate = function (after) {
     var updateFn = updateList[self.updateCount()];
     updateFn().always(function () {

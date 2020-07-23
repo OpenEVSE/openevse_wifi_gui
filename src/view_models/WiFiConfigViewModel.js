@@ -12,16 +12,49 @@ function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
 
   self.scanUpdating = ko.observable(false);
 
-  self.bssid = ko.observable("");
-  self.bssid.subscribe(function (bssid) {
-    for(var i = 0; i < self.scan.results().length; i++) {
-      var net = self.scan.results()[i];
-      if(bssid === net.bssid()) {
-        self.config.ssid(net.ssid());
-        return;
+  self.selectedNet = ko.observable(false);
+  self.bssid = ko.pureComputed({
+    read: () => {
+      return (false === self.selectedNet()) ? "" : self.selectedNet().bssid();
+    },
+    write: (bssid) => {
+      for(var i = 0; i < self.scan.results().length; i++) {
+        var net = self.scan.results()[i];
+        if(bssid === net.bssid()) {
+          self.selectedNet(net);
+          return;
+        }
       }
     }
   });
+  self.select = function(item) {
+    self.selectedNet(item);
+  };
+
+  self.setSsid = function(ssid)
+  {
+    if(false !== self.selectedNet() && ssid === self.selectedNet().ssid()) {
+      return;
+    }
+
+    for(var i = 0; i < self.scan.filteredResults().length; i++) {
+      var net = self.scan.filteredResults()[i];
+      if(ssid === net.ssid()) {
+        self.selectedNet(net);
+        return;
+      }
+    }
+
+    for(var i = 0; i < self.scan.results().length; i++) {
+      var net = self.scan.results()[i];
+      if(ssid === net.ssid()) {
+        self.selectedNet(net);
+        return;
+      }
+    }
+
+    self.selectedNet(false);
+  }
 
   var scanTimer = null;
   var scanTime = 3 * 1000;

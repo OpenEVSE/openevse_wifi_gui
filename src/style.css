@@ -28,14 +28,22 @@ th {
 }
 
 td {
-  background-color: #ffffff;
   color: #777777;
   border: 1px solid #e1e1e1;
   padding: 8px;
 }
 
+tr {
+  background-color: #ffffff;
+}
+
 tr:nth-child(2n+2) {
-  background-color:#f3f3f3;
+  background-color: #f3f3f3;
+}
+
+.wifiselected td {
+  background-color: teal;
+  color: white;
 }
 
 .header {
@@ -193,7 +201,7 @@ select {
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-top: 10px;
-  width: 280px;
+  width: 100%;
   padding:5px;
 }
 
@@ -502,4 +510,76 @@ border: none;
   width: 1%;
   height: 30px;
   background-color: #008080;
+}
+
+#wifiList {
+  display: inline-block;
+  width: 100%;
+  max-height: 230px;
+  overflow: auto
+}
+
+/*  Stolen from Bootstrap */
+.list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.list-group-item {
+    position: relative;
+    display: flex;
+    padding: .75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    background-color: teal;
+    border-color: teal;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+.list-group-item:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: .25rem;
+    border-bottom-left-radius: .25rem;
+}
+
+.protocol select {
+  width: 80px;
+}
+
+.protocol input {
+  width: 295px;
+}
+
+@media screen and (max-width: 420px) {
+  .protocol input {
+    width: 155px;
+  }  
+}
+
+.divert select {
+  width: 110px;
+}
+
+.divert input {
+  width: 265px;
+}
+
+@media screen and (max-width: 420px) {
+  .divert input {
+    width: 115px;
+  }  
 }
