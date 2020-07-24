@@ -31,14 +31,14 @@ var FitAddon = (function () {
     }
     var core = this._terminal._core;
     var parentElementStyle = window.getComputedStyle(this._terminal.element.parentElement);
-    var parentElementHeight = parseInt(parentElementStyle.getPropertyValue('height'));
-    var parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue('width')));
+    var parentElementHeight = parseInt(parentElementStyle.getPropertyValue("height"));
+    var parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue("width")));
     var elementStyle = window.getComputedStyle(this._terminal.element);
     var elementPadding = {
-      top: parseInt(elementStyle.getPropertyValue('padding-top')),
-      bottom: parseInt(elementStyle.getPropertyValue('padding-bottom')),
-      right: parseInt(elementStyle.getPropertyValue('padding-right')),
-      left: parseInt(elementStyle.getPropertyValue('padding-left'))
+      top: parseInt(elementStyle.getPropertyValue("padding-top")),
+      bottom: parseInt(elementStyle.getPropertyValue("padding-bottom")),
+      right: parseInt(elementStyle.getPropertyValue("padding-right")),
+      left: parseInt(elementStyle.getPropertyValue("padding-left"))
     };
     var elementPaddingVer = elementPadding.top + elementPadding.bottom;
     var elementPaddingHor = elementPadding.right + elementPadding.left;

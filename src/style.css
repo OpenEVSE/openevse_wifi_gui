@@ -583,29 +583,3 @@ border: none;
     width: 115px;
   }  
 }
-
-.console {
-  height:12rem;
-  color:#fff;
-  background-color:#300a24;
-  overflow: scroll;
-  overflow-x: hidden;
-  font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
-  font-size: 13px;
-  line-height: 20px;
-  
-  display: block;
-  padding: 9.5px;
-  margin: 0 0 10px;
-  font-size: 13px;
-  line-height: 20px;
-  /* word-break: break-all; */
-  word-wrap: break-word;
-  white-space: pre;
-  white-space: pre-wrap;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0,0,0,0.15);
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px
-}

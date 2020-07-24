@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ConsoleViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -248,10 +248,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
         }
       });
       self.connect();
-      if(self.isConsole()) {
-        self.serialDebug.start();
-        self.serialEvse.start();
-      }
     });
 
     // Set the advanced and developer modes from Cookies
