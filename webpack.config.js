@@ -95,6 +95,12 @@ module.exports = {
       inject: false,
       minify: htmlMinify
     }),
+    new HtmlWebpackPlugin({
+      filename: "term.html",
+      template: "./src/term.html",
+      inject: false,
+      minify: htmlMinify
+    }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
@@ -125,6 +131,11 @@ module.exports = {
           "src/view_models/OpenEvseWiFiViewModel.js",
           "src/home.js"
         ],
+        "term.js": [
+          "node_modules/jquery/dist/jquery.js",
+          "node_modules/xterm/lib/xterm.js",
+          "src/term.js"
+        ],
         "wifi_portal.js": [
           "src/view_models/WiFiPortalViewModel.js",
           "src/wifi_portal.js"
@@ -134,12 +145,14 @@ module.exports = {
         "lib.js": code => uglify("lib.js", code),
         "home.js": code => uglify("home.js", code),
         "wifi_portal.js": code => uglify("wifi_portal.js", code),
+        "term.js": code => uglify("term.js", code),
       }
     }),
     new CopyPlugin([
       { from: "assets/*", flatten: true },
-      { from: "posix_tz_db/zones.json", flatten: true }
-    ]) 
+      { from: "posix_tz_db/zones.json", flatten: true },
+      { from: "node_modules/xterm/css/xterm.css", flatten: true }
+    ])
   ],
   optimization: {
     splitChunks: {},

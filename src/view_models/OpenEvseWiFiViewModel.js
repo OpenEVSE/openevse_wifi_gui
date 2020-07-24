@@ -38,10 +38,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
 
-  // Debug consoles
-  self.serialDebug = new ConsoleViewModel(self.baseEndpoint, "debug");
-  self.serialEvse = new ConsoleViewModel(self.baseEndpoint, "evse");
-
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
   self.scanUpdating = ko.observable(false);
@@ -141,17 +137,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.isServices = ko.pureComputed(function() { return "services" === self.tab(); });
   self.isStatus = ko.pureComputed(function() { return "status" === self.tab(); });
   self.isRapi = ko.pureComputed(function() { return "rapi" === self.tab(); });
-  self.isConsole = ko.pureComputed(function() { return "console" === self.tab(); });
-
-  self.isConsole.subscribe((val) => {
-    if(val) {
-      self.serialDebug.start();
-      self.serialEvse.start();
-    } else {
-      self.serialDebug.stop();
-      self.serialEvse.stop();
-    }
-  });
 
   // Upgrade URL
   self.upgradeUrl = ko.observable("about:blank");

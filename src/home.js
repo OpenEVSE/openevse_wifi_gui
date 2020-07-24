@@ -24,12 +24,8 @@
     var openevse = new OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol);
     ko.applyBindings(openevse);
     openevse.start();
-    openevse.serialDebug.console.subscribe((val) => {
-      $("#serialDebug").scrollTop($("#serialDebug")[0].scrollHeight);
-    });
-    openevse.serialEvse.console.subscribe((val) => {
-      $("#serialEvse").scrollTop($("#serialEvse")[0].scrollHeight);
-    });
+    openevse.serialDebug.attach("serialDebug");
+    openevse.serialEvse.attach("serialEvse");
   });
 
 })();
