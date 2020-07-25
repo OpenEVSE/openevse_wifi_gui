@@ -126,7 +126,6 @@ module.exports = {
           "src/view_models/RapiViewModel.js",
           "src/view_models/TimeViewModel.js",
           "src/view_models/ZonesViewModel.js",
-          "src/view_models/ConsoleViewModel.js",
           "src/view_models/OpenEvseViewModel.js",
           "src/view_models/OpenEvseWiFiViewModel.js",
           "src/home.js"
