@@ -1,66 +1,10 @@
 /* global $, Terminal */
 
-
-// https://github.com/xtermjs/xterm.js/tree/master/addons/xterm-addon-fit
-var MINIMUM_COLS = 2;
-var MINIMUM_ROWS = 1;
-var FitAddon = (function () {
-  function FitAddon() {
-  }
-  FitAddon.prototype.activate = function (terminal) {
-    this._terminal = terminal;
-  };
-  FitAddon.prototype.dispose = function () { };
-  FitAddon.prototype.fit = function () {
-    var dims = this.proposeDimensions();
-    if (!dims || !this._terminal) {
-      return;
-    }
-    var core = this._terminal._core;
-    if (this._terminal.rows !== dims.rows || this._terminal.cols !== dims.cols) {
-      core._renderService.clear();
-      this._terminal.resize(dims.cols, dims.rows);
-    }
-  };
-  FitAddon.prototype.proposeDimensions = function () {
-    if (!this._terminal) {
-      return undefined;
-    }
-    if (!this._terminal.element || !this._terminal.element.parentElement) {
-      return undefined;
-    }
-    var core = this._terminal._core;
-    var parentElementStyle = window.getComputedStyle(this._terminal.element.parentElement);
-    var parentElementHeight = parseInt(parentElementStyle.getPropertyValue("height"));
-    var parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue("width")));
-    var elementStyle = window.getComputedStyle(this._terminal.element);
-    var elementPadding = {
-      top: parseInt(elementStyle.getPropertyValue("padding-top")),
-      bottom: parseInt(elementStyle.getPropertyValue("padding-bottom")),
-      right: parseInt(elementStyle.getPropertyValue("padding-right")),
-      left: parseInt(elementStyle.getPropertyValue("padding-left"))
-    };
-    var elementPaddingVer = elementPadding.top + elementPadding.bottom;
-    var elementPaddingHor = elementPadding.right + elementPadding.left;
-    var availableHeight = parentElementHeight - elementPaddingVer;
-    var availableWidth = parentElementWidth - elementPaddingHor - core.viewport.scrollBarWidth;
-    var geometry = {
-      cols: Math.max(MINIMUM_COLS, Math.floor(availableWidth / core._renderService.dimensions.actualCellWidth)),
-      rows: Math.max(MINIMUM_ROWS, Math.floor(availableHeight / core._renderService.dimensions.actualCellHeight))
-    };
-    return geometry;
-  };
-  return FitAddon;
-}());
-
 (function () {
   "use strict";
 
   var socket = false;
   var reconnectInterval = false;
-  var term = new Terminal();
-  var fitAddon = new FitAddon();
-  term.loadAddon(fitAddon);
 
   var validTerminals = ["debug", "evse"];
 
@@ -83,8 +27,19 @@ var FitAddon = (function () {
   }
   ws += url.pathname + "/console";
 
-  function fixLineEndings(text) {
-    return text.replace(/(\r\n|\n|\r)/gm, "\n\r");
+  
+  function addText(text, clear = false) {
+    var term = $("#term");
+    var scroll = ($(document).height() - ($(document).scrollTop() + window.innerHeight)) < 10;
+    text = text.replace(/(\r\n|\n|\r)/gm, "\n");
+    if(clear) {
+      term.text(text);
+    } else {
+      term.append(text);
+    }
+    if(scroll) {
+      $(document).scrollTop($(document).height());
+    }
   }
 
   function connect() {
@@ -93,7 +48,7 @@ var FitAddon = (function () {
       reconnect();
     };
     socket.onmessage = (msg) => {
-      term.write(fixLineEndings(msg.data));
+      addText(msg.data);
     };
     socket.onerror = (ev) => {
       console.log(ev);
@@ -112,16 +67,9 @@ var FitAddon = (function () {
   }
 
   $(() => {
-    term.open(document.getElementById("term"));
-    fitAddon.fit();
-
     $.get(url.href, (data) => {
-      term.write(fixLineEndings(data));
+      addText(data, true);
       connect();
     }, "text");
-  });
-
-  $( window ).resize(() => {
-    fitAddon.fit();
   });
 })();

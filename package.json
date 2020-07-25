@@ -5,8 +5,7 @@
   "dependencies": {
     "jquery": "^3.4.1",
     "knockout": "^3.5.0",
-    "knockout-mapping": "^2.6.0",
-    "xterm": "^4.8.1"
+    "knockout-mapping": "^2.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",

@@ -133,7 +133,6 @@ module.exports = {
         ],
         "term.js": [
           "node_modules/jquery/dist/jquery.js",
-          "node_modules/xterm/lib/xterm.js",
           "src/term.js"
         ],
         "wifi_portal.js": [
@@ -150,8 +149,7 @@ module.exports = {
     }),
     new CopyPlugin([
       { from: "assets/*", flatten: true },
-      { from: "posix_tz_db/zones.json", flatten: true },
-      { from: "node_modules/xterm/css/xterm.css", flatten: true }
+      { from: "posix_tz_db/zones.json", flatten: true }
     ])
   ],
   optimization: {
