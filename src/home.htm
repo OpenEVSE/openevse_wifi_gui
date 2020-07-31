@@ -305,7 +305,7 @@
             <div data-bind="visible: config.mqtt_enabled() &amp;&amp; !config.mqtt_reject_unauthorized()" class="box warning" style="margin-top: 20px;">
               <h4>Warning!!</h4>
               Certificate validation is disabled, although the connection to MQTT server will be encrypted the connection is still
-              vunrable to man-in-the-middle attacks.
+              vulnerable to man-in-the-middle attacks.
             </div>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Username:</b><span> blank - no authentication</span>
@@ -432,7 +432,7 @@
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
               <b>Minimum charge time:</b><br>
               <input data-bind="textInput: config.divert_min_charge_time" type="number" autocapitalize="none" hint="600" min="0" max="100000" step="10"><br>
-              <span class="small-text">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tare on the EVSE.</span>
+              <span class="small-text">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tear on the EVSE.</span>
             </p>
 
             <p data-bind="visible: isEcoModeAvailable">
