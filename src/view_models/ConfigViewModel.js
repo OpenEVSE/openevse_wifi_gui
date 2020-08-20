@@ -54,6 +54,28 @@ function ConfigViewModel(baseEndpoint) {
     "divert_min_charge_time": 600,
     "charge_mode": "full"
   }, endpoint);
+
+  function trim(prop, val) {
+    if(val.trim() !== prop()) {
+      prop(val.trim());
+    }
+  }
+
+  this.ssid.subscribe((v) => { trim(this.ssid, v); });
+  this.emoncms_server.subscribe((v) => { trim(this.emoncms_server, v); });
+  this.emoncms_apikey.subscribe((v) => { trim(this.emoncms_apikey, v); });
+  this.emoncms_node.subscribe((v) => { trim(this.emoncms_node, v); });
+  this.emoncms_fingerprint.subscribe((v) => { trim(this.emoncms_fingerprint, v); });
+  this.mqtt_server.subscribe((v) => { trim(this.mqtt_server, v); });
+  this.mqtt_topic.subscribe((v) => { trim(this.mqtt_topic, v); });
+  this.mqtt_user.subscribe((v) => { trim(this.mqtt_user, v); });
+  this.mqtt_solar.subscribe((v) => { trim(this.mqtt_solar, v); });
+  this.mqtt_grid_ie.subscribe((v) => { trim(this.mqtt_grid_ie, v); });
+  this.mqtt_vrms.subscribe((v) => { trim(this.mqtt_vrms, v); });
+  this.ohmkey.subscribe((v) => { trim(this.ohmkey, v); });
+  this.www_username.subscribe((v) => { trim(this.www_username, v); });
+  this.hostname.subscribe((v) => { trim(this.hostname, v); });
+  this.sntp_hostname.subscribe((v) => { trim(this.sntp_hostname, v); });
 }
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);
 ConfigViewModel.prototype.constructor = ConfigViewModel;
