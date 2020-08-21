@@ -35,7 +35,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.rapi = new RapiViewModel(self.baseEndpoint);
   self.scan = new WiFiScanViewModel(self.baseEndpoint);
   self.wifi = new WiFiConfigViewModel(self.baseEndpoint, self.config, self.status, self.scan);
-  self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.status);
+  self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.config, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
 
   self.initialised = ko.observable(false);

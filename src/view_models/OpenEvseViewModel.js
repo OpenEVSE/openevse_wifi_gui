@@ -11,7 +11,7 @@ function DummyRequest()
   };
 }
 
-function OpenEvseViewModel(baseEndpoint, statusViewModel) {
+function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
   "use strict";
   var self = this;
   var endpoint = ko.pureComputed(function () { return baseEndpoint() + "/r"; });
@@ -20,6 +20,7 @@ function OpenEvseViewModel(baseEndpoint, statusViewModel) {
     self.openevse.setEndpoint(end);
   });
   self.status = statusViewModel;
+  self.config = configViewModel;
   self.time = new TimeViewModel(self);
 
   // Option lists
@@ -126,6 +127,10 @@ function OpenEvseViewModel(baseEndpoint, statusViewModel) {
 
   self.isDisabled = ko.pureComputed(function () {
     return 255 === self.status.state();
+  });
+
+  self.isPaused = ko.pureComputed(function () {
+    return [254, 255].indexOf(self.status.state()) !== -1;
   });
 
   // helper to select an appropriate value for time limit
@@ -449,8 +454,12 @@ function OpenEvseViewModel(baseEndpoint, statusViewModel) {
   // support for changing status
   self.setStatus = function (action)
   {
+    if("pause" === action) {
+      action = self.config.pause_uses_disabled() ? "disable" : "sleep";
+    }
+
     var currentState = self.status.state();
-    if(("disabled" === action && 255 === currentState) ||
+    if(("disable" === action && 255 === currentState) ||
        ("sleep" === action && 254 === currentState) ||
        ("enable" === action && currentState < 254))
     {
