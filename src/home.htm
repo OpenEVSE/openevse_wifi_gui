@@ -293,7 +293,7 @@
             </div>
             <p data-bind="visible: config.mqtt_enabled() &amp;&amp; config.mqtt_port_enable()">
               <b>Port*:</b><br>
-              <input data-bind="textInput: config.mqtt_port" type="number" autocapitalize="none"><br/>
+              <input data-bind="textInput: config.mqtt_port" type="number" min="0" max="65535" autocapitalize="none"><br/>
             </p>
             <div data-bind="visible: config.mqtt_enabled() &amp;&amp; config.mqtt_reject_unauthorized_enable() &amp;&amp; advancedMode()">
               <b>Reject self-signed certificates:</b>
