@@ -35,7 +35,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.rapi = new RapiViewModel(self.baseEndpoint);
   self.scan = new WiFiScanViewModel(self.baseEndpoint);
   self.wifi = new WiFiConfigViewModel(self.baseEndpoint, self.config, self.status, self.scan);
-  self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.status);
+  self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.config, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
 
   self.initialised = ko.observable(false);
@@ -56,6 +56,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.showMqttInfo = ko.observable(false);
   self.showSolarDivert = ko.observable(false);
   self.showSafety = ko.observable(false);
+  self.showVehiclePauseStatus = ko.observable(false);
 
   self.toggle = function (flag) {
     flag(!flag());
@@ -469,6 +470,19 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     }
 
     return true;
+  });
+
+
+  // -----------------------------------------------------------------------
+  // Event: Vehicle settings save
+  // -----------------------------------------------------------------------
+  self.vehicleGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      pause_uses_disabled: self.config.pause_uses_disabled()
+    };
+  });
+  self.config.pause_uses_disabled.subscribe(() => {
+    self.vehicleGroup.save();
   });
 
   // -----------------------------------------------------------------------
