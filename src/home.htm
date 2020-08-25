@@ -847,6 +847,24 @@
             </table>
           </div>
 
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+            <h2>Vehicle Settings</h2>
+            <h3>Pause status <span class="info" data-bind="click: toggle.bind($data, showVehiclePauseStatus)"></span></h3>
+            <div class="box" data-bind="visible: showVehiclePauseStatus()">
+              Some vehicles will shutdown if left in sleep mode (pilot signal enable) and then can not be woken up by timers/PV divert. Changing the 
+              pause state to disable should resolve this issue, however this removes the ability for the charger to detect if a vehicle is connected
+              when paused.
+            </div>
+            <div>
+              <span data-bind="css: {selected: !config.pause_uses_disabled() }">Sleep</span>
+              <label class="switch">
+                <input type="checkbox" data-bind="checked: config.pause_uses_disabled" />
+                <div class="slider round"></div>
+              </label>
+              <span data-bind="css: {selected: config.pause_uses_disabled }">Disable</span><br/>
+            </div>
+          </div>
+
           <div class="box380" data-bind="visible: status.rapi_connected,
                                          css: { right: !advancedMode() &amp;&amp; !openevse.allTestsEnabled(),
                                                 left: advancedMode() || openevse.allTestsEnabled() }">
