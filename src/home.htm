@@ -417,6 +417,12 @@
               </div>
             </div>
 
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() === 'grid_ie'">
+              <b>Required PV power ratio:</b><br>
+              <input data-bind="textInput: config.divert_PV_ratio" type="number" autocapitalize="none" hint="1.0" min="0.05" max="1" step="0.01"><br>
+              <span class="small-text">The minimum fraction of charge current that must come from PV at all time </span>
+            </p>
+
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
               <b>Divert smoothing attack:</b><br>
               <input data-bind="textInput: config.divert_attack_smoothing_factor" type="number" autocapitalize="none" hint="0.4" min="0" max="1" step="0.01"><br>
