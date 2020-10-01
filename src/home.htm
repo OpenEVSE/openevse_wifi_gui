@@ -460,7 +460,7 @@
                           css: { ready: openevse.isReady(),
                                  connected: openevse.isConnected() &amp;&amp; !openevse.isCharging(),
                                  charging: openevse.isCharging(),
-                                 sleeping: openevse.isSleeping() }"
+                                 sleeping: openevse.isPaused() }"
                class="box box-full left">
             <h2 class="left">Session Status</h2>
             <h2 class="right" data-bind="text: status.estate"></h2>
@@ -496,9 +496,9 @@
               </span>
               <span data-bind="visible: advancedMode">
                 <br/>
-                <b>Voltage:</b> <span data-bind="text: status.voltage"></span>V
-                <span data-bind="visible: status.available_current() !== false">| <b>Available Current:</b> <span data-bind="text: status.available_current"></span>A</span>
-                <span data-bind="visible: status.smoothed_available_current() !== false">| <b>Smoothed Current:</b> <span data-bind="text: status.smoothed_available_current"></span>A</span>
+                <b>Voltage:</b> <span data-bind="text: parseFloat(status.voltage()).toFixed(1)"></span>V
+                <span data-bind="visible: status.available_current() !== false">| <b>Available Current:</b> <span data-bind="text: parseFloat(status.available_current()).toFixed(2)"></span>A</span>
+                <span data-bind="visible: status.smoothed_available_current() !== false">| <b>Smoothed Current:</b> <span data-bind="text: parseFloat(status.smoothed_available_current()).toFixed(2)"></span>A</span>
               </span>
             </div>
           </div>
@@ -517,8 +517,8 @@
             </div>
 
             <p data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
-              <button data-bind="click: setStatus.bind($data, 'enable'), visible: !isEnabled()">Start</button>
-              <button data-bind="click: setStatus.bind($data, 'sleep'), visible: !isSleeping()">Pause</button>
+              <button data-bind="click: setStatus.bind($data, 'enable'), visible: isPaused()">Start</button>
+              <button data-bind="click: setStatus.bind($data, 'pause'), visible: !isPaused()">Pause</button>
             </p>
 
             <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
@@ -845,6 +845,24 @@
                 </td>
               </tr>
             </table>
+          </div>
+
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+            <h2>Vehicle Settings</h2>
+            <h3>Pause status <span class="info" data-bind="click: toggle.bind($data, showVehiclePauseStatus)"></span></h3>
+            <div class="box" data-bind="visible: showVehiclePauseStatus()">
+              Some vehicles will shutdown if left in sleep mode (pilot signal enable) and then can not be woken up by timers/PV divert. Changing the 
+              pause state to disable should resolve this issue, however this removes the ability for the charger to detect if a vehicle is connected
+              when paused.
+            </div>
+            <div>
+              <span data-bind="css: {selected: !config.pause_uses_disabled() }">Sleep</span>
+              <label class="switch">
+                <input type="checkbox" data-bind="checked: config.pause_uses_disabled" />
+                <div class="slider round"></div>
+              </label>
+              <span data-bind="css: {selected: config.pause_uses_disabled }">Disable</span><br/>
+            </div>
           </div>
 
           <div class="box380" data-bind="visible: status.rapi_connected,

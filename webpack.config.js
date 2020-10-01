@@ -17,12 +17,58 @@ const CopyPlugin = require("copy-webpack-plugin");
 require("dotenv").config();
 const openevseEndpoint = process.env.OPENEVSE_ENDPOINT || "http://openevse.local";
 const devHost = process.env.DEV_HOST || "localhost";
+const enable_uglify = process.env.hasOwnProperty("UGLIFY") ? ("true" === process.env.UGLIFY) : true;
 
 var htmlMinify = {
   removeComments: true,
   collapseWhitespace: true,
   conservativeCollapse: true
 };
+
+var mergeOptions = {
+  files: {
+    "lib.js": [
+      "node_modules/jquery/dist/jquery.js",
+      "node_modules/knockout/build/output/knockout-latest.js",
+      "node_modules/knockout-mapping/dist/knockout.mapping.js",
+      "src/view_models/BaseViewModel.js",
+      "src/view_models/ConfigViewModel.js",
+      "src/view_models/StatusViewModel.js",
+      "src/view_models/WiFiScanViewModel.js",
+      "src/view_models/WiFiConfigViewModel.js",
+      "src/view_models/PasswordViewModel.js",
+      "src/view_models/ConfigGroupViewModel.js",
+    ],
+    "home.js": [
+      "src/openevse.js",
+      "src/view_models/RapiViewModel.js",
+      "src/view_models/TimeViewModel.js",
+      "src/view_models/ZonesViewModel.js",
+      "src/view_models/OpenEvseViewModel.js",
+      "src/view_models/OpenEvseWiFiViewModel.js",
+      "src/home.js"
+    ],
+    "term.js": [
+      "node_modules/jquery/dist/jquery.js",
+      "src/term.js"
+    ],
+    "wifi_portal.js": [
+      "src/view_models/WiFiPortalViewModel.js",
+      "src/wifi_portal.js"
+    ]
+  },
+};
+
+if(enable_uglify)
+{
+  console.log("Enabled Uglify");
+  mergeOptions.transform = {
+    "lib.js": code => uglify("lib.js", code),
+    "home.js": code => uglify("home.js", code),
+    "wifi_portal.js": code => uglify("wifi_portal.js", code),
+    "term.js": code => uglify("term.js", code),
+  };
+}
 
 module.exports = {
   mode: "production",
@@ -107,45 +153,7 @@ module.exports = {
       filename: "style.css",
       chunkFilename: "[id].css"
     }),
-    new MergeIntoSingleFilePlugin({
-      files: {
-        "lib.js": [
-          "node_modules/jquery/dist/jquery.js",
-          "node_modules/knockout/build/output/knockout-latest.js",
-          "node_modules/knockout-mapping/dist/knockout.mapping.js",
-          "src/view_models/BaseViewModel.js",
-          "src/view_models/ConfigViewModel.js",
-          "src/view_models/StatusViewModel.js",
-          "src/view_models/WiFiScanViewModel.js",
-          "src/view_models/WiFiConfigViewModel.js",
-          "src/view_models/PasswordViewModel.js",
-          "src/view_models/ConfigGroupViewModel.js",
-        ],
-        "home.js": [
-          "src/openevse.js",
-          "src/view_models/RapiViewModel.js",
-          "src/view_models/TimeViewModel.js",
-          "src/view_models/ZonesViewModel.js",
-          "src/view_models/OpenEvseViewModel.js",
-          "src/view_models/OpenEvseWiFiViewModel.js",
-          "src/home.js"
-        ],
-        "term.js": [
-          "node_modules/jquery/dist/jquery.js",
-          "src/term.js"
-        ],
-        "wifi_portal.js": [
-          "src/view_models/WiFiPortalViewModel.js",
-          "src/wifi_portal.js"
-        ]
-      },
-      transform: {
-        "lib.js": code => uglify("lib.js", code),
-        "home.js": code => uglify("home.js", code),
-        "wifi_portal.js": code => uglify("wifi_portal.js", code),
-        "term.js": code => uglify("term.js", code),
-      }
-    }),
+    new MergeIntoSingleFilePlugin(mergeOptions),
     new CopyPlugin([
       { from: "assets/*", flatten: true },
       { from: "posix_tz_db/zones.json", flatten: true }

@@ -3,3 +3,4 @@ dist
 stats.json
 .env
 .vscode/settings.json
+.DS_Store
