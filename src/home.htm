@@ -929,6 +929,12 @@
                 <td>$FS</td>
                 <td>Put EVSE to sleep</td>
               </tr>
+              <tr>
+                <td>$FF</td>
+                <td>Enable/disable feature (feature_id 0|1)<br>
+                    Front panel (B)utton, (D)iode check, G(F)I self-test, (G)round check,
+                    Stuck (R)elay check, (T)emp monitoring, (V)ent required</td>
+              </tr>
             </table>
           </div>
           <div class="box380 left">
@@ -937,6 +943,10 @@
               <tr>
                 <th>Get</th>
                 <th>Description</th>
+              </tr>
+              <tr>
+                <td>$G0</td>
+                <td>Get EV connected state, not connected (0), connected (1), unknown (2)</td>
               </tr>
               <tr>
                 <td>$G3</td>
@@ -952,7 +962,7 @@
               </tr>
               <tr>
                 <td>$GD</td>
-                <td>Get delay timer, starthr startmin endhr endmin</td>
+                <td>Get delay timer, start_hour start_min end_hour end_min</td>
               </tr>
               <tr>
                 <td>$GE</td>
@@ -975,12 +985,8 @@
                 <td>Get Voltmeter Scale/Offset, scale offset</td>
               </tr>
               <tr>
-                <td>$GO</td>
-                <td>Get Overtemperature thresholds, ambient infrared</td>
-              </tr>
-              <tr>
                 <td>$GP</td>
-                <td>Get Temperatures, LCD mcp9808 infrared (all integers, Celsius * 10)</td>
+                <td>Get Temperatures, LCD MCP9808 infrared (integers, °C * 10)</td>
               </tr>
               <tr>
                 <td>$GS</td>
@@ -1013,7 +1019,7 @@
               </tr>
               <tr>
                 <td>$S1</td>
-                <td>Set RTC Year Month Day Hour Minute Second (all 2-digit max)</td>
+                <td>Set RTC, year month day hour minute second (all 2-digit max)</td>
               </tr>
               <tr>
                 <td>$S2</td>
@@ -1031,15 +1037,6 @@
                 <td>$SC</td>
                 <td>Set current capacity, integer</td>
               </tr>
-              <tr><td>$SD</td><td>Enable (1) / Disable (0) Diode self-check</td></tr>
-              <tr>
-                <td>$SF</td>
-                <td>Enable (1) / Disable (0) GFI self-check</td>
-              </tr>
-              <tr>
-                <td>$SG</td>
-                <td>Enable (1) / Disable (0) Ground check</td>
-              </tr>
               <tr>
                 <td>$SH</td>
                 <td>Set charge limit in kWh, integer</td>
@@ -1048,22 +1045,13 @@
                 <td>$SK</td>
                 <td>Set accumulated Wh, integer</td>
               </tr>
-              <tr><td>$SL</td><td>Set service level (1/2/A)</td></tr>
+              <tr>
+                  <td>$SL</td>
+                  <td>Set service level (1/2/A)</td>
+              </tr>
               <tr>
                 <td>$SM</td>
                 <td>Set Voltmeter Scale/Offset, scale offset</td>
-              </tr>
-              <tr>
-                <td>$SO</td>
-                <td>Set Overtemperature thresholds, ambient infrared</td>
-              </tr>
-              <tr>
-                <td>$SR</td>
-                <td>Enable (1) / Disable (0) Stuck-relay check</td>
-              </tr>
-              <tr>
-                <td>$SS</td>
-                <td>Enable (1) / Disable (0) GFI self-check</td>
               </tr>
               <tr>
                 <td>$ST</td>
@@ -1071,7 +1059,7 @@
               </tr>
               <tr>
                 <td>$SV</td>
-                <td>Enable (1) / Disable (0) vent required check</td>
+                <td>Set voltage for power calculations, millivolts</td>
               </tr>
             </table>
           </div>
