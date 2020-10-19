@@ -49,6 +49,7 @@ function ConfigViewModel(baseEndpoint) {
     "version": "0.0.0",
     "time_zone": false,
     "divert_enabled": false,
+    "divert_PV_ratio": 1.0,
     "divert_attack_smoothing_factor": 0.4,
     "divert_decay_smoothing_factor": 0.05,
     "divert_min_charge_time": 600,

@@ -493,6 +493,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       divert_enabled: self.config.divert_enabled(),
       mqtt_solar: self.config.mqtt_solar(),
       mqtt_grid_ie: self.config.mqtt_grid_ie(),
+      divert_PV_ratio: self.config.divert_PV_ratio(),
       divert_attack_smoothing_factor: self.config.divert_attack_smoothing_factor(),
       divert_decay_smoothing_factor: self.config.divert_decay_smoothing_factor(),
       divert_min_charge_time: self.config.divert_min_charge_time()
