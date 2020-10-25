@@ -796,7 +796,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       processData: false,
       xhr: function () {
         var xhr = new window.XMLHttpRequest();
-        xhr.upload.addEventListener("progressController", function (evt) {
+        xhr.upload.addEventListener("progress", function (evt) {
           if (evt.lengthComputable) {
             self.updateControllerLoaded(evt.loaded);
             self.updateControllerTotal(evt.total);

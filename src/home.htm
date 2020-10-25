@@ -159,8 +159,8 @@
             </div>
             <div data-bind="visible: updateFetching() && !updateComplete()">
               Updating... <br/>
-              <div id="progressBack">
-                <div id="progressBar" data-bind="style: { width: updateProgress()+'%' }"></div>
+              <div id="progressBack" class="progressBack">
+                <div id="progressBar" class="progressBar" data-bind="style: { width: updateProgress()+'%' }"></div>
               </div>
             </div>
             <div  data-bind="visible: updateComplete">
@@ -187,8 +187,8 @@
             </div>
             <div data-bind="visible: updateControllerFetching() && !updateControllerComplete()">
               Updating... <br />
-              <div id="progressControllerBack">
-                <div id="progressControllerBar" data-bind="style: { width: updateControllerProgress()+'%' }"></div>
+              <div id="progressControllerBack" class="progressBack">
+                <div id="progressControllerBar" class="progressBar" data-bind="style: { width: updateControllerProgress()+'%' }"></div>
               </div>
             </div>
             <div data-bind="visible: updateControllerComplete">
