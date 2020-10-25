@@ -57,7 +57,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.showSolarDivert = ko.observable(false);
   self.showSafety = ko.observable(false);
   self.showVehiclePauseStatus = ko.observable(false);
-
+  
   self.toggle = function (flag) {
     flag(!flag());
   };
@@ -758,6 +758,63 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       self.updateError("HTTP Update failed");
     }).always(function () {
       self.updateFetching(false);
+    });
+  };
+
+  // -----------------------------------------------------------------------
+  // Event: Update
+  // -----------------------------------------------------------------------
+
+  // Support for OTA update of the Controller
+  self.updateControllerFetching = ko.observable(false);
+  self.updateControllerComplete = ko.observable(false);
+  self.updateControllerError = ko.observable("");
+  self.updateControllerFilename = ko.observable("");
+  self.updateControllerLoaded = ko.observable(0);
+  self.updateControllerTotal = ko.observable(1);
+  self.updateControllerProgress = ko.pureComputed(function () {
+    return (self.updateControllerLoaded() / self.updateControllerTotal()) * 100;
+  });
+
+  self.otaUpdateController = function () {
+    if ("" === self.updateControllerFilename()) {
+      self.updateControllerError("Filename not set");
+      return;
+    }
+
+    self.updateControllerFetching(true);
+    self.updateControllerError("");
+
+    var form = $("#upload_controller_form")[0];
+    var data = new FormData(form);
+
+    $.ajax({
+      url: "/updateController",
+      type: "POST",
+      data: data,
+      contentType: false,
+      processData: false,
+      xhr: function () {
+        var xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener("progressController", function (evt) {
+          if (evt.lengthComputable) {
+            self.updateControllerLoaded(evt.loaded);
+            self.updateControllerTotal(evt.total);
+          }
+        }, false);
+        return xhr;
+      }
+    }).done(function (msg) {
+      console.log(msg);
+      if ("OK" == msg) {
+        self.updateControllerComplete(true);
+      } else {
+        self.updateControllerError(msg);
+      }
+    }).fail(function () {
+      self.updateControllerError("HTTP Update failed");
+    }).always(function () {
+      self.updateControllerFetching(false);
     });
   };
 

@@ -172,26 +172,26 @@
             </p>
           </div>
 
-          <div class="box380 right" data-bind="visible: config.smartEVSE">
-            <h2>SmartEVSE Firmware</h2>
-            <p><b>Version: </b><span data-bind="text: config.smartEVSE_Version"></span></p>
-            <div data-bind="visible: !updateSmartEVSEFetching() && !updateSmartEVSEComplete()">
-              <form action="#" method="post" enctype="multipart/form-data" id="upload_smartevse_form" data-bind="submit: smartEVSEUpdate">
-                <input type="file" name="updateSmartEVSE" data-bind="value: updateSmartEVSEFilename">
-                <button data-bind="click: smartEVSEUpdate, text: (updateSmartEVSEFetching() ? 'Updating...' : 'Update'), disable: ('' == updateSmartEVSEFilename())">Update</button>
+          <div class="box380 right" data-bind="visible: config.canUpdateFirmware()">
+            <h2>Controller Firmware</h2>
+            <p><b>Version: </b><span data-bind="text: config.firmware"></span></p>
+            <div data-bind="visible: !updateControllerFetching() && !updateControllerComplete()">
+              <form action="#" method="post" enctype="multipart/form-data" id="upload_controller_form" data-bind="submit: otaUpdateController">
+                <input type="file" name="updateController" data-bind="value: updateControllerFilename">
+                <button data-bind="click: otaUpdateController, text: (updateControllerFetching() ? 'Updating...' : 'Update'), disable: ('' == updateControllerFilename())">Update</button>
               </form>
             </div>
-            <div data-bind="visible: (updateSmartEVSEError() !== '')" class="box error">
+            <div data-bind="visible: (updateControllerError() !== '')" class="box error">
               <h4>Error:</h4>
-              <span data-bind="text: updateSmartEVSEError"></span>
+              <span data-bind="text: updateControllerError"></span>
             </div>
-            <div data-bind="visible: updateSmartEVSEFetching() && !updateSmartEVSEComplete()">
+            <div data-bind="visible: updateControllerFetching() && !updateControllerComplete()">
               Updating... <br />
-              <div id="progressSmartEVSEBack">
-                <div id="progressSmartEVSEBar" data-bind="style: { width: updateSmartEVSEProgress()+'%' }"></div>
+              <div id="progressControllerBack">
+                <div id="progressControllerBar" data-bind="style: { width: updateControllerProgress()+'%' }"></div>
               </div>
             </div>
-            <div data-bind="visible: updateSmartEVSEComplete">
+            <div data-bind="visible: updateControllerComplete">
               Firmware update completed ok
             </div>
           </div>

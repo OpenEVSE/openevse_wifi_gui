@@ -46,7 +46,7 @@ function ConfigViewModel(baseEndpoint) {
     "tempt": 0,
     "scale": 1,
     "offset": 0,
-    "version": "0.0.0",
+    "version": "-",
     "time_zone": false,
     "divert_enabled": false,
     "divert_PV_ratio": 1.0,
@@ -54,9 +54,7 @@ function ConfigViewModel(baseEndpoint) {
     "divert_decay_smoothing_factor": 0.05,
     "divert_min_charge_time": 600,
     "charge_mode": "full",
-    "pause_uses_disabled": false,
-    "smartEVSE": false,
-    "smartEVSE_Version": "0.0.0"
+    "pause_uses_disabled": false
   }, endpoint);
 
   function trim(prop, val) {
@@ -99,4 +97,9 @@ ConfigViewModel.prototype.update = function (after = function () { }) {
     this.fetching(false);
     after();
   });
+
+  self.canUpdateFirmware = ko.pureComputed(function () {
+    return self.config.firmware() && self.config.firmware() !== "-";
+  });
+
 };
