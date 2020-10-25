@@ -123,23 +123,25 @@
           </div>
 
           <div class="box380 right">
-            <h2>Administration</h2>
-            <p>
-              <b>Username:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.www_username" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="">
-              <span class="small-text validMessage">15 characters max</span>
-            </p>
-            <p>
-              <b>Password:</b><br>
-              <input type="password" autocapitalize="none" data-bind="textInput: wwwPassword.value, attr: { type: wwwPassword.show() ? 'text' : 'password' }" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="" /><br />
-              <span>
-                <input id="wwwPassword" type="checkbox" data-bind="checked: wwwPassword.show" />
-                <label for="wwwPassword">Show password</label>
-              </span><br />
-              <span class="small-text validMessage">15 characters max</span><br>
-              <span class="small-text">Web interface HTTP authentication.</span><br><br>
-              <button data-bind="click: saveAdmin, text: (saveAdminFetching() ? 'Saving' : (saveAdminSuccess() ? 'Saved' : 'Save')), disable: saveAdminFetching">Save</button>
-            </p>
+            <form>
+              <h2>Administration</h2>
+              <p>
+                <b>Username:</b><br>
+                  <input type="text" autocapitalize="none" autocomplete="username" data-bind="textInput: config.www_username" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="">
+                <span class="small-text validMessage">15 characters max</span>
+              </p>
+              <p>
+                <b>Password:</b><br>
+                  <input type="password" autocapitalize="none" autocomplete="new-password" data-bind="textInput: wwwPassword.value, attr: { type: wwwPassword.show() ? 'text' : 'password' }" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="" /><br />
+                <span>
+                  <input id="wwwPassword" type="checkbox" data-bind="checked: wwwPassword.show" />
+                  <label for="wwwPassword">Show password</label>
+                </span><br />
+                <span class="small-text validMessage">15 characters max</span><br>
+                <span class="small-text">Web interface HTTP authentication.</span><br><br>
+                  <button data-bind="click: saveAdmin, text: (saveAdminFetching() ? 'Saving' : (saveAdminSuccess() ? 'Saved' : 'Save')), disable: saveAdminFetching">Save</button>
+              </p>
+            </form>
           </div>
 
           <div class="box380 right">
@@ -233,12 +235,14 @@
               <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_node">
             </p>
             <p data-bind="visible: config.emoncms_enabled">
+            <form>
               <b>Emoncms write-apikey*:</b><br />
-              <input type="password" autocapitalize="none" data-bind="textInput: emoncmsApiKey.value, attr: { type: emoncmsApiKey.show() ? 'text' : 'password' }" /><br />
+              <input type="password" autocapitalize="none" autocomplete="new-password" data-bind="textInput: emoncmsApiKey.value, attr: { type: emoncmsApiKey.show() ? 'text' : 'password' }" /><br />
               <span>
                 <input id="emoncmsApiKey" type="checkbox" data-bind="checked: emoncmsApiKey.show" />
                 <label for="emoncmsApiKey">Show password</label>
               </span>
+            </form>
             </p>
             <p data-bind="visible: config.emoncms_enabled && config.http_supported_protocols().length === 0">
               <b>Emoncms SSL SHA-1 Fingerprint (optional):</b><br>
@@ -310,18 +314,20 @@
               Certificate validation is disabled, although the connection to MQTT server will be encrypted the connection is still
               vulnerable to man-in-the-middle attacks.
             </div>
-            <p data-bind="visible: config.mqtt_enabled">
-              <b>Username:</b><span> blank - no authentication</span>
-              <input data-bind="textInput: config.mqtt_user" type="text" autocapitalize="none">
-            </p>
-            <p data-bind="visible: config.mqtt_enabled">
-              <b>Password:</b><span> blank - no authentication</span>
-              <input type="password" autocapitalize="none" data-bind="textInput: mqttPassword.value, attr: { type: mqttPassword.show() ? 'text' : 'password' }" /><br />
-              <span>
-                <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
-                <label for="mqttPassword">Show password</label>
-              </span>
-            </p>
+            <form>
+              <p data-bind="visible: config.mqtt_enabled">
+                <b>Username:</b><span> blank - no authentication</span>
+                  <input data-bind="textInput: config.mqtt_user" type="text" autocapitalize="none" autocomplete="username">
+              </p>
+              <p data-bind="visible: config.mqtt_enabled">
+                <b>Password:</b><span> blank - no authentication</span>
+                  <input type="password" autocapitalize="none" autocomplete="new-password" data-bind="textInput: mqttPassword.value, attr: { type: mqttPassword.show() ? 'text' : 'password' }" /><br />
+                <span>
+                  <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
+                  <label for="mqttPassword">Show password</label>
+                </span>
+              </p>
+            </form>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Base-topic*:</b><br>
               <input data-bind="textInput: config.mqtt_topic" type="text" autocapitalize="none"><br/>
