@@ -7,6 +7,7 @@ function ConfigViewModel(baseEndpoint) {
   BaseViewModel.call(this, {
     "ssid": "",
     "pass": "",
+    "apass": "",
     "emoncms_server": "data.openevse.com/emoncms",
     "emoncms_apikey": "",
     "emoncms_node": "",

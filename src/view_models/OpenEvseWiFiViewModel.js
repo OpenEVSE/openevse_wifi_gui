@@ -391,7 +391,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.advancedGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
     return {
       hostname: self.config.hostname(),
-      sntp_hostname: self.config.sntp_hostname()
+      sntp_hostname: self.config.sntp_hostname(),
+      apass: self.config.apass()
     };
   }).done(() => {
     if (confirm("These changes require a reboot to take effect. Reboot now?")) {
