@@ -3,6 +3,7 @@
 
 function ConfigViewModel(baseEndpoint) {
   "use strict";
+  var self = this;
   var endpoint = ko.pureComputed(function () { return baseEndpoint() + "/config"; });
   BaseViewModel.call(this, {
     "ssid": "",
@@ -78,7 +79,12 @@ function ConfigViewModel(baseEndpoint) {
   this.www_username.subscribe((v) => { trim(this.www_username, v); });
   this.hostname.subscribe((v) => { trim(this.hostname, v); });
   this.sntp_hostname.subscribe((v) => { trim(this.sntp_hostname, v); });
+
+  this.canUpdateFirmware = ko.pureComputed(function () {
+    return self.firmware() && self.firmware() !== "-";
+  });
 }
+
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);
 ConfigViewModel.prototype.constructor = ConfigViewModel;
 
@@ -96,10 +102,6 @@ ConfigViewModel.prototype.update = function (after = function () { }) {
   }, "json").always(() => {
     this.fetching(false);
     after();
-  });
-
-  self.canUpdateFirmware = ko.pureComputed(function () {
-    return self.config.firmware() && self.config.firmware() !== "-";
   });
 
 };
