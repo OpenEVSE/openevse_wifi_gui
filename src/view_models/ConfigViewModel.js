@@ -54,11 +54,13 @@ function ConfigViewModel(baseEndpoint) {
     "divert_decay_smoothing_factor": 0.05,
     "divert_min_charge_time": 600,
     "charge_mode": "full",
-    "pause_uses_disabled": false
+    "pause_uses_disabled": false,
+    "smartEVSE": false,
+    "smartEVSE_Version": "0.0.0"
   }, endpoint);
 
   function trim(prop, val) {
-    if(val.trim() !== prop()) {
+    if (val.trim() !== prop()) {
       prop(val.trim());
     }
   }
@@ -90,7 +92,7 @@ ConfigViewModel.prototype.update = function (after = function () { }) {
     this.mqtt_port_enable(data.hasOwnProperty("mqtt_port"));
     this.mqtt_reject_unauthorized_enable(data.hasOwnProperty("mqtt_reject_unauthorized"));
     // HACK: not sure why this is needed
-    if(data.hasOwnProperty("mqtt_protocol")) {
+    if (data.hasOwnProperty("mqtt_protocol")) {
       this.mqtt_protocol(data.mqtt_protocol);
     }
   }, "json").always(() => {

@@ -172,6 +172,30 @@
             </p>
           </div>
 
+          <div class="box380 right" data-bind="visible: config.smartEVSE">
+            <h2>SmartEVSE Firmware</h2>
+            <p><b>Version: </b><span data-bind="text: config.smartEVSE_Version"></span></p>
+            <div data-bind="visible: !updateSmartEVSEFetching() && !updateSmartEVSEComplete()">
+              <form action="#" method="post" enctype="multipart/form-data" id="upload_smartevse_form" data-bind="submit: smartEVSEUpdate">
+                <input type="file" name="updateSmartEVSE" data-bind="value: updateSmartEVSEFilename">
+                <button data-bind="click: smartEVSEUpdate, text: (updateSmartEVSEFetching() ? 'Updating...' : 'Update'), disable: ('' == updateSmartEVSEFilename())">Update</button>
+              </form>
+            </div>
+            <div data-bind="visible: (updateSmartEVSEError() !== '')" class="box error">
+              <h4>Error:</h4>
+              <span data-bind="text: updateSmartEVSEError"></span>
+            </div>
+            <div data-bind="visible: updateSmartEVSEFetching() && !updateSmartEVSEComplete()">
+              Updating... <br />
+              <div id="progressSmartEVSEBack">
+                <div id="progressSmartEVSEBar" data-bind="style: { width: updateSmartEVSEProgress()+'%' }"></div>
+              </div>
+            </div>
+            <div data-bind="visible: updateSmartEVSEComplete">
+              Firmware update completed ok
+            </div>
+          </div>
+
           <div class="box380 left" data-bind="visible: advancedMode()">
             <h2>Advanced Settings</h2>
             <p data-bind="visible: false !== config.hostname()">
