@@ -144,6 +144,22 @@
             </form>
           </div>
 
+          <div class="box380 left" data-bind="visible: advancedMode()">
+            <h2>Advanced Settings</h2>
+            <p data-bind="visible: false !== config.hostname()">
+              <b>Hostname:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
+              <span class="small-text validMessage">31 characters max</span>
+            </p>
+            <p data-bind="visible: false !== config.sntp_hostname()">
+              <b>NTP Server:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname" pattern=".{31}">
+            </p>
+            <p>
+              <button data-bind="click: advancedGroup.save, text: (advancedGroup.fetching() ? 'Saving' : (advancedGroup.success() ? 'Saved' : 'Save')), disable: advancedGroup.fetching">Save</button>
+            </p>
+          </div>
+
           <div class="box380 right">
             <h2>WiFi Firmware</h2>
             <p><b>Version: </b><span data-bind="text: config.version"></span></p>
@@ -194,22 +210,6 @@
             <div data-bind="visible: updateControllerComplete">
               Firmware update completed ok
             </div>
-          </div>
-
-          <div class="box380 left" data-bind="visible: advancedMode()">
-            <h2>Advanced Settings</h2>
-            <p data-bind="visible: false !== config.hostname()">
-              <b>Hostname:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
-              <span class="small-text validMessage">31 characters max</span>
-            </p>
-            <p data-bind="visible: false !== config.sntp_hostname()">
-              <b>NTP Server:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname" pattern=".{31}">
-            </p>
-            <p>
-              <button data-bind="click: advancedGroup.save, text: (advancedGroup.fetching() ? 'Saving' : (advancedGroup.success() ? 'Saved' : 'Save')), disable: advancedGroup.fetching">Save</button>
-            </p>
           </div>
 
           <div class="box380 left">
