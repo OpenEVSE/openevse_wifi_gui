@@ -188,7 +188,7 @@
             </p>
           </div>
 
-          <div class="box380 right" data-bind="visible: config.canUpdateFirmware()">
+          <div class="box380 right" data-bind="visible: config.canUpdateControllerFirmware()">
             <h2>Controller Firmware</h2>
             <p><b>Version: </b><span data-bind="text: config.firmware"></span></p>
             <div data-bind="visible: !updateControllerFetching() && !updateControllerComplete()">
