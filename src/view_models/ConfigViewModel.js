@@ -80,12 +80,8 @@ function ConfigViewModel(baseEndpoint) {
   this.hostname.subscribe((v) => { trim(this.hostname, v); });
   this.sntp_hostname.subscribe((v) => { trim(this.sntp_hostname, v); });
 
-  this.isSmartEVSE = ko.pureComputed(function () {
-    return self.firmware() && self.firmware().startsWith("SmartEVSE_");
-  });
-
   this.canUpdateControllerFirmware = ko.pureComputed(function () {
-    return this.isSmartEVSE() || self.firmware()=="-";
+    return self.firmware() && (self.firmware().startsWith("SmartEVSE_") || self.firmware()=="-");
   });
 }
 

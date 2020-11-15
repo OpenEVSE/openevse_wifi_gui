@@ -513,6 +513,10 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     };
   });
 
+  this.isSmartEVSE = ko.pureComputed(function () {
+    return self.config.firmware() && self.config.firmware().startsWith("SmartEVSE_");
+  });
+
   self.isEcoModeAvailable = ko.pureComputed(function () {
     return self.config.mqtt_enabled() && self.config.divert_enabled() &&
            ("" !== self.config.mqtt_solar() ||

@@ -560,7 +560,7 @@
               <button data-bind="click: setStatus.bind($data, 'pause'), visible: !isPaused()">Pause</button>
             </p>
 
-            <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
+            <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode() &amp;&amp; !isSmartEVSE()">
               <hr \>
               <p>
                 <b>Time limit:</b><br\>
@@ -583,8 +583,8 @@
               </p>
             </span>
 
-            <hr> <br>
-            <div data-bind="with: openevse">
+            <div data-bind="with: openevse, visible: !isSmartEVSE()">
+              <hr> <br>
               <b>Timer:</b><br>
                 Start: <input type="time" data-bind="value: delayTimerStart, disable: isError" />
                 &nbsp;&nbsp;
@@ -684,16 +684,17 @@
               <button data-bind="click: setTime, text: (setTimeFetching() ? 'Saving' : (setTimeSuccess() ? 'Saved' : 'Set time')), disable: setTimeFetching">Set time</button>
             </div>
             <hr>
-            <p>
-              <b>Service Level:</b><br/>
-              <select data-bind="options: openevse.serviceLevels,
-                                 optionsText: 'name',
-                                 optionsValue: 'value',
-                                 value: openevse.serviceLevel,
-                                 disable: openevse.updatingServiceLevel(),
-                                 css: { saved: openevse.savedServiceLevel }"></select>
-            </p>
-
+            <div data-bind="visible: !isSmartEVSE()">
+              <p>
+                <b>Service Level:</b><br/>
+                <select data-bind="options: openevse.serviceLevels,
+                                  optionsText: 'name',
+                                  optionsValue: 'value',
+                                  value: openevse.serviceLevel,
+                                  disable: openevse.updatingServiceLevel(),
+                                  css: { saved: openevse.savedServiceLevel }"></select>
+              </p>
+            </div>
             <p>
               <b>Max Current:</b><br/>
               <select data-bind="options: openevse.currentLevels,
