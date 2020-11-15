@@ -763,7 +763,7 @@
                 <th>Test</th>
                 <th>Status</th>
               </tr>
-              <tr data-bind="css: {error: 9 === status.state() }">
+              <tr data-bind="css: {error: 9 === status.state() }, visible: !isSmartEVSE()">
                 <td>GFI Self Test:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -773,7 +773,7 @@
                   <span data-bind="text: openevse.gfiSelfTestEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="css: {error: 7 === status.state() }">
+              <tr data-bind="css: {error: 7 === status.state() }, visible: !isSmartEVSE()">
                 <td>Ground Monitoring:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -783,7 +783,7 @@
                   <span data-bind="text: openevse.groundCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="css: {error: 8 === status.state() }">
+              <tr data-bind="css: {error: 8 === status.state() }, visible: !isSmartEVSE()">
                 <td>Stuck Contact Detection:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -813,7 +813,7 @@
                   <span data-bind="text: openevse.diodeCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="css: {error: 4 === status.state() }">
+              <tr data-bind="css: {error: 4 === status.state() }, visible: !isSmartEVSE()">
                 <td>Vent Required:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -823,19 +823,19 @@
                   <span data-bind="text: openevse.ventRequiredEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr>
+              <tr data-bind="visible: !isSmartEVSE()">
                 <th>Error</th>
                 <th>Count</th>
               </tr>
-              <tr>
+              <tr data-bind="visible: !isSmartEVSE()">
                 <td>GFCI:</td>
                 <td><span data-bind="text: status.gfcicount"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: !isSmartEVSE()">
                 <td>No Ground:</td>
                 <td><span data-bind="text: status.nogndcount"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: !isSmartEVSE()">
                 <td>Stuck Contact:</td>
                 <td><span data-bind="text: status.stuckcount"></span></td>
               </tr>

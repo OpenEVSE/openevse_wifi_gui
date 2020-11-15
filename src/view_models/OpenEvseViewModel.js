@@ -82,6 +82,11 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
   self.delayTimerStart = ko.observable("--:--");
   self.delayTimerStop = ko.observable("--:--");
 
+  self.isSmartEVSE = ko.pureComputed(function () {
+    console.log("Firmware: " + self.config.firmware());
+    return self.config.firmware() && self.config.firmware().startsWith("SmartEVSE_");
+  });
+
   // Saftey tests
   self.gfiSelfTestEnabled = ko.observable(false);
   self.groundCheckEnabled = ko.observable(false);
@@ -90,12 +95,17 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
   self.diodeCheckEnabled = ko.observable(false);
   self.ventRequiredEnabled = ko.observable(false);
   self.allTestsEnabled = ko.pureComputed(function () {
-    return self.gfiSelfTestEnabled() &&
-           self.groundCheckEnabled() &&
-           self.stuckRelayEnabled() &&
-           self.tempCheckEnabled() &&
-           self.diodeCheckEnabled() &&
-           self.ventRequiredEnabled();
+    if (self.isSmartEVSE()) {
+      return self.tempCheckEnabled() &&
+             self.diodeCheckEnabled();
+    } else {
+      return self.gfiSelfTestEnabled() &&
+             self.groundCheckEnabled() &&
+             self.stuckRelayEnabled() &&
+             self.tempCheckEnabled() &&
+             self.diodeCheckEnabled() &&
+             self.ventRequiredEnabled();
+    }
   });
 
   self.tempCheckSupported = ko.observable(false);
