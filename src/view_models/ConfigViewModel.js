@@ -49,6 +49,7 @@ function ConfigViewModel(baseEndpoint) {
     "offset": 0,
     "version": "-",
     "time_zone": false,
+    "divert_feed_type": "grid_ie",
     "divert_enabled": false,
     "divert_PV_ratio": 1.0,
     "divert_attack_smoothing_factor": 0.4,

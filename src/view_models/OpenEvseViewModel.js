@@ -83,7 +83,6 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
   self.delayTimerStop = ko.observable("--:--");
 
   self.isSmartEVSE = ko.pureComputed(function () {
-    console.log("Firmware: " + self.config.firmware());
     return self.config.firmware() && self.config.firmware().startsWith("SmartEVSE_");
   });
 

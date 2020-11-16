@@ -428,7 +428,7 @@
               </p>
             </div>
 
-            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() !== 'internal'">
               <br>
               <span data-bind="visible: divertFeedType() === 'solar'"><b>Solar:</b></span>
               <span data-bind="visible: divertFeedType() === 'grid_ie'"><b>Grid Import/Export:</b></span>
@@ -443,38 +443,40 @@
                 <select data-bind="value: divertFeedType">
                   <option value="solar">SolarPV-gen</option>
                   <option value="grid_ie">Grid (+I/-E)</option>
+                  <option data-bind="visible: openevse.isSmartEVSE" value="internal">Internal</option>
                 </select>
-                <input data-bind="textInput: divertFeedValue" type="text" autocapitalize="none"><br/>
+                <input data-bind="textInput: divertFeedValue, visible: divertFeedType() !== 'internal'" type="text" autocapitalize="none"><br/>
                 <span data-bind="visible: divertFeedType() === 'solar'" class="small-text">Solar PV MQTT topic to modulate charge rate based on solar</span>
                 <span data-bind="visible: divertFeedType() === 'grid_ie'" class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
+                <span data-bind="visible: divertFeedType() === 'internal'" class="small-text">SmartEVSE internal solar mode</span>
               </div>
             </div>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() === 'grid_ie'">
-              <b>Required PV power ratio:</b><br>
+              <b>Required PV power ratio:</b><br>  
               <input data-bind="textInput: config.divert_PV_ratio" type="number" autocapitalize="none" hint="1.1" min="0.05" max="1.5" step="0.01"><br>
               <span class="small-text">The fraction of PV current that suffices to start charging or increment current </span>
             </p>
 
-            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() !== 'internal'">
               <b>Divert smoothing attack:</b><br>
               <input data-bind="textInput: config.divert_attack_smoothing_factor" type="number" autocapitalize="none" hint="0.4" min="0" max="1" step="0.01"><br>
               <span class="small-text">The amount of the new feed value to add to the divert available power rolling average </span>
             </p>
 
-            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() !== 'internal'">
               <b>Divert smoothing decay:</b><br>
               <input data-bind="textInput: config.divert_decay_smoothing_factor" type="number" autocapitalize="none" hint="0.05" min="0" max="1" step="0.01"><br>
               <span class="small-text">The amount of the new feed value to remove to the divert available power rolling average </span>
             </p>
 
-            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() !== 'internal'">
               <b>Minimum charge time:</b><br>
               <input data-bind="textInput: config.divert_min_charge_time" type="number" autocapitalize="none" hint="600" min="0" max="100000" step="10"><br>
               <span class="small-text">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tear on the EVSE.</span>
             </p>
 
-            <p data-bind="visible: isEcoModeAvailable">
+            <p data-bind="visible: config.mqtt_enabled">
               <button data-bind="click: divertGroup.save, text: (divertGroup.fetching() ? 'Saving' : (divertGroup.success() ? 'Saved' : 'Save')), disable: divertGroup.fetching">Save</button>
             </p>
           </div>
@@ -521,9 +523,12 @@
             
             <div data-bind="visible: ecoMode() &amp;&amp; isEcoModeAvailable()">
               <br>
-              <span data-bind="visible: haveSolar"><b>Solar:</b></span>
-              <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
-              <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
+              <span data-bind="visible: haveSolar() &amp;&amp; divertFeedType() !== 'internal'"><b>Solar:</b></span>
+              <span data-bind="visible: haveGridIe() &amp;&amp; divertFeedType() !== 'internal'"><b>Grid Import/Export:</b></span>
+              <span data-bind="visible: divertFeedType() === 'internal'"><b>Internal:</b></span>
+              <div data-bind="visible: divertFeedType() !== 'internal'">
+                <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
+              </div>
               <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
               |
               <span data-bind="visible: openevse.isReady()"><b>Vehicle not connected</b></span>
@@ -560,7 +565,7 @@
               <button data-bind="click: setStatus.bind($data, 'pause'), visible: !isPaused()">Pause</button>
             </p>
 
-            <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode() &amp;&amp; !isSmartEVSE()">
+            <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode() &amp;&amp; !openevse.isSmartEVSE()">
               <hr \>
               <p>
                 <b>Time limit:</b><br\>
@@ -583,7 +588,7 @@
               </p>
             </span>
 
-            <div data-bind="with: openevse, visible: !isSmartEVSE()">
+            <div data-bind="with: openevse, visible: !openevse.isSmartEVSE()">
               <hr> <br>
               <b>Timer:</b><br>
                 Start: <input type="time" data-bind="value: delayTimerStart, disable: isError" />
@@ -684,7 +689,7 @@
               <button data-bind="click: setTime, text: (setTimeFetching() ? 'Saving' : (setTimeSuccess() ? 'Saved' : 'Set time')), disable: setTimeFetching">Set time</button>
             </div>
             <hr>
-            <div data-bind="visible: !isSmartEVSE()">
+            <div data-bind="visible: !openevse.isSmartEVSE()">
               <p>
                 <b>Service Level:</b><br/>
                 <select data-bind="options: openevse.serviceLevels,
@@ -763,7 +768,7 @@
                 <th>Test</th>
                 <th>Status</th>
               </tr>
-              <tr data-bind="css: {error: 9 === status.state() }, visible: !isSmartEVSE()">
+              <tr data-bind="css: {error: 9 === status.state() }, visible: !openevse.isSmartEVSE()">
                 <td>GFI Self Test:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -773,7 +778,7 @@
                   <span data-bind="text: openevse.gfiSelfTestEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="css: {error: 7 === status.state() }, visible: !isSmartEVSE()">
+              <tr data-bind="css: {error: 7 === status.state() }, visible: !openevse.isSmartEVSE()">
                 <td>Ground Monitoring:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -783,7 +788,7 @@
                   <span data-bind="text: openevse.groundCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="css: {error: 8 === status.state() }, visible: !isSmartEVSE()">
+              <tr data-bind="css: {error: 8 === status.state() }, visible: !openevse.isSmartEVSE()">
                 <td>Stuck Contact Detection:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -813,7 +818,7 @@
                   <span data-bind="text: openevse.diodeCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="css: {error: 4 === status.state() }, visible: !isSmartEVSE()">
+              <tr data-bind="css: {error: 4 === status.state() }, visible: !openevse.isSmartEVSE()">
                 <td>Vent Required:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -823,19 +828,19 @@
                   <span data-bind="text: openevse.ventRequiredEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="visible: !isSmartEVSE()">
+              <tr data-bind="visible: !openevse.isSmartEVSE()">
                 <th>Error</th>
                 <th>Count</th>
               </tr>
-              <tr data-bind="visible: !isSmartEVSE()">
+              <tr data-bind="visible: !openevse.isSmartEVSE()">
                 <td>GFCI:</td>
                 <td><span data-bind="text: status.gfcicount"></span></td>
               </tr>
-              <tr data-bind="visible: !isSmartEVSE()">
+              <tr data-bind="visible: !openevse.isSmartEVSE()">
                 <td>No Ground:</td>
                 <td><span data-bind="text: status.nogndcount"></span></td>
               </tr>
-              <tr data-bind="visible: !isSmartEVSE()">
+              <tr data-bind="visible: !openevse.isSmartEVSE()">
                 <td>Stuck Contact:</td>
                 <td><span data-bind="text: status.stuckcount"></span></td>
               </tr>
@@ -1041,6 +1046,14 @@
                 <td>$GV</td>
                 <td>Get Versions, evse_firmware protocol_version</td>
               </tr>
+              <tr>
+                <td>$GX</td>
+                <td>Get current mode for SmartEVSE (0=Normal, 1=Smart, 2=Solar)</td>
+              </tr>
+              <tr>
+                <td>$GY</td>
+                <td>Get per phase values (EV Amps L1,2,3; Main Amps L1,2,3; Voltage L1,2,3)</td>
+              </tr>
             </table>
           </div>
           <div class="box380 right">
@@ -1097,6 +1110,10 @@
               <tr>
                 <td>$SV</td>
                 <td>Set voltage for power calculations, millivolts</td>
+              </tr>
+              <tr>
+                <td>$SX</td>
+                <td>Set current mode for SmartEVSE (0=Normal, 1=Smart, 2=Solar)</td>
               </tr>
             </table>
           </div>

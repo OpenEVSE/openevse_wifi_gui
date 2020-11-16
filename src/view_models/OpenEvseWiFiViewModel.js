@@ -490,6 +490,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   // -----------------------------------------------------------------------
   self.divertGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
     return {
+      divert_feed_type: self.config.divert_feed_type(),
       divert_enabled: self.config.divert_enabled(),
       mqtt_solar: self.config.mqtt_solar(),
       mqtt_grid_ie: self.config.mqtt_grid_ie(),
@@ -499,7 +500,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       divert_min_charge_time: self.config.divert_min_charge_time()
     };
   }).validate((divert) => {
-    if (divert.divert_enabled && divert.mqtt_solar === "" && divert.mqtt_grid_ie === "") {
+    if (divert.divert_enabled && "internal"!==divert.divert_feed_type && divert.mqtt_solar === "" && divert.mqtt_grid_ie === "") {
       alert("Please enter either a Solar PV or Grid I/E feed");
       return false;
     }
@@ -513,14 +514,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     };
   });
 
-  this.isSmartEVSE = ko.pureComputed(function () {
-    return self.config.firmware() && self.config.firmware().startsWith("SmartEVSE_");
-  });
-
   self.isEcoModeAvailable = ko.pureComputed(function () {
     return self.config.mqtt_enabled() && self.config.divert_enabled() &&
            ("" !== self.config.mqtt_solar() ||
-            "" !== self.config.mqtt_grid_ie());
+            "" !== self.config.mqtt_grid_ie() || 
+            "internal" === self.config.divert_feed_type());
   });
 
   self.ecoMode = ko.pureComputed({
@@ -549,13 +547,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     return "" !== self.config.mqtt_grid_ie();
   });
 
-  self._divertFeedType = "grid_ie";
   self.divertFeedType = ko.computed({
     read: () => {
-      var ret = self.haveSolar() ? "solar" :
+      var ret = "internal"===self.config.divert_feed_type()? "internal" :
+                self.haveSolar() ? "solar" :
                 self.haveGridIe() ? "grid_ie" : 
-                self._divertFeedType;
-      self._divertFeedType = ret;
+                self.config.divert_feed_type();
+      self.config.divert_feed_type(ret);
       return ret;
     },
     write: (val) => {
@@ -565,20 +563,24 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       } else if("grid_ie" === val && self.haveSolar()) {
         self.config.mqtt_grid_ie(self.config.mqtt_solar());
         self.config.mqtt_solar("");
-      }
-      self._divertFeedType = val;
+      } 
+      self.config.divert_feed_type(val);
     }
   });
   self.divertFeedValue = ko.computed({
     read: () => {
-      return "solar" === self.divertFeedType() ? 
-                self.config.mqtt_solar() :
-                self.config.mqtt_grid_ie();
+      if ("solar" === self.divertFeedType()) {
+        return self.config.mqtt_solar();
+      } else if("grid_ie" === self.divertFeedType()) {
+        return self.config.mqtt_grid_ie();
+      } else {
+        return false;        
+      }
     },
     write: (val) => {
       if("solar" === self.divertFeedType()) {
         self.config.mqtt_solar(val);
-      } else {
+      } else if("grid_ie" === self.divertFeedType()){
         self.config.mqtt_grid_ie(val);
       }
     }
