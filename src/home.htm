@@ -250,6 +250,8 @@
             </p>
             <p>
               <button data-bind="click: saveEmonCms, text: (saveEmonCmsFetching() ? 'Saving' : (saveEmonCmsSuccess() ? 'Saved' : 'Save')), disable: saveEmonCmsFetching">Save</button>
+            </p>
+            <p>
               <span data-bind="visible: config.emoncms_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.emoncms_connected() ? 'Yes' : 'No'"></span></b></span>
               <span data-bind="visible: config.emoncms_enabled() &amp;&amp; 1 === status.emoncms_connected()"><b>&nbsp; Successful posts:&nbsp;<span data-bind="text: status.packets_success"></span></b></span>
             </p>
@@ -359,9 +361,8 @@
             <p data-bind="visible: config.ohm_enabled">
               <strong>USA - California only</strong>
             </p>
-            <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/119419875" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
-              <p data-bind="visible: config.ohm_enabled">
-              Ohm Key can be obtained by logging in to OhmConnect, enter Settings and locate the link in "Open Source Projects"<br/>
+            <p data-bind="visible: config.ohm_enabled">
+              Ohm Key can be obtained by logging in to OhmConnect, enter Settings and locate the link in "Open Source Projects".<br/>
               Example: https://login.ohmconnect.com/verify-ohm-hour/OpnEoVse<br/>
               <b>Key: </b>OpnEoVse
             </p>
