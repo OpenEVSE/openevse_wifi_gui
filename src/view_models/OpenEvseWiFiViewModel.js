@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -37,6 +37,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.wifi = new WiFiConfigViewModel(self.baseEndpoint, self.config, self.status, self.scan);
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.config, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
+  self.schedule = new ScheduleViewModel(self.baseEndpoint);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -217,36 +218,39 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.itemsLoaded = ko.pureComputed(function () {
     return self.loadedCount() + self.openevse.updateCount();
   });
-  self.itemsTotal = ko.observable(2 + self.openevse.updateTotal());
+  self.itemsTotal = ko.observable(3 + self.openevse.updateTotal());
   self.start = function () {
     self.updating(true);
     self.status.update(function () {
       self.loadedCount(self.loadedCount() + 1);
       self.config.update(function () {
         self.loadedCount(self.loadedCount() + 1);
-        // If we are accessing on a .local domain try and redirect
-        if(self.baseHost().endsWith(".local") && "" !== self.status.ipaddress()) {
-          if("" === self.config.www_username())
-          {
-            // Redirect to the IP internally
-            self.baseHost(self.status.ipaddress());
-          } else {
-            window.location.replace("http://" + self.status.ipaddress() + ":" + self.basePort());
-          }
-        }
-        if(self.status.rapi_connected()) {
-          self.openevse.update(self.finishedStarting);
-        } else {
-          self.finishedStarting();
-          self.status.rapi_connected.subscribe((val) => {
-            if(val) {
-              self.config.update(() => {
-                self.openevse.update(() => {
-                });
-              });
+        self.schedule.update(function () {
+          self.loadedCount(self.loadedCount() + 1);
+          // If we are accessing on a .local domain try and redirect
+          if(self.baseHost().endsWith(".local") && "" !== self.status.ipaddress()) {
+            if("" === self.config.www_username())
+            {
+              // Redirect to the IP internally
+              self.baseHost(self.status.ipaddress());
+            } else {
+              window.location.replace("http://" + self.status.ipaddress() + ":" + self.basePort());
             }
-          });
-        }
+          }
+          if(self.status.rapi_connected()) {
+            self.openevse.update(self.finishedStarting);
+          } else {
+            self.finishedStarting();
+            self.status.rapi_connected.subscribe((val) => {
+              if(val) {
+                self.config.update(() => {
+                  self.openevse.update(() => {
+                  });
+                });
+              }
+            });
+          }
+        });
       });
       self.connect();
     });

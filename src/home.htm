@@ -41,7 +41,7 @@
         <input id="tab-2" type="radio" name="tab-group" data-bind="checked: tab" value="services" />
         <label for="tab-2">Services</label>
         <input id="tab-4" type="radio" name="tab-group" data-bind="checked: tab" value="rapi" />
-        <label for="tab-4" data-bind="visible: developerMode() &amp;&amp; status.rapi_connected()">RAPI</label>
+        <label for="tab-4" data-bind="visible: developerMode() &amp;&amp; status.evse_connected()">RAPI</label>
       </div>
 
       <div id="content">
@@ -374,7 +374,7 @@
           <!-- Divert Mode -->
           <div class="box380 right">
             <h2>Solar PV divert</h2>
-            
+
             <p data-bind="visible: config.mqtt_enabled">
               <input type="checkbox" id="divert_enabled" data-bind="checked: config.divert_enabled" />
               <label for="divert_enabled"><b>Enable Solar PV Divert</b></label>
@@ -407,7 +407,7 @@
               <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
               <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
             </p>
-            
+
             <div data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
               <b>Feed*:</b><br>
               <div class="divert">
@@ -461,12 +461,12 @@
             <span data-bind="text: status.estate"></span>
           </div>
 
-          <div data-bind="visible: !status.rapi_connected()" class="box box-full left error">
+          <div data-bind="visible: !status.evse_connected()" class="box box-full left error">
             <h4>EVSE Error</h4>
             <span>OpenEVSE not responding or not connected</span>
           </div>
 
-          <div data-bind="visible: !openevse.isError() &amp;&amp; status.rapi_connected(),
+          <div data-bind="visible: !openevse.isError() &amp;&amp; status.evse_connected(),
                           css: { ready: openevse.isReady(),
                                  connected: openevse.isConnected() &amp;&amp; !openevse.isCharging(),
                                  charging: openevse.isCharging(),
@@ -489,7 +489,7 @@
                 <td><span data-bind="text: openevse.time.elapsed"></span></td>
               </tr>
             </table>
-            
+
             <div data-bind="visible: ecoMode() &amp;&amp; isEcoModeAvailable()">
               <br>
               <span data-bind="visible: haveSolar"><b>Solar:</b></span>
@@ -514,7 +514,7 @@
           </div>
 
           <!-- Session Options -->
-          <div class="box380 left" data-bind="visible: status.rapi_connected">
+          <div class="box380 left" data-bind="visible: status.evse_connected">
             <h2>Charge Options</h2>
 
             <div data-bind="visible: isEcoModeAvailable">
@@ -542,7 +542,7 @@
                 enable: !updatingTimeLimit() &amp;&amp; isConnected(),
                 css: { saved: savedTimeLimit }"></select>
               </p>
-              
+
               <p>
                 <b>Energy limit:</b><br\>
                 <select type="text" data-bind="options: chargeLimits,
@@ -555,26 +555,26 @@
             </span>
 
             <hr> <br>
-            <div data-bind="with: openevse">
+            <div data-bind="with: schedule">
               <b>Timer:</b><br>
-                Start: <input type="time" data-bind="value: delayTimerStart, disable: isError" />
+                Start: <input type="time" data-bind="value: delayTimerStart, disable: $root.openevse.isError" />
                 &nbsp;&nbsp;
-                Stop: <input type="time" data-bind="value: delayTimerStop, disable: isError" /><br/>
+                Stop: <input type="time" data-bind="value: delayTimerStop, disable: $root.openevse.isError" /><br/>
                 <br>
                 <button data-bind="text: delayTimerEnabled() ? 'Update' : 'Set',
                                    enable: !updatingDelayTimer() &amp;&amp;
                                            delayTimerValid() &amp;&amp;
-                                           !isError(),
+                                           !$root.openevse.isError(),
                                    click: startDelayTimer">Set</button>
                 <button data-bind="visible: delayTimerEnabled(),
                                    enable: !updatingDelayTimer() &amp;&amp;
-                                           !isError(),
+                                           !$root.openevse.isError(),
                                    click: stopDelayTimer">Cancel</button>
             </div>
           </div>
 
           <!-- Energy -->
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Energy</h2>
             <table>
               <tr>
@@ -593,7 +593,7 @@
           </div>
 
           <!-- Sensor Values -->
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Sensor Values</h2>
             <table>
               <tr>
@@ -628,7 +628,7 @@
           </div>
 
           <!-- Settings -->
-          <div class="box380 setup" data-bind="visible: status.rapi_connected, css: { right: !advancedMode(), left: advancedMode() }">
+          <div class="box380 setup" data-bind="visible: status.evse_connected, css: { right: !advancedMode(), left: advancedMode() }">
             <h2>Setup</h2>
             <p data-bind="visible: !openevse.time.hasRTC()">
               <b>Time: No RTC detected</b>
@@ -677,7 +677,7 @@
           </div>
 
           <!-- Current -->
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Current</h2>
             <table>
               <tr>
@@ -715,7 +715,7 @@
           </div>
 
           <!-- Safety -->
-          <div class="box380 left" data-bind="visible: status.rapi_connected() &amp;&amp; (advancedMode() || !openevse.allTestsEnabled())">
+          <div class="box380 left" data-bind="visible: status.evse_connected() &amp;&amp; (advancedMode() || !openevse.allTestsEnabled())">
             <h2>Safety<span class="info" data-bind="click: toggle.bind($data, showSafety)"></span></h2>
 
             <div class="box" data-bind="visible: showSafety()">
@@ -813,7 +813,7 @@
           </div>
 
           <!-- Hardware -->
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Hardware</h2>
             <table>
               <tr>
@@ -857,11 +857,11 @@
             </table>
           </div>
 
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Vehicle Settings</h2>
             <h3>Pause status <span class="info" data-bind="click: toggle.bind($data, showVehiclePauseStatus)"></span></h3>
             <div class="box" data-bind="visible: showVehiclePauseStatus()">
-              Some vehicles will shutdown if left in sleep mode (pilot signal enable) and then can not be woken up by timers/PV divert. Changing the 
+              Some vehicles will shutdown if left in sleep mode (pilot signal enable) and then can not be woken up by timers/PV divert. Changing the
               pause state to disable should resolve this issue, however this removes the ability for the charger to detect if a vehicle is connected
               when paused.
             </div>
@@ -875,7 +875,7 @@
             </div>
           </div>
 
-          <div class="box380" data-bind="visible: status.rapi_connected,
+          <div class="box380" data-bind="visible: status.evse_connected,
                                          css: { right: !advancedMode() &amp;&amp; !openevse.allTestsEnabled(),
                                                 left: advancedMode() || openevse.allTestsEnabled() }">
             <h2>Display</h2>
@@ -892,7 +892,7 @@
         <!--end tab 3-->
 
         <!--TAB 4    -->
-        <div id="content-4" data-bind="visible: isRapi() &amp;&amp; status.rapi_connected()">
+        <div id="content-4" data-bind="visible: isRapi() &amp;&amp; status.evse_connected()">
           <div class="box380 left">
             <form method='get' action='r' data-bind="with: rapi">
               <p>
