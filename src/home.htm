@@ -485,7 +485,7 @@
               <tr>
                 <td><span data-bind="text: scaleString(status.amp(), 1000, 2) + ' A'"></span></td>
                 <td><span data-bind="text: scaleString(status.wattsec(), 3600000, 2) + ' kWh'"></span></td>
-                <td><span data-bind="text: scaleString(status.temp1(), 10, 1) + ' &deg;C'"></span></td>
+                <td><span data-bind="text: scaleString(status.temp(), 10, 1) + ' &deg;C'"></span></td>
                 <td><span data-bind="text: openevse.time.elapsed"></span></td>
               </tr>
             </table>
@@ -623,6 +623,10 @@
               <tr data-bind="visible: false !== status.temp3()">
                 <td>Temp3:</td>
                 <td><span data-bind="text: scaleString(status.temp3(), 10, 1) + ' &deg;C'"></span></td>
+              </tr>
+              <tr data-bind="visible: false !== status.temp4()">
+                <td>Temp4:</td>
+                <td><span data-bind="text: scaleString(status.temp4(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
             </table>
           </div>
