@@ -411,6 +411,18 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   // -----------------------------------------------------------------------
+  // Event: RFID save
+  // -----------------------------------------------------------------------
+  self.rfidGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      rfid_enabled: self.config.rfid_enabled()
+    };
+  });
+  self.config.rfid_enabled.subscribe(() => {
+    self.rfidGroup.save();
+  });
+
+  // -----------------------------------------------------------------------
   // Event: Emoncms save
   // -----------------------------------------------------------------------
   self.saveEmonCmsFetching = ko.observable(false);
