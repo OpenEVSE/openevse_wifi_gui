@@ -13,7 +13,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.baseEndpoint = ko.pureComputed(function () {
     var endpoint = "//" + self.baseHost();
     if(80 !== self.basePort()) {
-      endpoint += ":"+self.basePort();
+      endpoint += ":"+3000//self.basePort();
     }
     return endpoint;
   });
@@ -37,7 +37,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.wifi = new WiFiConfigViewModel(self.baseEndpoint, self.config, self.status, self.scan);
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.config, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
-  self.rfid = new RFIDViewModel(self.baseEndpoint);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -422,9 +421,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.config.rfid_enabled.subscribe(() => {
     self.rfidGroup.save();
     if(self.config.rfid_enabled()){
-      self.rfid.update(function () {
-        self.config.update()
-      });
+      self.config.update();
     }
   });
 
