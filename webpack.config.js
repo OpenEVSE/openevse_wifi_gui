@@ -38,6 +38,7 @@ var mergeOptions = {
       "src/view_models/WiFiConfigViewModel.js",
       "src/view_models/PasswordViewModel.js",
       "src/view_models/ConfigGroupViewModel.js",
+      "src/view_models/RFIDViewModel.js"
     ],
     "home.js": [
       "src/openevse.js",
