@@ -23,6 +23,8 @@ function RFIDViewModel(baseEndpoint) {
                 self.waiting(false);
             }else if(data.status == "waiting") {
                 self.timeLeft(data.timeLeft);
+            } else {
+                self.waiting(false);
             }
         }, "json").always(function () {
         });
