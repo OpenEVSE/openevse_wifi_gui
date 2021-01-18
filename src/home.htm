@@ -194,36 +194,47 @@
               <div class="slider round"></div>
             </label>
             <br>
-            <!--div>
+            <div>
               <h3>Stored tags</h3>
-              <table>
+              <!--table>
                 <tr>
-                  <th>Name</th>
                   <th>UID</th>
                 </tr>
                 <tr>
-                  <td>Tag 1</td>
                   <td>11 22 33 44</td>
-                </tr>
+                </tr> 
                 <tr>
-                  <td>Tag 2</td>
                   <td>55 66 77 88</td>
                 </tr>
                 <tr>
-                  <td>Tag 3</td>
                   <td>99 AA BB CC</td>
                 </tr>
-              </table>
+              </table-->
+              <div id="stored_tags_list">
+                <ul class="list-group" data-bind="foreach: config.stored_rfid_tags">
+                  <li class="list-group-item">
+                    <span data-bind="text: $data" style="font-family: 'Courier New', monospace;"></span>
+                    <span style="float: right"><a>Remove</a></span>
+                  </li>
+                </ul>
+              </div>
               <button onclick="window.open('term.html?debug');">Clear tags</button>
             </div>
             <div>
-              <h3>Add RFID tag</h3>
-              <b>Name:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname">
-              <b>UID:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname">
-              <button onclick="window.open('term.html?debug');">Scan</button>
-            </div-->
+              <!--b>UID:</b><br>
+              <input style="float: left" type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname"><br>
+              <button onclick="window.open('term.html?debug');">Add</button-->
+              <div data-bind="visible: config.rfid_enabled">
+                <h3>Add RFID tag</h3>
+                <button data-bind="click: waitForRFID, disable: rfid.waiting() > 0">Scan</button>
+                <div data-bind="visible: rfid.waiting() > 0">
+                  <b>Place your RFID tag on the scanner... <span data-bind="text: rfid.timeLeft"></span></b>
+                </div>
+                <div data-bind="visible: rfid.scanned()">
+                  <b>Successfully added: <span data-bind="text: rfid.scanned"></span></b>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="box380 left">

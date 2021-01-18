@@ -37,6 +37,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.wifi = new WiFiConfigViewModel(self.baseEndpoint, self.config, self.status, self.scan);
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.config, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
+  self.rfid = new RFIDViewModel(self.baseEndpoint);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -76,6 +77,17 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       self.advancedMode(true); // Enabling dev mode implicitly enables advanced mode
     }
   });
+
+  self.waitForRFID = function () {
+    this.rfid.startWaiting();
+    console.log("Waiting for RFID");
+    let checkFunc = function() {
+      self.rfid.poll()
+      if(self.rfid.waiting())
+        setTimeout(checkFunc, 1000);
+    }
+    setTimeout(checkFunc, 1000);
+  };
 
   var updateTimer = null;
   var updateTime = 5 * 1000;

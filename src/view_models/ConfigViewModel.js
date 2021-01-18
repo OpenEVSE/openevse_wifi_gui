@@ -28,6 +28,7 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_enabled": 0,
     "mqtt_supported_protocols": ["mqtt"],
     "http_supported_protocols": [],
+    "stored_rfid_tags": [],
     "ohm_enabled": 0,
     "ohmkey": "",
     "www_username": "",
