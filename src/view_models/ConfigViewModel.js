@@ -28,7 +28,6 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_enabled": 0,
     "mqtt_supported_protocols": ["mqtt"],
     "http_supported_protocols": [],
-    "stored_rfid_tags": [],
     "ohm_enabled": 0,
     "ohmkey": "",
     "www_username": "",
@@ -56,7 +55,8 @@ function ConfigViewModel(baseEndpoint) {
     "divert_min_charge_time": 600,
     "charge_mode": "full",
     "pause_uses_disabled": false,
-    "rfid_enabled": 0
+    "rfid_enabled": 0,
+    "rfid_storage": ""
   }, endpoint);
 
   function trim(prop, val) {

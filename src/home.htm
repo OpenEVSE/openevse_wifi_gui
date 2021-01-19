@@ -211,10 +211,10 @@
                 </tr>
               </table-->
               <div id="stored_tags_list">
-                <ul class="list-group" data-bind="foreach: config.stored_rfid_tags">
-                  <li class="list-group-item">
+                <ul class="list-group" data-bind="foreach: config.rfid_storage().split(',')">
+                  <li class="list-group-item" data-bind="visible: $data">
                     <span data-bind="text: $data" style="font-family: 'Courier New', monospace;"></span>
-                    <span style="float: right"><a>Remove</a></span>
+                    <span style="float: right"><a style="cursor: pointer;" data-bind="click: $parent.waitForRFID">Remove</a></span>
                   </li>
                 </ul>
               </div>
