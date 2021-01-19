@@ -83,8 +83,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     console.log("Waiting for RFID");
     let checkFunc = function() {
       self.rfid.poll()
-      if(self.rfid.waiting())
+      if(self.rfid.waiting()){
         setTimeout(checkFunc, 1000);
+      }else{
+        self.config.update()
+      }
     }
     setTimeout(checkFunc, 1000);
   };
