@@ -426,11 +426,47 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   // -----------------------------------------------------------------------
+  // Event: Add RFID tag
+  // -----------------------------------------------------------------------
+  self.addRFIDTag = function(tag) {
+    let storage = self.config.rfid_storage();
+    if(!storage || !storage.includes(tag)){
+      let newStorage = storage + (storage == '' ? '':',') + tag
+      self.config.rfid_storage(newStorage);
+    }
+    self.rfid.scanned("");
+    self.rfidGroup.save();
+  }
+
+  // -----------------------------------------------------------------------
+  // Event: Remove RFID tag
+  // -----------------------------------------------------------------------
+  self.removeRFIDTag = function(tag) {
+    if (confirm(`You are about to remove the tag with UID: '${tag}' permanently!`)) {
+      var replace = new RegExp(`${tag},?`,"g");
+      self.config.rfid_storage(self.config.rfid_storage().replaceAll(replace, ""));
+      self.rfid.scanned("");
+      self.rfidGroup.save();
+    }
+  };
+
+  // -----------------------------------------------------------------------
+  // Event: Clear RFID tags
+  // -----------------------------------------------------------------------
+  self.clearRFIDTags = function() {
+    if (confirm(`You are about to remove all stored tags permanently!`)){
+      self.config.rfid_storage("");
+      self.rfidGroup.save();
+    }
+  }
+
+  // -----------------------------------------------------------------------
   // Event: RFID save
   // -----------------------------------------------------------------------
   self.rfidGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
     return {
-      rfid_enabled: self.config.rfid_enabled()
+      rfid_enabled: self.config.rfid_enabled(),
+      rfid_storage: self.config.rfid_storage()
     };
   }).done(() => {
     setTimeout(self.config.update(), 1000);
