@@ -376,6 +376,12 @@
               <input data-bind="textInput: config.mqtt_vrms" type="text" autocapitalize="none" hint="emon/emonpi/vrms"><br>
               <span class="small-text">Voltage MQTT topic to improve power calculations
             </p>
+            <b>Max Current:</b><br/>
+              <select data-bind="options: openevse.currentLevels,
+                                  optionsText: 'name',
+                                  optionsValue: 'value',
+                                  value: config.mqtt_disconnect_current"></select>
+            </p>
             <p>
               <button data-bind="click: mqttGroup.save, text: (mqttGroup.fetching() ? 'Saving' : (mqttGroup.success() ? 'Saved' : 'Save')), disable: mqttGroup.fetching">Save</button>
               <span data-bind="visible: config.mqtt_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.mqtt_connected() ? 'Yes' : 'No'"></span></b></span>

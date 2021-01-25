@@ -26,6 +26,7 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_grid_ie": "",
     "mqtt_vrms": "",
     "mqtt_enabled": 0,
+    "mqtt_disconnect_current": 6,
     "mqtt_supported_protocols": ["mqtt"],
     "http_supported_protocols": [],
     "ohm_enabled": 0,

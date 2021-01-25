@@ -522,7 +522,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       mqtt_topic: self.config.mqtt_topic(),
       mqtt_user: self.config.mqtt_user(),
       mqtt_pass: self.config.mqtt_pass(),
-      mqtt_vrms: self.config.mqtt_vrms()
+      mqtt_vrms: self.config.mqtt_vrms(),
+      mqtt_disconnect_current: self.config.mqtt_disconnect_current()
     };
   }).validate((mqtt) => {
     if(!self.config.mqtt_enabled()) {
