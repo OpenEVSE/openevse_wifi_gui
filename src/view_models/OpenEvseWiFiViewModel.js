@@ -13,7 +13,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.baseEndpoint = ko.pureComputed(function () {
     var endpoint = "//" + self.baseHost();
     if(80 !== self.basePort()) {
-      endpoint += ":"+3000//self.basePort();
+      endpoint += ":"+self.basePort();
     }
     return endpoint;
   });
