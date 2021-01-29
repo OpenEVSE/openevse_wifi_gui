@@ -58,6 +58,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.showSolarDivert = ko.observable(false);
   self.showSafety = ko.observable(false);
   self.showVehiclePauseStatus = ko.observable(false);
+  self.showTotalCurrentInfo = ko.observable(false);
 
   self.toggle = function (flag) {
     flag(!flag());
@@ -476,6 +477,68 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   // -----------------------------------------------------------------------
+  // Event: Load Balancing save
+  // -----------------------------------------------------------------------
+  self.loadBalancingEnabledGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      load_balancing_enabled: self.config.load_balancing_enabled()
+    };
+  });
+  self.config.load_balancing_enabled.subscribe(() => {
+    self.loadBalancingEnabledGroup.save();
+  });
+
+  // -----------------------------------------------------------------------
+  // Event: Load Balancing Current Levels save
+  // -----------------------------------------------------------------------
+  self.loadBalancingCurrentLevelsGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      safe_current_level: self.config.safe_current_level(),
+      total_current: self.config.total_current()
+    };
+  });
+  self.config.safe_current_level.subscribe(() => {
+    self.loadBalancingCurrentLevelsGroup.save();
+  });
+  self.config.total_current.subscribe(() => {
+    self.loadBalancingCurrentLevelsGroup.save();
+  });
+
+  // -----------------------------------------------------------------------
+  // Event: Load Balancing topics save
+  self.loadBalancingTopicsGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      load_balancing_topics: self.config.load_balancing_topics()
+    };
+  });
+
+  // -----------------------------------------------------------------------
+  // Event: Add Load Balancing topic
+  // -----------------------------------------------------------------------
+  self.addLoadBalancingTopic = function() {
+    let topic = prompt('Enter the MQTT base topic of the station you would like to add.', '');
+    if (!topic)
+      return
+    let topics = self.config.load_balancing_topics();
+    if(!topics || !topics.includes(topic)){
+      let newTopics = topics + (topics == '' ? '':',') + topic
+      self.config.load_balancing_topics(newTopics);
+    }
+    self.loadBalancingTopicsGroup.save();
+  }
+
+  // -----------------------------------------------------------------------
+  // Event: Remove Load Balancing topic
+  // -----------------------------------------------------------------------
+  self.removeLoadBalancingTopic = function(topic) {
+    if (confirm(`Do you really want to remove this topic?`)) {
+      var replace = new RegExp(`${topic},?`,"g");
+      self.config.load_balancing_topics(self.config.load_balancing_topics().replaceAll(replace, ""));
+      self.loadBalancingTopicsGroup.save();
+    }
+  };
+
+  // -----------------------------------------------------------------------
   // Event: Emoncms save
   // -----------------------------------------------------------------------
   self.saveEmonCmsFetching = ko.observable(false);
@@ -522,8 +585,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       mqtt_topic: self.config.mqtt_topic(),
       mqtt_user: self.config.mqtt_user(),
       mqtt_pass: self.config.mqtt_pass(),
-      mqtt_vrms: self.config.mqtt_vrms(),
-      mqtt_disconnect_current: self.config.mqtt_disconnect_current()
+      mqtt_vrms: self.config.mqtt_vrms()
     };
   }).validate((mqtt) => {
     if(!self.config.mqtt_enabled()) {

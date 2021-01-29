@@ -376,12 +376,6 @@
               <input data-bind="textInput: config.mqtt_vrms" type="text" autocapitalize="none" hint="emon/emonpi/vrms"><br>
               <span class="small-text">Voltage MQTT topic to improve power calculations
             </p>
-            <b>Max Current:</b><br/>
-              <select data-bind="options: openevse.currentLevels,
-                                  optionsText: 'name',
-                                  optionsValue: 'value',
-                                  value: config.mqtt_disconnect_current"></select>
-            </p>
             <p>
               <button data-bind="click: mqttGroup.save, text: (mqttGroup.fetching() ? 'Saving' : (mqttGroup.success() ? 'Saved' : 'Save')), disable: mqttGroup.fetching">Save</button>
               <span data-bind="visible: config.mqtt_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.mqtt_connected() ? 'Yes' : 'No'"></span></b></span>
@@ -722,6 +716,44 @@
                                   disable: openevse.updatingServiceLevel() || openevse.updatingCurrentCapacity(),
                                   css: { saved: openevse.savedCurrentCapacity }"></select>
             </p>
+            <p>
+              <input type="checkbox" id="load_balancing_enabled" data-bind="checked: config.load_balancing_enabled" />
+              <label for="load_balancing_enabled"><b>Enable load balancing</b></label>
+            </p>
+            <div data-bind="visible: config.load_balancing_enabled">
+              <div class="box error" data-bind="visible: !config.mqtt_enabled()">
+                <h4>MQTT not enabled.</h4>
+                Load balancing requires communication with other charging stations via MQTT.
+              </div>
+              <p>
+                <b>Max Current total:</b>
+                <select data-bind="options: openevse.currentLevels,
+                                    optionsText: 'name',
+                                    optionsValue: 'value',
+                                    value: config.total_current"></select>
+              </p>
+              <p>
+                <b>Max safe Current:</b>
+                <select data-bind="options: openevse.currentLevels,
+                                    optionsText: 'name',
+                                    optionsValue: 'value',
+                                    value: config.safe_current_level"></select>
+              </p>
+              <div id="balance_topic_list">
+                <b>Balance with:</b>
+                <ul class="list-group" data-bind="foreach: config.load_balancing_topics().split(',')">
+                  <li class="list-group-item" data-bind="visible: $data">
+                    <p>
+                      <b data-bind="text: $data"></b>
+                    </p>
+                    <span style="float: right"><a style="cursor: pointer;" data-bind="click: $parent.removeLoadBalancingTopic">Remove</a></span>
+                  </li>
+                </ul>
+              </div>
+              <button class="add-btn" data-bind="click: addLoadBalancingTopic()">
+                Add station
+              </button>
+            </div>
           </div>
 
           <!-- Current -->

@@ -26,7 +26,6 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_grid_ie": "",
     "mqtt_vrms": "",
     "mqtt_enabled": 0,
-    "mqtt_disconnect_current": 6,
     "mqtt_supported_protocols": ["mqtt"],
     "http_supported_protocols": [],
     "ohm_enabled": 0,
@@ -57,7 +56,11 @@ function ConfigViewModel(baseEndpoint) {
     "charge_mode": "full",
     "pause_uses_disabled": false,
     "rfid_enabled": 0,
-    "rfid_storage": ""
+    "rfid_storage": "",
+    "load_balancing_enabled": 0,
+    "safe_current_level": 6,
+    "total_current": 6,
+    "load_balancing_topics": ""
   }, endpoint);
 
   function trim(prop, val) {
