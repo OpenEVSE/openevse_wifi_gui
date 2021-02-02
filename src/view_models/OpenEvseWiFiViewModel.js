@@ -506,10 +506,14 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
   // -----------------------------------------------------------------------
   // Event: Load Balancing topics save
+  // -----------------------------------------------------------------------
   self.loadBalancingTopicsGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
     return {
       load_balancing_topics: self.config.load_balancing_topics()
     };
+  });
+  self.config.load_balancing_topics.subscribe(() => {
+    self.loadBalancingTopicsGroup.save();
   });
 
   // -----------------------------------------------------------------------
@@ -524,7 +528,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       let newTopics = topics + (topics == '' ? '':',') + topic
       self.config.load_balancing_topics(newTopics);
     }
-    self.loadBalancingTopicsGroup.save();
   }
 
   // -----------------------------------------------------------------------
@@ -534,7 +537,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     if (confirm(`Do you really want to remove this topic?`)) {
       var replace = new RegExp(`${topic},?`,"g");
       self.config.load_balancing_topics(self.config.load_balancing_topics().replaceAll(replace, ""));
-      self.loadBalancingTopicsGroup.save();
     }
   };
 

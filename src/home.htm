@@ -740,7 +740,13 @@
                                     value: config.safe_current_level"></select>
               </p>
               <div id="balance_topic_list">
-                <b>Balance with:</b>
+                <p>
+                  <b>Balance with:</b>
+                  <input type="text" data-bind="value: config.load_balancing_topics" />
+                  <span class="small-text validMessage">MQTT base topic of other device</span>
+                </p>
+
+                <!-- UNCOMMENT FOR POSSIBILITY TO ADD MUTLIPLE TOPICS
                 <ul class="list-group" data-bind="foreach: config.load_balancing_topics().split(',')">
                   <li class="list-group-item" data-bind="visible: $data">
                     <p>
@@ -752,7 +758,8 @@
               </div>
               <button class="add-btn" data-bind="click: addLoadBalancingTopic()">
                 Add station
-              </button>
+              </button-->
+              </div>
             </div>
           </div>
 
