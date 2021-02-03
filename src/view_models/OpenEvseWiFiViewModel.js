@@ -477,68 +477,16 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   // -----------------------------------------------------------------------
-  // Event: Load Balancing save
-  // -----------------------------------------------------------------------
-  self.loadBalancingEnabledGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
-    return {
-      load_balancing_enabled: self.config.load_balancing_enabled()
-    };
-  });
-  self.config.load_balancing_enabled.subscribe(() => {
-    self.loadBalancingEnabledGroup.save();
-  });
-
-  // -----------------------------------------------------------------------
   // Event: Load Balancing Current Levels save
   // -----------------------------------------------------------------------
-  self.loadBalancingCurrentLevelsGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+  self.loadBalancingGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
     return {
+      load_balancing_enabled: self.config.load_balancing_enabled(),
       safe_current_level: self.config.safe_current_level(),
-      total_current: self.config.total_current()
-    };
-  });
-  self.config.safe_current_level.subscribe(() => {
-    self.loadBalancingCurrentLevelsGroup.save();
-  });
-  self.config.total_current.subscribe(() => {
-    self.loadBalancingCurrentLevelsGroup.save();
-  });
-
-  // -----------------------------------------------------------------------
-  // Event: Load Balancing topics save
-  // -----------------------------------------------------------------------
-  self.loadBalancingTopicsGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
-    return {
+      total_current: self.config.total_current(),
       load_balancing_topics: self.config.load_balancing_topics()
     };
   });
-  self.config.load_balancing_topics.subscribe(() => {
-    self.loadBalancingTopicsGroup.save();
-  });
-
-  // -----------------------------------------------------------------------
-  // Event: Add Load Balancing topic
-  // -----------------------------------------------------------------------
-  self.addLoadBalancingTopic = function() {
-    let topic = prompt('Enter the MQTT base topic of the station you would like to add.', '');
-    if (!topic)
-      return
-    let topics = self.config.load_balancing_topics();
-    if(!topics || !topics.includes(topic)){
-      let newTopics = topics + (topics == '' ? '':',') + topic
-      self.config.load_balancing_topics(newTopics);
-    }
-  }
-
-  // -----------------------------------------------------------------------
-  // Event: Remove Load Balancing topic
-  // -----------------------------------------------------------------------
-  self.removeLoadBalancingTopic = function(topic) {
-    if (confirm(`Do you really want to remove this topic?`)) {
-      var replace = new RegExp(`${topic},?`,"g");
-      self.config.load_balancing_topics(self.config.load_balancing_topics().replaceAll(replace, ""));
-    }
-  };
 
   // -----------------------------------------------------------------------
   // Event: Emoncms save

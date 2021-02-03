@@ -707,7 +707,7 @@
                                  css: { saved: openevse.savedServiceLevel }"></select>
             </p>
 
-            <p>
+            <p data-bind="visible: !config.load_balancing_enabled()">
               <b>Max Current:</b><br/>
               <select data-bind="options: openevse.currentLevels,
                                   optionsText: 'name',
@@ -730,14 +730,18 @@
                 <select data-bind="options: openevse.currentLevels,
                                     optionsText: 'name',
                                     optionsValue: 'value',
-                                    value: config.total_current"></select>
+                                    value: config.total_current,
+                                    disable: loadBalancingGroup.fetching,
+                                    valueAllowUnset: true"></select>
               </p>
               <p>
                 <b>Max safe Current:</b>
                 <select data-bind="options: openevse.currentLevels,
                                     optionsText: 'name',
                                     optionsValue: 'value',
-                                    value: config.safe_current_level"></select>
+                                    value: config.safe_current_level,
+                                    disable: loadBalancingGroup.fetching,
+                                    valueAllowUnset: true"></select>
               </p>
               <div id="balance_topic_list">
                 <p>
@@ -760,6 +764,7 @@
                 Add station
               </button-->
               </div>
+              <button data-bind="click: loadBalancingGroup.save, text: (loadBalancingGroup.fetching() ? 'Saving' : (loadBalancingGroup.success() ? 'Saved' : 'Save')), disable: loadBalancingGroup.fetching">Save</button>
             </div>
           </div>
 
