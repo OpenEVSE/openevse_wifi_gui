@@ -80,69 +80,99 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   // Sleep timer not connected
-  self.sleepTimerNotConnectedEnabled = ko.observable((self.config.sleep_timer_enabled_flags() & (1 << 0)) == (1 << 0));
-  self.sleepTimerNotConnectedEnabled.subscribe(function (enabled) {
-    if(enabled){
-      self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() | (1 << 0));
-    }else{
-      self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() & ~(1 << 0));
+  self.sleepTimerNotConnectedEnabled = ko.computed({
+    read: function() {
+      return (self.config.sleep_timer_enabled_flags() & (1 << 0)) == (1 << 0);
+    },
+    write: function(enabled) {
+      if(enabled){
+        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() | (1 << 0));
+      }else{
+        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() & ~(1 << 0));
+      }
     }
   });
 
-  self.sleepTimerNotConnectedMinutes = ko.observable(self.config.sleep_timer_not_connected() / 60);
-  self.sleepTimerNotConnectedMinutes.subscribe(function (val) {
-    self.config.sleep_timer_not_connected(eval(val) * 60 + eval(self.sleepTimerNotConnectedSeconds()));
-    console.log(self.config.sleep_timer_not_connected());
+  self.sleepTimerNotConnectedMinutes = ko.computed({
+    read: function(){
+      return Math.floor(self.config.sleep_timer_not_connected() / 60);
+    },
+    write: function(val){
+      self.config.sleep_timer_not_connected(eval(val) * 60 + eval(self.sleepTimerNotConnectedSeconds()));
+    }
   });
 
-  self.sleepTimerNotConnectedSeconds = ko.observable(self.config.sleep_timer_not_connected() / 60)
-  self.sleepTimerNotConnectedSeconds.subscribe(function (val) {
-    self.config.sleep_timer_not_connected(eval(self.sleepTimerNotConnectedMinutes()) * 60 + eval(val));
-    console.log(self.config.sleep_timer_not_connected());
+  self.sleepTimerNotConnectedSeconds = ko.computed({
+    read: function(){
+      return self.config.sleep_timer_not_connected() % 60;
+    },
+    write: function(val){
+      self.config.sleep_timer_not_connected(eval(self.sleepTimerNotConnectedMinutes()) * 60 + eval(val));
+    }
   });
 
   // Sleep timer connected
-  self.sleepTimerConnectedEnabled = ko.observable((self.config.sleep_timer_enabled_flags() & (1 << 1)) == (1 << 1));
-  self.sleepTimerConnectedEnabled.subscribe(function (enabled) {
-    if(enabled){
-      self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() | (1 << 1));
-    }else{
-      self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() & ~(1 << 1));
+  self.sleepTimerConnectedEnabled = ko.computed({
+    read: function() {
+      return (self.config.sleep_timer_enabled_flags() & (1 << 1)) == (1 << 1);
+    },
+    write: function(enabled) {
+      if(enabled){
+        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() | (1 << 1));
+      }else{
+        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() & ~(1 << 1));
+      }
     }
   });
 
-  self.sleepTimerConnectedMinutes = ko.observable(self.config.sleep_timer_connected() / 60);
-  self.sleepTimerConnectedMinutes.subscribe(function (val) {
-    self.config.sleep_timer_connected(eval(val) * 60 + eval(self.sleepTimerConnectedSeconds()));
-    console.log(self.config.sleep_timer_connected());
+  self.sleepTimerConnectedMinutes = ko.computed({
+    read: function(){
+      return Math.floor(self.config.sleep_timer_connected() / 60);
+    },
+    write: function(val){
+      self.config.sleep_timer_connected(eval(val) * 60 + eval(self.sleepTimerConnectedSeconds()));
+    }
   });
 
-  self.sleepTimerConnectedSeconds = ko.observable(self.config.sleep_timer_connected() / 60)
-  self.sleepTimerConnectedSeconds.subscribe(function (val) {
-    self.config.sleep_timer_connected(eval(self.sleepTimerConnectedMinutes()) * 60 + eval(val));
-    console.log(self.config.sleep_timer_connected());
+  self.sleepTimerConnectedSeconds = ko.computed({
+    read: function(){
+      return self.config.sleep_timer_connected() % 60;
+    },
+    write: function(val){
+      self.config.sleep_timer_connected(eval(self.sleepTimerConnectedMinutes()) * 60 + eval(val));
+    }
   });
 
   // Sleep timer connected
-  self.sleepTimerDisconnectedEnabled = ko.observable((self.config.sleep_timer_enabled_flags() & (1 << 2)) == (1 << 2));
-  self.sleepTimerDisconnectedEnabled.subscribe(function (enabled) {
-    if(enabled){
-      self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() | (1 << 2));
-    }else{
-      self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() & ~(1 << 2));
+  self.sleepTimerDisconnectedEnabled = ko.computed({
+    read: function() {
+      return (self.config.sleep_timer_enabled_flags() & (1 << 2)) == (1 << 2);
+    },
+    write: function(enabled) {
+      if(enabled){
+        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() | (1 << 2));
+      }else{
+        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() & ~(1 << 2));
+      }
     }
   });
 
-  self.sleepTimerDisconnectedMinutes = ko.observable(self.config.sleep_timer_disconnected() / 60);
-  self.sleepTimerDisconnectedMinutes.subscribe(function (val) {
-    self.config.sleep_timer_disconnected(eval(val) * 60 + eval(self.sleepTimerDisconnectedSeconds()));
-    console.log(self.config.sleep_timer_disconnected());
+  self.sleepTimerDisconnectedMinutes = ko.computed({
+    read: function(){
+      return Math.floor(self.config.sleep_timer_disconnected() / 60);
+    },
+    write: function(val){
+      self.config.sleep_timer_disconnected(eval(val) * 60 + eval(self.sleepTimerDisconnectedSeconds()));
+    }
   });
 
-  self.sleepTimerDisconnectedSeconds = ko.observable(self.config.sleep_timer_disconnected() / 60)
-  self.sleepTimerDisconnectedSeconds.subscribe(function (val) {
-    self.config.sleep_timer_disconnected(eval(self.sleepTimerDisconnectedMinutes()) * 60 + eval(val));
-    console.log(self.config.sleep_timer_disconnected());
+  self.sleepTimerDisconnectedSeconds = ko.computed({
+    read: function(){
+      return self.config.sleep_timer_disconnected() % 60;
+    },
+    write: function(val){
+      self.config.sleep_timer_disconnected(eval(self.sleepTimerDisconnectedMinutes()) * 60 + eval(val));
+    }
   });
 
   self.waitForRFID = function () {
