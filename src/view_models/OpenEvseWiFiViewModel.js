@@ -89,15 +89,15 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     }
   });
 
-  self.sleepTimerNotConnectedMinutes = ko.observable(self.config.sleep_timer_not_connected() / 60000);
+  self.sleepTimerNotConnectedMinutes = ko.observable(self.config.sleep_timer_not_connected() / 60);
   self.sleepTimerNotConnectedMinutes.subscribe(function (val) {
-    self.config.sleep_timer_not_connected(val * 60000 + self.sleepTimerNotConnectedSeconds() * 1000);
+    self.config.sleep_timer_not_connected(val * 60 + self.sleepTimerNotConnectedSeconds());
     console.log(self.config.sleep_timer_not_connected());
   });
 
-  self.sleepTimerNotConnectedSeconds = ko.observable(self.config.sleep_timer_not_connected() / 60000)
+  self.sleepTimerNotConnectedSeconds = ko.observable(self.config.sleep_timer_not_connected() / 60)
   self.sleepTimerNotConnectedSeconds.subscribe(function (val) {
-    self.config.sleep_timer_not_connected(self.sleepTimerNotConnectedMinutes() * 60000 + val * 1000);
+    self.config.sleep_timer_not_connected(self.sleepTimerNotConnectedMinutes() * 60 + val);
     console.log(self.config.sleep_timer_not_connected());
   });
 
@@ -111,15 +111,15 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     }
   });
 
-  self.sleepTimerConnectedMinutes = ko.observable(self.config.sleep_timer_connected() / 60000);
+  self.sleepTimerConnectedMinutes = ko.observable(self.config.sleep_timer_connected() / 60);
   self.sleepTimerConnectedMinutes.subscribe(function (val) {
-    self.config.sleep_timer_connected(val * 60000 + self.sleepTimerConnectedSeconds() * 1000);
+    self.config.sleep_timer_connected(val * 60 + self.sleepTimerConnectedSeconds());
     console.log(self.config.sleep_timer_connected());
   });
 
-  self.sleepTimerConnectedSeconds = ko.observable(self.config.sleep_timer_connected() / 60000)
+  self.sleepTimerConnectedSeconds = ko.observable(self.config.sleep_timer_connected() / 60)
   self.sleepTimerConnectedSeconds.subscribe(function (val) {
-    self.config.sleep_timer_connected(self.sleepTimerConnectedMinutes() * 60000 + val * 1000);
+    self.config.sleep_timer_connected(self.sleepTimerConnectedMinutes() * 60 + val);
     console.log(self.config.sleep_timer_connected());
   });
 
@@ -133,15 +133,15 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     }
   });
 
-  self.sleepTimerDisconnectedMinutes = ko.observable(self.config.sleep_timer_disconnected() / 60000);
+  self.sleepTimerDisconnectedMinutes = ko.observable(self.config.sleep_timer_disconnected() / 60);
   self.sleepTimerDisconnectedMinutes.subscribe(function (val) {
-    self.config.sleep_timer_disconnected(val * 60000 + self.sleepTimerDisconnectedSeconds() * 1000);
+    self.config.sleep_timer_disconnected(val * 60 + self.sleepTimerDisconnectedSeconds());
     console.log(self.config.sleep_timer_disconnected());
   });
 
-  self.sleepTimerDisconnectedSeconds = ko.observable(self.config.sleep_timer_disconnected() / 60000)
+  self.sleepTimerDisconnectedSeconds = ko.observable(self.config.sleep_timer_disconnected() / 60)
   self.sleepTimerDisconnectedSeconds.subscribe(function (val) {
-    self.config.sleep_timer_disconnected(self.sleepTimerDisconnectedMinutes() * 60000 + val * 1000);
+    self.config.sleep_timer_disconnected(self.sleepTimerDisconnectedMinutes() * 60 + val);
     console.log(self.config.sleep_timer_disconnected());
   });
 
