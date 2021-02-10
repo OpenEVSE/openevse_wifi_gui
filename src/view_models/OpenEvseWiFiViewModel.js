@@ -91,13 +91,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
   self.sleepTimerNotConnectedMinutes = ko.observable(self.config.sleep_timer_not_connected() / 60);
   self.sleepTimerNotConnectedMinutes.subscribe(function (val) {
-    self.config.sleep_timer_not_connected(val * 60 + self.sleepTimerNotConnectedSeconds());
+    self.config.sleep_timer_not_connected(eval(val) * 60 + eval(self.sleepTimerNotConnectedSeconds()));
     console.log(self.config.sleep_timer_not_connected());
   });
 
   self.sleepTimerNotConnectedSeconds = ko.observable(self.config.sleep_timer_not_connected() / 60)
   self.sleepTimerNotConnectedSeconds.subscribe(function (val) {
-    self.config.sleep_timer_not_connected(self.sleepTimerNotConnectedMinutes() * 60 + val);
+    self.config.sleep_timer_not_connected(eval(self.sleepTimerNotConnectedMinutes()) * 60 + eval(val));
     console.log(self.config.sleep_timer_not_connected());
   });
 
@@ -113,13 +113,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
   self.sleepTimerConnectedMinutes = ko.observable(self.config.sleep_timer_connected() / 60);
   self.sleepTimerConnectedMinutes.subscribe(function (val) {
-    self.config.sleep_timer_connected(val * 60 + self.sleepTimerConnectedSeconds());
+    self.config.sleep_timer_connected(eval(val) * 60 + eval(self.sleepTimerConnectedSeconds()));
     console.log(self.config.sleep_timer_connected());
   });
 
   self.sleepTimerConnectedSeconds = ko.observable(self.config.sleep_timer_connected() / 60)
   self.sleepTimerConnectedSeconds.subscribe(function (val) {
-    self.config.sleep_timer_connected(self.sleepTimerConnectedMinutes() * 60 + val);
+    self.config.sleep_timer_connected(eval(self.sleepTimerConnectedMinutes()) * 60 + eval(val));
     console.log(self.config.sleep_timer_connected());
   });
 
@@ -135,13 +135,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
   self.sleepTimerDisconnectedMinutes = ko.observable(self.config.sleep_timer_disconnected() / 60);
   self.sleepTimerDisconnectedMinutes.subscribe(function (val) {
-    self.config.sleep_timer_disconnected(val * 60 + self.sleepTimerDisconnectedSeconds());
+    self.config.sleep_timer_disconnected(eval(val) * 60 + eval(self.sleepTimerDisconnectedSeconds()));
     console.log(self.config.sleep_timer_disconnected());
   });
 
   self.sleepTimerDisconnectedSeconds = ko.observable(self.config.sleep_timer_disconnected() / 60)
   self.sleepTimerDisconnectedSeconds.subscribe(function (val) {
-    self.config.sleep_timer_disconnected(self.sleepTimerDisconnectedMinutes() * 60 + val);
+    self.config.sleep_timer_disconnected(eval(self.sleepTimerDisconnectedMinutes()) * 60 + eval(val));
     console.log(self.config.sleep_timer_disconnected());
   });
 
