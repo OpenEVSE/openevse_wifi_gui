@@ -229,6 +229,56 @@
           </div>
 
           <div class="box380 left">
+            <h2>Pause timer</h2>
+            <p>
+              <b>After waking up:</b> <br>
+              <div data-bind="visible: isEcoModeAvailable">
+                <span data-bind="css: {selected: !sleepTimerNotConnectedEnabled() }">Stay awake</span>
+                <label class="switch">
+                  <input type="checkbox" data-bind="checked: sleepTimerNotConnectedEnabled" />
+                  <div class="slider round"></div>
+                </label>
+                <span data-bind="css: {selected: sleepTimerNotConnectedEnabled }">Start timer</span><br/>
+              </div>
+              <input data-bind="enable: sleepTimerNotConnectedEnabled, value: sleepTimerNotConnectedMinutes" type="number" style="width: 6em;" placeholder="minutes" min="0" max="59">
+              :
+              <input data-bind="enable: sleepTimerNotConnectedEnabled, value: sleepTimerNotConnectedSeconds" type="number" style="width: 6em;" placeholder="seconds" min="0" max="59"><br>
+              <span class="small-text validMessage">The time it will take before pausing after the device is started and no vehicle is connected.</span>
+            </p>
+            <p>
+              <b>After connecting:</b> <br>
+              <div data-bind="visible: isEcoModeAvailable">
+                <span data-bind="css: {selected: !sleepTimerConnectedEnabled() }">Stay awake</span>
+                <label class="switch">
+                  <input type="checkbox" data-bind="checked: sleepTimerConnectedEnabled" />
+                  <div class="slider round"></div>
+                </label>
+                <span data-bind="css: {selected: sleepTimerConnectedEnabled }">Start timer</span><br/>
+              </div>
+              <input data-bind="enable: sleepTimerConnectedEnabled, value: sleepTimerConnectedMinutes" type="number" style="width: 6em;" placeholder="minutes" min="0" max="59">
+              :
+              <input data-bind="enable: sleepTimerConnectedEnabled, value: sleepTimerConnectedSeconds" type="number" style="width: 6em;" placeholder="seconds" min="0" max="59"><br>
+              <span class="small-text validMessage">The time it will take before pausing after a vehicle is connected but is not charging.</span>
+            </p>
+            <p>
+              <b>After disconnecting:</b> <br>
+              <div data-bind="visible: isEcoModeAvailable">
+                <span data-bind="css: {selected: !sleepTimerDisconnectedEnabled() }">Stay awake</span>
+                <label class="switch">
+                  <input type="checkbox" data-bind="checked: sleepTimerDisconnectedEnabled" />
+                  <div class="slider round"></div>
+                </label>
+                <span data-bind="css: {selected: sleepTimerDisconnectedEnabled }">Start timer</span><br/>
+              </div>
+              <input data-bind="enable: sleepTimerDisconnectedEnabled, value: sleepTimerDisconnectedMinutes" type="number" style="width: 6em;" placeholder="minutes" min="0" max="59">
+              :
+              <input data-bind="enable: sleepTimerDisconnectedEnabled, value: sleepTimerDisconnectedSeconds" type="number" style="width: 6em;" placeholder="seconds" min="0" max="59"><br>
+              <span class="small-text validMessage">The time it will take before pausing after a vehicle is disonnected.</span>
+            </p>
+            <button data-bind="click: sleepTimerGroup.save, text: (sleepTimerGroup.fetching() ? 'Saving' : (sleepTimerGroup.success() ? 'Saved' : 'Save')), disable: sleepTimerGroup.fetching">Save</button>
+          </div>
+
+          <div class="box380 right">
             <h2>Developer Mode</h2>
             <div>
               <b>Enabled: </b>

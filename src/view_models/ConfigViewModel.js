@@ -60,7 +60,11 @@ function ConfigViewModel(baseEndpoint) {
     "load_balancing_enabled": 0,
     "safe_current_level": 0,
     "total_current": 0,
-    "load_balancing_topics": ""
+    "load_balancing_topics": "",
+    "sleep_timer_enabled_flags": 0,
+    "sleep_timer_not_connected": 0,
+    "sleep_timer_connected": 0,
+    "sleep_timer_disconnected": 0
   }, endpoint);
 
   function trim(prop, val) {
