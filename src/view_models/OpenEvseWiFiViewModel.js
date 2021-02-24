@@ -98,6 +98,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       return Math.floor(self.config.sleep_timer_not_connected() / 60);
     },
     write: function(val){
+      if(!val)
+        val = 0;
       self.config.sleep_timer_not_connected(eval(val) * 60 + eval(self.sleepTimerNotConnectedSeconds()));
     }
   });
@@ -107,6 +109,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       return self.config.sleep_timer_not_connected() % 60;
     },
     write: function(val){
+      if(!val)
+        val = 0;
       self.config.sleep_timer_not_connected(eval(self.sleepTimerNotConnectedMinutes()) * 60 + eval(val));
     }
   });
@@ -130,6 +134,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       return Math.floor(self.config.sleep_timer_connected() / 60);
     },
     write: function(val){
+      if(!val)
+        val = 0;
       self.config.sleep_timer_connected(eval(val) * 60 + eval(self.sleepTimerConnectedSeconds()));
     }
   });
@@ -139,6 +145,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       return self.config.sleep_timer_connected() % 60;
     },
     write: function(val){
+      if(!val)
+        val = 0;
       self.config.sleep_timer_connected(eval(self.sleepTimerConnectedMinutes()) * 60 + eval(val));
     }
   });
@@ -162,6 +170,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       return Math.floor(self.config.sleep_timer_disconnected() / 60);
     },
     write: function(val){
+      if(!val)
+        val = 0;
       self.config.sleep_timer_disconnected(eval(val) * 60 + eval(self.sleepTimerDisconnectedSeconds()));
     }
   });
@@ -171,6 +181,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       return self.config.sleep_timer_disconnected() % 60;
     },
     write: function(val){
+      if(!val)
+        val = 0;
       self.config.sleep_timer_disconnected(eval(self.sleepTimerDisconnectedMinutes()) * 60 + eval(val));
     }
   });
