@@ -232,7 +232,7 @@
             <h2>Pause timer</h2>
             <p>
               <b>After waking up:</b> <br>
-              <div data-bind="visible: isEcoModeAvailable">
+              <div>
                 <span data-bind="css: {selected: !sleepTimerNotConnectedEnabled() }">Stay awake</span>
                 <label class="switch">
                   <input type="checkbox" data-bind="checked: sleepTimerNotConnectedEnabled" />
@@ -247,7 +247,7 @@
             </p>
             <p>
               <b>After connecting:</b> <br>
-              <div data-bind="visible: isEcoModeAvailable">
+              <div>
                 <span data-bind="css: {selected: !sleepTimerConnectedEnabled() }">Stay awake</span>
                 <label class="switch">
                   <input type="checkbox" data-bind="checked: sleepTimerConnectedEnabled" />
@@ -262,7 +262,7 @@
             </p>
             <p>
               <b>After disconnecting:</b> <br>
-              <div data-bind="visible: isEcoModeAvailable">
+              <div>
                 <span data-bind="css: {selected: !sleepTimerDisconnectedEnabled() }">Stay awake</span>
                 <label class="switch">
                   <input type="checkbox" data-bind="checked: sleepTimerDisconnectedEnabled" />
