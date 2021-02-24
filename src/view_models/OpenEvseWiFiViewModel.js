@@ -595,6 +595,9 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       load_balancing_topics: self.config.load_balancing_topics()
     };
   });
+  self.config.load_balancing_enabled.subscribe(() => {
+    self.loadBalancingGroup.save();
+  });
 
   // -----------------------------------------------------------------------
   // Event: Emoncms save
