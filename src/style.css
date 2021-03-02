@@ -476,6 +476,12 @@ span.selected
   box-shadow: 1px 7px 7px 1px rgba(146, 0, 247, 0.4);
 }
 
+.sleeping_connected {
+  border-color: rgb(0, 146, 247);
+  border-left-width: 5px;
+  box-shadow: 1px 7px 7px 1px rgba(0, 146, 247, 0.4);
+}
+
 /*Separator lines*/
 hr {
 height: 1px;
@@ -567,7 +573,7 @@ border: none;
 @media screen and (max-width: 420px) {
   .protocol input {
     width: 155px;
-  }  
+  }
 }
 
 .divert select {
@@ -581,5 +587,5 @@ border: none;
 @media screen and (max-width: 420px) {
   .divert input {
     width: 115px;
-  }  
+  }
 }

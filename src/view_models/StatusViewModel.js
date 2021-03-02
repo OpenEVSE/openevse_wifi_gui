@@ -32,6 +32,8 @@ function StatusViewModel(baseEndpoint) {
     "temp3": false,
     "temp4": false,
     "state": 0,
+    "vehicle": false,
+    "colour": false,
     "elapsed": 0,
     "wattsec": 0,
     "watthour": 0,
@@ -120,10 +122,17 @@ function StatusViewModel(baseEndpoint) {
         estate = "Over Current";
         break;
       case 254:
-        estate = "Waiting";
-        break;
       case 255:
-        estate = "Disabled";
+        estate = "Waiting";
+        if(false !== self.vehicle())
+        {
+          estate += " - EV " ;
+          if(1 === self.vehicle()) {
+            estate += "Connected";
+          } else {
+            estate += "Not connected";
+          }
+        }
         break;
       default:
         estate = "Invalid";
