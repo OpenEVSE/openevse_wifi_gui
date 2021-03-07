@@ -14,6 +14,9 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
   <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+  <link rel="apple-touch-icon" href="favicon-180.png" sizes="180x180">
+  <link rel="apple-touch-icon" href="favicon-167.png" sizes="167x167">
+  <link rel="apple-touch-icon" href="favicon-152.png" sizes="152x152">
 
 </head>
 
@@ -38,7 +41,7 @@
         <input id="tab-2" type="radio" name="tab-group" data-bind="checked: tab" value="services" />
         <label for="tab-2">Services</label>
         <input id="tab-4" type="radio" name="tab-group" data-bind="checked: tab" value="rapi" />
-        <label for="tab-4" data-bind="visible: developerMode() &amp;&amp; status.rapi_connected()">RAPI</label>
+        <label for="tab-4" data-bind="visible: developerMode() &amp;&amp; status.evse_connected()">RAPI</label>
       </div>
 
       <div id="content">
@@ -247,6 +250,8 @@
             </p>
             <p>
               <button data-bind="click: saveEmonCms, text: (saveEmonCmsFetching() ? 'Saving' : (saveEmonCmsSuccess() ? 'Saved' : 'Save')), disable: saveEmonCmsFetching">Save</button>
+            </p>
+            <p>
               <span data-bind="visible: config.emoncms_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.emoncms_connected() ? 'Yes' : 'No'"></span></b></span>
               <span data-bind="visible: config.emoncms_enabled() &amp;&amp; 1 === status.emoncms_connected()"><b>&nbsp; Successful posts:&nbsp;<span data-bind="text: status.packets_success"></span></b></span>
             </p>
@@ -356,9 +361,8 @@
             <p data-bind="visible: config.ohm_enabled">
               <strong>USA - California only</strong>
             </p>
-            <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/119419875" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
-              <p data-bind="visible: config.ohm_enabled">
-              Ohm Key can be obtained by logging in to OhmConnect, enter Settings and locate the link in "Open Source Projects"<br/>
+            <p data-bind="visible: config.ohm_enabled">
+              Ohm Key can be obtained by logging in to OhmConnect, enter Settings and locate the link in "Open Source Projects".<br/>
               Example: https://login.ohmconnect.com/verify-ohm-hour/OpnEoVse<br/>
               <b>Key: </b>OpnEoVse
             </p>
@@ -370,7 +374,7 @@
           <!-- Divert Mode -->
           <div class="box380 right">
             <h2>Solar PV divert</h2>
-            
+
             <p data-bind="visible: config.mqtt_enabled">
               <input type="checkbox" id="divert_enabled" data-bind="checked: config.divert_enabled" />
               <label for="divert_enabled"><b>Enable Solar PV Divert</b></label>
@@ -403,7 +407,7 @@
               <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
               <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
             </p>
-            
+
             <div data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
               <b>Feed*:</b><br>
               <div class="divert">
@@ -416,6 +420,12 @@
                 <span data-bind="visible: divertFeedType() === 'grid_ie'" class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
               </div>
             </div>
+
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() === 'grid_ie'">
+              <b>Required PV power ratio:</b><br>
+              <input data-bind="textInput: config.divert_PV_ratio" type="number" autocapitalize="none" hint="1.1" min="0.05" max="1.5" step="0.01"><br>
+              <span class="small-text">The fraction of PV current that suffices to start charging or increment current </span>
+            </p>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
               <b>Divert smoothing attack:</b><br>
@@ -451,16 +461,17 @@
             <span data-bind="text: status.estate"></span>
           </div>
 
-          <div data-bind="visible: !status.rapi_connected()" class="box box-full left error">
+          <div data-bind="visible: !status.evse_connected()" class="box box-full left error">
             <h4>EVSE Error</h4>
             <span>OpenEVSE not responding or not connected</span>
           </div>
 
-          <div data-bind="visible: !openevse.isError() &amp;&amp; status.rapi_connected(),
+          <div data-bind="visible: !openevse.isError() &amp;&amp; status.evse_connected(),
                           css: { ready: openevse.isReady(),
                                  connected: openevse.isConnected() &amp;&amp; !openevse.isCharging(),
                                  charging: openevse.isCharging(),
-                                 sleeping: openevse.isPaused() }"
+                                 sleeping: openevse.isPaused() &amp;&amp; 0 == status.vehicle(),
+                                 sleeping_connected: openevse.isPaused() &amp;&amp; 1 == status.vehicle() }"
                class="box box-full left">
             <h2 class="left">Session Status</h2>
             <h2 class="right" data-bind="text: status.estate"></h2>
@@ -475,11 +486,11 @@
               <tr>
                 <td><span data-bind="text: scaleString(status.amp(), 1000, 2) + ' A'"></span></td>
                 <td><span data-bind="text: scaleString(status.wattsec(), 3600000, 2) + ' kWh'"></span></td>
-                <td><span data-bind="text: scaleString(status.temp1(), 10, 1) + ' &deg;C'"></span></td>
+                <td><span data-bind="text: scaleString(status.temp(), 10, 1) + ' &deg;C'"></span></td>
                 <td><span data-bind="text: openevse.time.elapsed"></span></td>
               </tr>
             </table>
-            
+
             <div data-bind="visible: ecoMode() &amp;&amp; isEcoModeAvailable()">
               <br>
               <span data-bind="visible: haveSolar"><b>Solar:</b></span>
@@ -504,7 +515,7 @@
           </div>
 
           <!-- Session Options -->
-          <div class="box380 left" data-bind="visible: status.rapi_connected">
+          <div class="box380 left" data-bind="visible: status.evse_connected">
             <h2>Charge Options</h2>
 
             <div data-bind="visible: isEcoModeAvailable">
@@ -532,7 +543,7 @@
                 enable: !updatingTimeLimit() &amp;&amp; isConnected(),
                 css: { saved: savedTimeLimit }"></select>
               </p>
-              
+
               <p>
                 <b>Energy limit:</b><br\>
                 <select type="text" data-bind="options: chargeLimits,
@@ -545,26 +556,26 @@
             </span>
 
             <hr> <br>
-            <div data-bind="with: openevse">
+            <div data-bind="with: schedule">
               <b>Timer:</b><br>
-                Start: <input type="time" data-bind="value: delayTimerStart, disable: isError" />
+                Start: <input type="time" data-bind="value: delayTimerStart, disable: $root.openevse.isError" />
                 &nbsp;&nbsp;
-                Stop: <input type="time" data-bind="value: delayTimerStop, disable: isError" /><br/>
+                Stop: <input type="time" data-bind="value: delayTimerStop, disable: $root.openevse.isError" /><br/>
                 <br>
                 <button data-bind="text: delayTimerEnabled() ? 'Update' : 'Set',
                                    enable: !updatingDelayTimer() &amp;&amp;
                                            delayTimerValid() &amp;&amp;
-                                           !isError(),
+                                           !$root.openevse.isError(),
                                    click: startDelayTimer">Set</button>
                 <button data-bind="visible: delayTimerEnabled(),
                                    enable: !updatingDelayTimer() &amp;&amp;
-                                           !isError(),
+                                           !$root.openevse.isError(),
                                    click: stopDelayTimer">Cancel</button>
             </div>
           </div>
 
           <!-- Energy -->
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Energy</h2>
             <table>
               <tr>
@@ -583,7 +594,7 @@
           </div>
 
           <!-- Sensor Values -->
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Sensor Values</h2>
             <table>
               <tr>
@@ -614,11 +625,15 @@
                 <td>Temp3:</td>
                 <td><span data-bind="text: scaleString(status.temp3(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
+              <tr data-bind="visible: false !== status.temp4()">
+                <td>Temp4:</td>
+                <td><span data-bind="text: scaleString(status.temp4(), 10, 1) + ' &deg;C'"></span></td>
+              </tr>
             </table>
           </div>
 
           <!-- Settings -->
-          <div class="box380 setup" data-bind="visible: status.rapi_connected, css: { right: !advancedMode(), left: advancedMode() }">
+          <div class="box380 setup" data-bind="visible: status.evse_connected, css: { right: !advancedMode(), left: advancedMode() }">
             <h2>Setup</h2>
             <p data-bind="visible: !openevse.time.hasRTC()">
               <b>Time: No RTC detected</b>
@@ -667,7 +682,7 @@
           </div>
 
           <!-- Current -->
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Current</h2>
             <table>
               <tr>
@@ -705,7 +720,7 @@
           </div>
 
           <!-- Safety -->
-          <div class="box380 left" data-bind="visible: status.rapi_connected() &amp;&amp; (advancedMode() || !openevse.allTestsEnabled())">
+          <div class="box380 left" data-bind="visible: status.evse_connected() &amp;&amp; (advancedMode() || !openevse.allTestsEnabled())">
             <h2>Safety<span class="info" data-bind="click: toggle.bind($data, showSafety)"></span></h2>
 
             <div class="box" data-bind="visible: showSafety()">
@@ -803,7 +818,7 @@
           </div>
 
           <!-- Hardware -->
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Hardware</h2>
             <table>
               <tr>
@@ -847,11 +862,11 @@
             </table>
           </div>
 
-          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.rapi_connected()">
+          <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
             <h2>Vehicle Settings</h2>
             <h3>Pause status <span class="info" data-bind="click: toggle.bind($data, showVehiclePauseStatus)"></span></h3>
             <div class="box" data-bind="visible: showVehiclePauseStatus()">
-              Some vehicles will shutdown if left in sleep mode (pilot signal enable) and then can not be woken up by timers/PV divert. Changing the 
+              Some vehicles will shutdown if left in sleep mode (pilot signal enable) and then can not be woken up by timers/PV divert. Changing the
               pause state to disable should resolve this issue, however this removes the ability for the charger to detect if a vehicle is connected
               when paused.
             </div>
@@ -865,7 +880,7 @@
             </div>
           </div>
 
-          <div class="box380" data-bind="visible: status.rapi_connected,
+          <div class="box380" data-bind="visible: status.evse_connected,
                                          css: { right: !advancedMode() &amp;&amp; !openevse.allTestsEnabled(),
                                                 left: advancedMode() || openevse.allTestsEnabled() }">
             <h2>Display</h2>
@@ -882,7 +897,7 @@
         <!--end tab 3-->
 
         <!--TAB 4    -->
-        <div id="content-4" data-bind="visible: isRapi() &amp;&amp; status.rapi_connected()">
+        <div id="content-4" data-bind="visible: isRapi() &amp;&amp; status.evse_connected()">
           <div class="box380 left">
             <form method='get' action='r' data-bind="with: rapi">
               <p>
@@ -926,6 +941,12 @@
                 <td>$FS</td>
                 <td>Put EVSE to sleep</td>
               </tr>
+              <tr>
+                <td>$FF</td>
+                <td>Enable/disable feature (feature_id 0|1)<br>
+                    Front panel (B)utton, (D)iode check, G(F)I self-test, (G)round check,
+                    Stuck (R)elay check, (T)emp monitoring, (V)ent required</td>
+              </tr>
             </table>
           </div>
           <div class="box380 left">
@@ -934,6 +955,10 @@
               <tr>
                 <th>Get</th>
                 <th>Description</th>
+              </tr>
+              <tr>
+                <td>$G0</td>
+                <td>Get EV connected state, not connected (0), connected (1), unknown (2)</td>
               </tr>
               <tr>
                 <td>$G3</td>
@@ -949,7 +974,7 @@
               </tr>
               <tr>
                 <td>$GD</td>
-                <td>Get delay timer, starthr startmin endhr endmin</td>
+                <td>Get delay timer, start_hour start_min end_hour end_min</td>
               </tr>
               <tr>
                 <td>$GE</td>
@@ -972,12 +997,8 @@
                 <td>Get Voltmeter Scale/Offset, scale offset</td>
               </tr>
               <tr>
-                <td>$GO</td>
-                <td>Get Overtemperature thresholds, ambient infrared</td>
-              </tr>
-              <tr>
                 <td>$GP</td>
-                <td>Get Temperatures, LCD mcp9808 infrared (all integers, Celsius * 10)</td>
+                <td>Get Temperatures, LCD MCP9808 infrared (integers, °C * 10)</td>
               </tr>
               <tr>
                 <td>$GS</td>
@@ -1010,7 +1031,7 @@
               </tr>
               <tr>
                 <td>$S1</td>
-                <td>Set RTC Year Month Day Hour Minute Second (all 2-digit max)</td>
+                <td>Set RTC, year month day hour minute second (all 2-digit max)</td>
               </tr>
               <tr>
                 <td>$S2</td>
@@ -1028,15 +1049,6 @@
                 <td>$SC</td>
                 <td>Set current capacity, integer</td>
               </tr>
-              <tr><td>$SD</td><td>Enable (1) / Disable (0) Diode self-check</td></tr>
-              <tr>
-                <td>$SF</td>
-                <td>Enable (1) / Disable (0) GFI self-check</td>
-              </tr>
-              <tr>
-                <td>$SG</td>
-                <td>Enable (1) / Disable (0) Ground check</td>
-              </tr>
               <tr>
                 <td>$SH</td>
                 <td>Set charge limit in kWh, integer</td>
@@ -1045,22 +1057,13 @@
                 <td>$SK</td>
                 <td>Set accumulated Wh, integer</td>
               </tr>
-              <tr><td>$SL</td><td>Set service level (1/2/A)</td></tr>
+              <tr>
+                  <td>$SL</td>
+                  <td>Set service level (1/2/A)</td>
+              </tr>
               <tr>
                 <td>$SM</td>
                 <td>Set Voltmeter Scale/Offset, scale offset</td>
-              </tr>
-              <tr>
-                <td>$SO</td>
-                <td>Set Overtemperature thresholds, ambient infrared</td>
-              </tr>
-              <tr>
-                <td>$SR</td>
-                <td>Enable (1) / Disable (0) Stuck-relay check</td>
-              </tr>
-              <tr>
-                <td>$SS</td>
-                <td>Enable (1) / Disable (0) GFI self-check</td>
               </tr>
               <tr>
                 <td>$ST</td>
@@ -1068,7 +1071,7 @@
               </tr>
               <tr>
                 <td>$SV</td>
-                <td>Enable (1) / Disable (0) vent required check</td>
+                <td>Set voltage for power calculations, millivolts</td>
               </tr>
             </table>
           </div>
