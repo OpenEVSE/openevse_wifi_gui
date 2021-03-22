@@ -553,7 +553,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.divertFeedType = ko.computed({
     read: () => {
       var ret = self.haveSolar() ? "solar" :
-                self.haveGridIe() ? "grid_ie" : 
+                self.haveGridIe() ? "grid_ie" :
                 self._divertFeedType;
       self._divertFeedType = ret;
       return ret;
@@ -571,7 +571,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
   self.divertFeedValue = ko.computed({
     read: () => {
-      return "solar" === self.divertFeedType() ? 
+      return "solar" === self.divertFeedType() ?
                 self.config.mqtt_solar() :
                 self.config.mqtt_grid_ie();
     },
@@ -707,6 +707,53 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       });
     }
   };
+
+  // -----------------------------------------------------------------------
+  // Event: Manual Override
+  // -----------------------------------------------------------------------
+  self.setOverrideFetching = ko.observable(false);
+  self.setOverrideSuccess = ko.observable(false);
+  self.setOverride = () =>
+  {
+    self.setOverrideFetching(true);
+    self.setOverrideSuccess(false);
+
+    let props = {
+      state: self.openevse.isPaused() ? "disabled" : "active",
+    };
+
+    $.ajax({
+      method: "POST",
+      url: self.baseEndpoint() + "/override",
+      data: JSON.stringify(props),
+      contentType: "application/json"
+    }).done(() => {
+      self.setOverrideSuccess(true);
+    }).fail(() => {
+      alert("Failed to set manual override");
+    }).always(() => {
+      self.setOverrideFetching(false);
+    });
+  };
+
+  self.clearOverrideFetching = ko.observable(false);
+  self.clearOverrideSuccess = ko.observable(false);
+  self.clearOverride = () =>
+  {
+    self.clearOverrideFetching(true);
+    self.clearOverrideSuccess(false);
+    $.ajax({
+      method: "DELETE",
+      url: self.baseEndpoint() + "/override"
+    }).done(() => {
+      self.clearOverrideSuccess(true);
+    }).fail(() => {
+      alert("Failed to clear manual override");
+    }).always(() => {
+      self.clearOverrideFetching(false);
+    });
+  };
+
 
   // -----------------------------------------------------------------------
   // Event: Update

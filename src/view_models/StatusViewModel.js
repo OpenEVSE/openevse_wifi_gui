@@ -34,6 +34,7 @@ function StatusViewModel(baseEndpoint) {
     "state": 0,
     "vehicle": false,
     "colour": false,
+    "manual_override": false,
     "elapsed": 0,
     "wattsec": 0,
     "watthour": 0,

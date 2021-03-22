@@ -527,9 +527,15 @@
               <span data-bind="css: {selected: ecoMode }">Eco (PV divert)</span><br/>
             </div>
 
-            <p data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
-              <button data-bind="click: setStatus.bind($data, 'enable'), visible: isPaused()">Start</button>
-              <button data-bind="click: setStatus.bind($data, 'pause'), visible: !isPaused()">Pause</button>
+            <p data-bind="visible: !openevse.isError() &amp;&amp; !ecoMode()">
+              <h3 data-bind="visible: status.manual_override">Manual Override</h3>
+              <button data-bind="click: setOverride,
+                                 enable: !setOverrideFetching(),
+                                 visible: !status.manual_override(),
+                                 text: openevse.isPaused() ? 'Stop' : 'Pause'">Stop</button>
+              <button data-bind="click: clearOverride,
+                                 enable: !clearOverrideFetching(),
+                                 visible: status.manual_override()">Clear</button>
             </p>
 
             <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
@@ -537,21 +543,21 @@
               <p>
                 <b>Time limit:</b><br\>
                 <select data-bind="options: timeLimits,
-                optionsText: 'name',
-                optionsValue: 'value',
-                value: timeLimit,
-                enable: !updatingTimeLimit() &amp;&amp; isConnected(),
-                css: { saved: savedTimeLimit }"></select>
+                                   optionsText: 'name',
+                                   optionsValue: 'value',
+                                   value: timeLimit,
+                                   enable: !updatingTimeLimit() &amp;&amp; isConnected(),
+                                   css: { saved: savedTimeLimit }"></select>
               </p>
 
               <p>
                 <b>Energy limit:</b><br\>
-                <select type="text" data-bind="options: chargeLimits,
-                optionsText: 'name',
-                optionsValue: 'value',
-                value: chargeLimit,
-                enable: !updatingChargeLimit() &amp;&amp; isConnected(),
-                css: { saved: savedChargeLimit }" ></select>
+                <select data-bind="options: chargeLimits,
+                                   optionsText: 'name',
+                                   optionsValue: 'value',
+                                   value: chargeLimit,
+                                   enable: !updatingChargeLimit() &amp;&amp; isConnected(),
+                                   css: { saved: savedChargeLimit }" ></select>
               </p>
             </span>
 

@@ -104,12 +104,13 @@ module.exports = {
         "/divertmode",
         "/debug",
         "/evse",
-        "/schedule"
+        "/schedule",
+        "/override"
       ],
       target: openevseEndpoint
     },
     {
-      context: [ 
+      context: [
         "/ws",
         "/debug/console",
         "/evse/console"
