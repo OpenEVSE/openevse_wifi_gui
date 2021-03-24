@@ -90,7 +90,7 @@ function StatusViewModel(baseEndpoint) {
         estate = "Starting";
         break;
       case 1:
-        estate = "Not Connected";
+        estate = "EV Not connected";
         break;
       case 2:
         estate = "EV Connected";
