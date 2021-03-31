@@ -19,6 +19,11 @@ function ConfigGroupViewModel(baseEndpoint, data)
     self.success(false);  
   });
 
+  self.setForTime = function (flag, time) {
+    flag(true);
+    setTimeout(function () { flag(false); }, time);
+  };
+
   self.save = function () {
     var data = self.value();
     if(self._validate(data))
@@ -30,7 +35,7 @@ function ConfigGroupViewModel(baseEndpoint, data)
         data: JSON.stringify(data),
         contentType: "application/json"
       }).done(() => {
-        self.success(true);
+        self.setForTime(self.success, 2000);
         self._done();
       }).fail(self._fail).always(() => {
         self.fetching(false);

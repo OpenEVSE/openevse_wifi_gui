@@ -476,7 +476,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     return true;
   });
 
-
   // -----------------------------------------------------------------------
   // Event: Vehicle settings save
   // -----------------------------------------------------------------------
@@ -487,6 +486,18 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
   self.config.pause_uses_disabled.subscribe(() => {
     self.vehicleGroup.save();
+  });
+
+  // -----------------------------------------------------------------------
+  // Event: Display settings save
+  // -----------------------------------------------------------------------
+  self.displayGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      led_brightness: self.config.led_brightness()
+    };
+  });
+  self.config.led_brightness.subscribe(() => {
+    self.displayGroup.save();
   });
 
   // -----------------------------------------------------------------------

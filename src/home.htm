@@ -898,6 +898,24 @@
               </label>
               <span data-bind="css: {selected: advancedMode }">Advanced</span><br/>
             </div>
+
+            <hr/>
+
+            <p data-bind="visible: config.led_brightness() !== false">
+              <b>LED Brightness:</b><br\>
+              <span class="rangeslidercontainer">
+                <input type="range" min="0" max="255" class="rangeslider"
+                       data-bind="value: config.led_brightness,
+                                  disable: displayGroup.fetching(),
+                                  css: { saved: displayGroup.success }">
+              </span>
+            </p>
+            <!--p>
+              <button data-bind="click: displayGroup.save,
+                                 text: (displayGroup.fetching() ? 'Saving' : 
+                                       (displayGroup.success() ? 'Saved' : 'Save')),
+                                 disable: displayGroup.fetching">Save</button>
+            </p-->
           </div>
         </div>
         <!--end tab 3-->

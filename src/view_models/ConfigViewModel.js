@@ -54,7 +54,8 @@ function ConfigViewModel(baseEndpoint) {
     "divert_decay_smoothing_factor": 0.05,
     "divert_min_charge_time": 600,
     "charge_mode": "full",
-    "pause_uses_disabled": false
+    "pause_uses_disabled": false,
+    "led_brightness": false
   }, endpoint);
 
   function trim(prop, val) {
