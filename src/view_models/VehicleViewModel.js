@@ -9,12 +9,13 @@ function VehicleViewModel(baseEndpoint, config)
   // var endpoint = ko.pureComputed(function () { return baseEndpoint() + "/status"; });
   // BaseViewModel.call(self, {
   // }, endpoint);
-
+  this.mqtt_enabled_state = ko.observable(false);
   this.mqtt_enabled = ko.computed({
     read: () => {
       return config.mqtt_vehicle_soc() !== "" ||
              config.mqtt_vehicle_range() !== "" ||
-             config.mqtt_vehicle_eta() !== "";
+             config.mqtt_vehicle_eta() !== "" ||
+             this.mqtt_enabled_state();
     },
     write: (val) => {
       if(false === val)
@@ -23,6 +24,7 @@ function VehicleViewModel(baseEndpoint, config)
         config.mqtt_vehicle_range("");
         config.mqtt_vehicle_eta("");
       }
+      this.mqtt_enabled_state(val);
     }
   });
 
