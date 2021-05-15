@@ -42,9 +42,12 @@
         <label for="tab-2">Services</label>
         <input id="tab-4" type="radio" name="tab-group" data-bind="checked: tab" value="rapi" />
         <label for="tab-4" data-bind="visible: developerMode() &amp;&amp; status.evse_connected()">RAPI</label>
+        <input id="tab-5" type="radio" name="tab-group" data-bind="checked: tab" value="vehicle" />
+        <label for="tab-5">Vehicle</label>
       </div>
 
       <div id="content">
+        <!--TAB 1: System -->
         <div id="content-1" data-bind="visible: isSystem">
           <div class="box380 left">
             <h2>WiFi Setup</h2>
@@ -204,6 +207,7 @@
         </div>
         <!--end content 1-->
 
+        <!--TAB 2: Services -->
         <div id="content-2" data-bind="visible: isServices">
           <div class="box380 left">
             <h2>&nbsp; Energy Monitoring <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="emoncms.jpg" align="left" /></h2>
@@ -912,7 +916,7 @@
             </p>
             <!--p>
               <button data-bind="click: displayGroup.save,
-                                 text: (displayGroup.fetching() ? 'Saving' : 
+                                 text: (displayGroup.fetching() ? 'Saving' :
                                        (displayGroup.success() ? 'Saved' : 'Save')),
                                  disable: displayGroup.fetching">Save</button>
             </p-->
@@ -920,7 +924,7 @@
         </div>
         <!--end tab 3-->
 
-        <!--TAB 4    -->
+        <!--TAB 4: RAPI -->
         <div id="content-4" data-bind="visible: isRapi() &amp;&amp; status.evse_connected()">
           <div class="box380 left">
             <form method='get' action='r' data-bind="with: rapi">
@@ -1101,6 +1105,90 @@
           </div>
         </div>
         <!--end TAB 4-->
+
+        <!--TAB 5: Vehicle -->
+        <div id="content-5" data-bind="visible: isVehicle">
+          <div class="box380 left">
+            <h2>&nbsp; Setup</h2>
+            <select data-bind="value: vehicle.type">
+              <option value="none">None</option>
+              <option value="tesla">Tesla</option>
+              <option value="ovms">OVMS</option>
+              <option value="mqtt">MQTT</option>
+            </select>
+
+            <div data-bind="visible: 'none' == vehicle.type()">
+              <p>Select the vehicle connection type</p>
+            </div>
+
+            <div data-bind="visible: 'tesla' == vehicle.type()">
+              <hr/>
+              <h3>Tesla</h3>
+              <p>
+                <b>Username:</b>
+                <input data-bind="textInput: vehicle.tesla.username" type="text" autocapitalize="none">
+              </p>
+              <p>
+                <b>Password:</b>
+                <input type="password" autocapitalize="none" data-bind="textInput: vehicle.tesla.password" /><br />
+                <!--span>
+                  <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
+                  <label for="mqttPassword">Show password</label>
+                </span-->
+              </p>
+              <p>
+                <button data-bind="click: vehicle.tesla.login">Login</button>
+              </p>
+            </div>
+
+            <div data-bind="visible: 'ovms' == vehicle.type()">
+              <hr/>
+              <h3>Open Vehicle Monitoring System</h3>
+
+            </div>
+
+            <div data-bind="visible: 'mqtt' == vehicle.type()">
+              <hr/>
+              <h3>MQTT</h3>
+
+              <div class="box error" data-bind="visible: !config.mqtt_enabled()">
+                <h4>MQTT not enabled.</h4>
+                You need to enable MQTT on the <a href="#services">Services</a> tab.
+              </div>
+
+              <p data-bind="visible: config.mqtt_enabled()">
+                <b>State of Charge:</b><br>
+                <input data-bind="textInput: config.mqtt_vehicle_soc" type="text" autocapitalize="none"><br>
+                <span class="small-text">The battery level of charge as a percentage</span>
+              </p>
+
+              <div data-bind="visible: config.mqtt_enabled()">
+                <b>Range:</b><br>
+                <div class="divert">
+                  <input data-bind="textInput: config.mqtt_vehicle_range" type="text" autocapitalize="none">
+                  <select data-bind="value: config.mqtt_vehicle_range_units">
+                    <option value="km">km</option>
+                    <option value="mi">miles</option>
+                  </select><br/>
+                  <span class="small-text">The range (on electric) of the vehicle based on the current battery level</span>
+                </div>
+              </div>
+
+              <p data-bind="visible: config.mqtt_enabled()">
+                <b>Time to charge:</b><br>
+                <input data-bind="textInput: config.mqtt_vehicle_eta" type="text" autocapitalize="none"><br>
+                <span class="small-text">The time until the battery is fully charged in seconds</span>
+              </p>
+
+            </div>
+
+            <p>
+              <button data-bind="click: vehicleStateGroup.save, text: (vehicleStateGroup.fetching() ? 'Saving' : (vehicleStateGroup.success() ? 'Saved' : 'Save')), disable: vehicleStateGroup.fetching">Save</button>
+            </p>
+
+          </div>
+        </div>
+        <!--end TAB 5-->
 
       </div>
       <!--end content-->

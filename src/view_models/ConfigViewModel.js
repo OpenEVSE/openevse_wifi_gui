@@ -26,6 +26,10 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_grid_ie": "",
     "mqtt_vrms": "",
     "mqtt_enabled": 0,
+    "mqtt_vehicle_soc": "",
+    "mqtt_vehicle_range": "",
+    "mqtt_vehicle_range_units": "km",
+    "mqtt_vehicle_eta": "",
     "mqtt_supported_protocols": ["mqtt"],
     "http_supported_protocols": [],
     "ohm_enabled": 0,
@@ -55,7 +59,9 @@ function ConfigViewModel(baseEndpoint) {
     "divert_min_charge_time": 600,
     "charge_mode": "full",
     "pause_uses_disabled": false,
-    "led_brightness": false
+    "led_brightness": false,
+    "tesla_enabled": false,
+    "ovms_enabled": false
   }, endpoint);
 
   function trim(prop, val) {

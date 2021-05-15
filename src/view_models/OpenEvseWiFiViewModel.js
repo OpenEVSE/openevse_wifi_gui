@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel, VehicleViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -38,6 +38,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.config, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
   self.schedule = new ScheduleViewModel(self.baseEndpoint);
+  self.vehicle = new VehicleViewModel(self.baseEndpoint, self.config);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -139,6 +140,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.isServices = ko.pureComputed(function() { return "services" === self.tab(); });
   self.isStatus = ko.pureComputed(function() { return "status" === self.tab(); });
   self.isRapi = ko.pureComputed(function() { return "rapi" === self.tab(); });
+  self.isVehicle = ko.pureComputed(function() { return "vehicle" === self.tab(); });
 
   // Upgrade URL
   self.upgradeUrl = ko.observable("about:blank");
@@ -474,6 +476,20 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     }
 
     return true;
+  });
+
+  // -----------------------------------------------------------------------
+  // Event: Vehicle MQTT save
+  // -----------------------------------------------------------------------
+  self.vehicleStateGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      mqtt_vehicle_soc: self.config.mqtt_vehicle_soc(),
+      mqtt_vehicle_range: self.config.mqtt_vehicle_range(),
+      mqtt_vehicle_range_units: self.config.mqtt_vehicle_range_units(),
+      mqtt_vehicle_eta: self.config.mqtt_vehicle_eta(),
+      tesla_enabled: self.config.tesla_enabled(),
+      ovms_enabled: self.config.ovms_enabled()
+    };
   });
 
   // -----------------------------------------------------------------------
