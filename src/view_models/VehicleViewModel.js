@@ -46,6 +46,15 @@ function VehicleViewModel(baseEndpoint, config)
       }
     }
   );
+
+  this.mqtt_vehicle_range_units = ko.computed({
+    read: () => {
+      return config.mqtt_vehicle_range_miles() ? "mi" : "km";
+    },
+    write: (val) => {
+      config.mqtt_vehicle_range_miles("mi" === val);
+    }
+  });
 }
 //VehicleViewModel.prototype = Object.create(BaseViewModel.prototype);
 //VehicleViewModel.prototype.constructor = VehicleViewModel;

@@ -28,7 +28,7 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_enabled": 0,
     "mqtt_vehicle_soc": "",
     "mqtt_vehicle_range": "",
-    "mqtt_vehicle_range_units": "km",
+    "mqtt_vehicle_range_miles": false,
     "mqtt_vehicle_eta": "",
     "mqtt_supported_protocols": ["mqtt"],
     "http_supported_protocols": [],

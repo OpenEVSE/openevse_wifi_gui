@@ -485,7 +485,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     return {
       mqtt_vehicle_soc: self.config.mqtt_vehicle_soc(),
       mqtt_vehicle_range: self.config.mqtt_vehicle_range(),
-      mqtt_vehicle_range_units: self.config.mqtt_vehicle_range_units(),
+      mqtt_vehicle_range_miles: self.config.mqtt_vehicle_range_miles(),
       mqtt_vehicle_eta: self.config.mqtt_vehicle_eta(),
       tesla_enabled: self.config.tesla_enabled(),
       ovms_enabled: self.config.ovms_enabled()
