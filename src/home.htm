@@ -1137,7 +1137,9 @@
                 </span-->
               </p>
               <p>
-                <button data-bind="click: vehicle.tesla.login">Login</button>
+                <button data-bind="click: vehicle.tesla.login,
+                                   text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Login')),
+                                   disable: vehicle.tesla.fetching">Login</button>
               </p>
             </div>
 
@@ -1182,7 +1184,7 @@
 
             </div>
 
-            <p>
+            <p data-bind="visible: 'tesla' != vehicle.type()">
               <button data-bind="click: vehicleStateGroup.save, text: (vehicleStateGroup.fetching() ? 'Saving' : (vehicleStateGroup.success() ? 'Saved' : 'Save')), disable: vehicleStateGroup.fetching">Save</button>
             </p>
 
