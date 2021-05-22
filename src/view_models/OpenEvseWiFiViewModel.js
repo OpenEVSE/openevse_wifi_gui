@@ -38,7 +38,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.config, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
   self.schedule = new ScheduleViewModel(self.baseEndpoint);
-  self.vehicle = new VehicleViewModel(self.baseEndpoint, self.config);
+  self.vehicle = new VehicleViewModel(self.baseEndpoint, self.config, self.status);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);

@@ -210,7 +210,7 @@
         <!--TAB 2: Services -->
         <div id="content-2" data-bind="visible: isServices">
           <div class="box380 left">
-            <h2>&nbsp; Energy Monitoring <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="emoncms.jpg" align="left" /></h2>
+            <h2>Energy Monitoring <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="emoncms.jpg" align="left" /></h2>
             <p>
               <input type="checkbox" id="emoncms_enabled" data-bind="checked: config.emoncms_enabled" />
               <label for="emoncms_enabled"><b>Enable Emoncms</b></label>
@@ -345,7 +345,7 @@
           </div>
 
           <div class="box380 left">
-            <h2>&nbsp; OhmConnect <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="ohm.jpg" align=left></h2>
+            <h2>OhmConnect <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="ohm.jpg" align=left></h2>
             <p>
               <input type="checkbox" id="ohm_enabled" data-bind="checked: config.ohm_enabled" />
               <label for="ohm_enabled"><b>Enable OhmConnect</b></label>
@@ -1108,8 +1108,30 @@
 
         <!--TAB 5: Vehicle -->
         <div id="content-5" data-bind="visible: isVehicle">
+          <div class="box380 right" data-bind="visible: vehicle.has_status">
+            <h2>Status</h2>
+            <table>
+              <tr>
+                <th>Status</th>
+                <th><span data-bind="text: formatUpdate(openevse.time.vehicle_state_update()), css: updateClass(openevse.time.vehicle_state_update())"></span></th>
+              </tr>
+              <tr data-bind="visible: false !== status.battery_level()">
+                <td>Battery Level:</td>
+                <td><span data-bind="text: status.battery_level()+ '%'"></span></td>
+              </tr>
+              <tr data-bind="visible: false !== status.battery_range()">
+                <td>Battery Range:</td>
+                <td><span data-bind="text: status.battery_range() + ' ' + (vehicle.mqtt_vehicle_range_units())"></span></td>
+              </tr>
+              <tr data-bind="visible: false !== status.time_to_full_charge()">
+                <td>Time to full charge:</td>
+                <td><span data-bind="text: new Date(status.time_to_full_charge() * 1000).toISOString().substr(11, 8)"></span></td>
+              </tr>
+            </table>
+          </div>
+
           <div class="box380 left">
-            <h2>&nbsp; Setup</h2>
+            <h2>Setup</h2>
             <select data-bind="value: vehicle.type">
               <option value="none">None</option>
               <!-- option value="tesla">Tesla</option -->

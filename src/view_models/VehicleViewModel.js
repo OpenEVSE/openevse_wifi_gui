@@ -1,7 +1,7 @@
 /* global ko, BaseViewModel, TeslaViewModel */
 /* exported VehicleViewModel */
 
-function VehicleViewModel(baseEndpoint, config)
+function VehicleViewModel(baseEndpoint, config, status)
 {
   "use strict";
   //var self = this;
@@ -26,6 +26,12 @@ function VehicleViewModel(baseEndpoint, config)
       }
       this.mqtt_enabled_state(val);
     }
+  });
+
+  this.has_status = ko.computed(() => {
+    return false !== status.battery_range() ||
+           false !== status.battery_level() ||
+           false !== status.time_to_full_charge();
   });
 
   this.tesla = new TeslaViewModel(baseEndpoint, config);
