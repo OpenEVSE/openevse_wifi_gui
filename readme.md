@@ -27,3 +27,5 @@ You can configure the dev server using [dotenv](https://www.npmjs.com/package/do
 To start the dev server use the command:
 
 `npm start`
+
+OCPP integration started
