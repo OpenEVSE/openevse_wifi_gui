@@ -477,6 +477,29 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   // -----------------------------------------------------------------------
+  // Event: OCPP 1.6 save
+  // -----------------------------------------------------------------------
+  self.ocppGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      ocpp_enabled: self.config.ocpp_enabled(),
+      ocpp_server: self.config.ocpp_server(),
+      ocpp_chargeBoxId: self.config.ocpp_chargeBoxId(),
+      ocpp_idTag: self.config.ocpp_idTag(),
+      tx_start_point: self.config.tx_start_point(),
+      ocpp_suspend_evse: self.config.ocpp_suspend_evse(),
+      ocpp_energize_plug: self.config.ocpp_energize_plug()
+    };
+  }).validate((ocpp) => {
+
+    if (ocpp.ocpp_enabled && ocpp.ocpp_server === "") {
+      alert("Please enter OCPP server");
+      return false;
+    }
+
+    return true;
+  });
+
+  // -----------------------------------------------------------------------
   // Event: Vehicle settings save
   // -----------------------------------------------------------------------
   self.vehicleGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
