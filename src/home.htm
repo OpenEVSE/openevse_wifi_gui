@@ -1136,12 +1136,7 @@
                   <label for="mqttPassword">Show password</label>
                 </span-->
               </p>
-              <p data-bind="visible: !vehicle.tesla.have_credentials()">
-                <button data-bind="click: vehicle.tesla.login,
-                                   text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Login')),
-                                   disable: vehicle.tesla.fetching">Login</button>
-              </p>
-              <p>
+              <p data-bind="visible: vehicle.tesla.have_credentials()">
                 <select data-bind="options: vehicle.tesla.vehicles,
                   optionsText: 'name',
                   optionsValue: 'id',
@@ -1195,8 +1190,25 @@
 
             </div>
 
-            <p data-bind="visible: vehicle.show_save()">
-              <button data-bind="click: vehicleStateGroup.save, text: (vehicleStateGroup.fetching() ? 'Saving' : (vehicleStateGroup.success() ? 'Saved' : 'Save')), disable: vehicleStateGroup.fetching">Save</button>
+            <p data-bind="">
+              <button data-bind="visible: vehicle.show_save(),
+                                 click: vehicleStateGroup.save,
+                                 text: (vehicleStateGroup.fetching() ? 'Saving' : (vehicleStateGroup.success() ? 'Saved' : 'Save')),
+                                 disable: vehicleStateGroup.fetching">
+                Save
+              </button>
+              <button data-bind="visible: !vehicle.tesla.have_credentials(),
+                                  click: vehicle.tesla.login,
+                                  text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Login')),
+                                  disable: vehicle.tesla.fetching">
+                Login
+              </button>
+              <button data-bind="visible: vehicle.tesla.have_credentials(),
+                                 click: vehicle.tesla.logout,
+                                 text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Logout')),
+                                 disable: vehicle.tesla.fetching">
+                Logout
+              </button>
             </p>
 
           </div>

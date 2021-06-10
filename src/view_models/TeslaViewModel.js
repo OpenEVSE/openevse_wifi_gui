@@ -78,6 +78,29 @@ function TeslaViewModel(baseEndpoint, config, status)
       this.fetching(false);
     });
   };
+
+  this.logout = () => {
+    $.ajax(baseEndpoint() + "/config", {
+      method: "POST",
+      data: JSON.stringify({
+        tesla_enabled: false,
+        tesla_access_token: "",
+        tesla_refresh_token: "",
+        tesla_created_at: "",
+        tesla_expires_in: ""
+      }),
+      contentType: "application/json"
+    }).done(() => {
+      config.tesla_access_token("");
+      config.tesla_refresh_token("");
+      config.tesla_created_at("");
+      config.tesla_expires_in("");
+      this.setForTime(this.success, 2000);
+    }).fail(() => {
+    }).always(() => {
+      this.fetching(false);
+    });
+};
 }
 TeslaViewModel.prototype = Object.create(BaseViewModel.prototype);
 TeslaViewModel.prototype.constructor = TeslaViewModel;
