@@ -1108,33 +1108,11 @@
 
         <!--TAB 5: Vehicle -->
         <div id="content-5" data-bind="visible: isVehicle">
-          <div class="box380 right" data-bind="visible: vehicle.has_status">
-            <h2>Status</h2>
-            <table>
-              <tr>
-                <th>Status</th>
-                <th><span data-bind="text: formatUpdate(openevse.time.vehicle_state_update()), css: updateClass(openevse.time.vehicle_state_update())"></span></th>
-              </tr>
-              <tr data-bind="visible: false !== status.battery_level()">
-                <td>Battery Level:</td>
-                <td><span data-bind="text: status.battery_level()+ '%'"></span></td>
-              </tr>
-              <tr data-bind="visible: false !== status.battery_range()">
-                <td>Battery Range:</td>
-                <td><span data-bind="text: status.battery_range() + ' ' + (vehicle.mqtt_vehicle_range_units())"></span></td>
-              </tr>
-              <tr data-bind="visible: false !== status.time_to_full_charge()">
-                <td>Time to full charge:</td>
-                <td><span data-bind="text: new Date(status.time_to_full_charge() * 1000).toISOString().substr(11, 8)"></span></td>
-              </tr>
-            </table>
-          </div>
-
           <div class="box380 left">
             <h2>Setup</h2>
             <select data-bind="value: vehicle.type">
               <option value="none">None</option>
-              <!-- option value="tesla">Tesla</option -->
+              <option value="tesla">Tesla</option>
               <!-- option value="ovms">OVMS</option -->
               <option value="mqtt">MQTT</option>
             </select>
@@ -1146,11 +1124,11 @@
             <div data-bind="visible: 'tesla' == vehicle.type()">
               <hr/>
               <h3>Tesla</h3>
-              <p>
+              <p data-bind="visible: !vehicle.tesla.have_credentials()">
                 <b>Username:</b>
                 <input data-bind="textInput: vehicle.tesla.username" type="text" autocapitalize="none">
               </p>
-              <p>
+              <p data-bind="visible: !vehicle.tesla.have_credentials()">
                 <b>Password:</b>
                 <input type="password" autocapitalize="none" data-bind="textInput: vehicle.tesla.password" /><br />
                 <!--span>
@@ -1158,10 +1136,21 @@
                   <label for="mqttPassword">Show password</label>
                 </span-->
               </p>
-              <p>
+              <p data-bind="visible: !vehicle.tesla.have_credentials()">
                 <button data-bind="click: vehicle.tesla.login,
                                    text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Login')),
                                    disable: vehicle.tesla.fetching">Login</button>
+              </p>
+              <p>
+                <select data-bind="options: vehicle.tesla.vehicles,
+                  optionsText: 'name',
+                  optionsValue: 'id',
+                  value: config.tesla_vehicle_id,
+                  visible: vehicle.tesla.vehicles().length > 0">
+                </select>
+                <span data-bind="visible: 0 == vehicle.tesla.vehicles().length">
+                  Fetching vehicle info ...
+                </span>
               </p>
             </div>
 
@@ -1206,10 +1195,37 @@
 
             </div>
 
-            <p data-bind="visible: 'tesla' != vehicle.type()">
+            <p data-bind="visible: vehicle.show_save()">
               <button data-bind="click: vehicleStateGroup.save, text: (vehicleStateGroup.fetching() ? 'Saving' : (vehicleStateGroup.success() ? 'Saved' : 'Save')), disable: vehicleStateGroup.fetching">Save</button>
             </p>
 
+          </div>
+
+          <div class="box380 right error" data-bind="visible: false !== status.tesla_error()">
+            <h4>Error</h4>
+            <span data-bind="text: status.tesla_error"></span>
+          </div>
+
+          <div class="box380 right" data-bind="visible: vehicle.has_status">
+            <h2>Status</h2>
+            <table>
+              <tr>
+                <th>Status</th>
+                <th><span data-bind="text: formatUpdate(openevse.time.vehicle_state_update()), css: updateClass(openevse.time.vehicle_state_update())"></span></th>
+              </tr>
+              <tr data-bind="visible: false !== status.battery_level()">
+                <td>Battery Level:</td>
+                <td><span data-bind="text: status.battery_level()+ '%'"></span></td>
+              </tr>
+              <tr data-bind="visible: false !== status.battery_range()">
+                <td>Battery Range:</td>
+                <td><span data-bind="text: status.battery_range() + ' ' + (vehicle.mqtt_vehicle_range_units())"></span></td>
+              </tr>
+              <tr data-bind="visible: false !== status.time_to_full_charge()">
+                <td>Time to full charge:</td>
+                <td><span data-bind="text: new Date(status.time_to_full_charge() * 1000).toISOString().substr(11, 8)"></span></td>
+              </tr>
+            </table>
           </div>
         </div>
         <!--end TAB 5-->

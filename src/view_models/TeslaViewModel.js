@@ -1,9 +1,14 @@
 /* global ko, BaseViewModel */
 /* exported TeslaViewModel */
 
-function TeslaViewModel(baseEndpoint, config)
+function TeslaViewModel(baseEndpoint, config, status)
 {
   "use strict";
+
+  var endpoint = ko.pureComputed(function () { return baseEndpoint() + "/tesla/vehicles"; });
+  BaseViewModel.call(this, {
+    "vehicles": [ ]
+  }, endpoint);
 
   this.username = ko.observable("");
   this.password = ko.observable("");
@@ -13,7 +18,22 @@ function TeslaViewModel(baseEndpoint, config)
   this.fetching = ko.observable(false);
   this.success = ko.observable(false);
 
-  const teslaLogin = "http://localhost:3000/login";
+  status.tesla_vehicle_count.subscribe(() => {
+    this.update();
+  });
+
+  this.have_credentials = ko.computed(() => {
+    return  config.tesla_access_token() !== false &&
+            config.tesla_access_token() !== "" &&
+            config.tesla_refresh_token() !== false &&
+            config.tesla_refresh_token() !== "" &&
+            config.tesla_created_at() !== false &&
+            config.tesla_created_at() !== "" &&
+            config.tesla_expires_in() !== false &&
+            config.tesla_expires_in() !== "";
+  });
+
+  const teslaLogin = "https://tesla.bigjungle.net/login";
 
   this.setForTime = function (flag, time) {
     flag(true);
@@ -59,3 +79,5 @@ function TeslaViewModel(baseEndpoint, config)
     });
   };
 }
+TeslaViewModel.prototype = Object.create(BaseViewModel.prototype);
+TeslaViewModel.prototype.constructor = TeslaViewModel;

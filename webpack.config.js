@@ -108,7 +108,8 @@ module.exports = {
         "/debug",
         "/evse",
         "/schedule",
-        "/override"
+        "/override",
+        "/tesla"
       ],
       target: openevseEndpoint
     },

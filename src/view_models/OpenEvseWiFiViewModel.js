@@ -482,12 +482,24 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   // Event: Vehicle MQTT save
   // -----------------------------------------------------------------------
   self.vehicleStateGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    if(false === self.config.tesla_enabled()) {
+      self.config.tesla_access_token("");
+      self.config.tesla_refresh_token("");
+      self.config.tesla_created_at(0);
+      self.config.tesla_expires_in(0);
+    }
+
     return {
       mqtt_vehicle_soc: self.config.mqtt_vehicle_soc(),
       mqtt_vehicle_range: self.config.mqtt_vehicle_range(),
       mqtt_vehicle_range_miles: self.config.mqtt_vehicle_range_miles(),
       mqtt_vehicle_eta: self.config.mqtt_vehicle_eta(),
       tesla_enabled: self.config.tesla_enabled(),
+      tesla_access_token: self.config.tesla_access_token(),
+      tesla_refresh_token: self.config.tesla_refresh_token(),
+      tesla_created_at: self.config.tesla_created_at(),
+      tesla_expires_in: self.config.tesla_expires_in(),
+      tesla_vehicle_id: self.config.tesla_vehicle_id(),
       ovms_enabled: self.config.ovms_enabled()
     };
   });

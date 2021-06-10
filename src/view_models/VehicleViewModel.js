@@ -34,7 +34,7 @@ function VehicleViewModel(baseEndpoint, config, status)
            false !== status.time_to_full_charge();
   });
 
-  this.tesla = new TeslaViewModel(baseEndpoint, config);
+  this.tesla = new TeslaViewModel(baseEndpoint, config, status);
 
   // Some devired values
   this.type = ko.pureComputed(
@@ -52,6 +52,11 @@ function VehicleViewModel(baseEndpoint, config, status)
       }
     }
   );
+
+  this.show_save = ko.computed(() => {
+    return "tesla" !== this.type() ||
+           this.tesla.have_credentials();
+  });
 
   this.mqtt_vehicle_range_units = ko.computed({
     read: () => {
