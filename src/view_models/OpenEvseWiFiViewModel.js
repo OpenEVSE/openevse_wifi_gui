@@ -491,8 +491,33 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     };
   }).validate((ocpp) => {
 
-    if (ocpp.ocpp_enabled && ocpp.ocpp_server === "") {
-      alert("Please enter OCPP server");
+    if (ocpp.ocpp_enabled == false) {
+      return true;
+    }
+
+    let csUrl = ocpp.ocpp_server.trim();
+    if (csUrl.length <= 0) {
+      alert("Please enter OCPP server URL");
+      return false;
+    }
+
+    if (csUrl.charAt(csUrl.length - 1) !== '/') {
+      csUrl += '/';
+    }
+
+    let cbId = ocpp.ocpp_chargeBoxId.trim();
+    csUrl += cbId;
+    
+    let validatedUrl;
+    try {
+      validatedUrl = new URL(csUrl);
+    } catch (_) {
+      alert("Please enter valid OCPP server URL and valid charge box ID");
+      return false;  
+    }
+
+    if (validatedUrl.protocol !== "ws:" && validatedUrl.protocol !== "wss:") {
+      alert("OCPP only allows ws: and wss: as protocol");
       return false;
     }
 
