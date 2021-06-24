@@ -532,7 +532,7 @@
               <button data-bind="click: setOverride,
                                  enable: !setOverrideFetching(),
                                  visible: !status.manual_override(),
-                                 text: openevse.isPaused() ? 'Stop' : 'Pause'">Stop</button>
+                                 text: openevse.isPaused() ? 'Start' : 'Pause'">Start</button>
               <button data-bind="click: clearOverride,
                                  enable: !clearOverrideFetching(),
                                  visible: status.manual_override()">Clear</button>
@@ -912,7 +912,7 @@
             </p>
             <!--p>
               <button data-bind="click: displayGroup.save,
-                                 text: (displayGroup.fetching() ? 'Saving' : 
+                                 text: (displayGroup.fetching() ? 'Saving' :
                                        (displayGroup.success() ? 'Saved' : 'Save')),
                                  disable: displayGroup.fetching">Save</button>
             </p-->
