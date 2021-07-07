@@ -3,6 +3,7 @@
 
 function ConfigViewModel(baseEndpoint) {
   "use strict";
+  var self = this;
   var endpoint = ko.pureComputed(function () { return baseEndpoint() + "/config"; });
   BaseViewModel.call(this, {
     "ssid": "",
@@ -46,8 +47,9 @@ function ConfigViewModel(baseEndpoint) {
     "tempt": 0,
     "scale": 1,
     "offset": 0,
-    "version": "0.0.0",
+    "version": "-",
     "time_zone": false,
+    "divert_feed_type": "grid_ie",
     "divert_enabled": false,
     "divert_PV_ratio": 1.0,
     "divert_attack_smoothing_factor": 0.4,
@@ -58,7 +60,7 @@ function ConfigViewModel(baseEndpoint) {
   }, endpoint);
 
   function trim(prop, val) {
-    if(val.trim() !== prop()) {
+    if (val.trim() !== prop()) {
       prop(val.trim());
     }
   }
@@ -78,7 +80,12 @@ function ConfigViewModel(baseEndpoint) {
   this.www_username.subscribe((v) => { trim(this.www_username, v); });
   this.hostname.subscribe((v) => { trim(this.hostname, v); });
   this.sntp_hostname.subscribe((v) => { trim(this.sntp_hostname, v); });
+
+  this.canUpdateControllerFirmware = ko.pureComputed(function () {
+    return self.firmware() && (self.firmware().startsWith("SmartEVSE_") || self.firmware()=="-");
+  });
 }
+
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);
 ConfigViewModel.prototype.constructor = ConfigViewModel;
 
@@ -90,11 +97,12 @@ ConfigViewModel.prototype.update = function (after = function () { }) {
     this.mqtt_port_enable(data.hasOwnProperty("mqtt_port"));
     this.mqtt_reject_unauthorized_enable(data.hasOwnProperty("mqtt_reject_unauthorized"));
     // HACK: not sure why this is needed
-    if(data.hasOwnProperty("mqtt_protocol")) {
+    if (data.hasOwnProperty("mqtt_protocol")) {
       this.mqtt_protocol(data.mqtt_protocol);
     }
   }, "json").always(() => {
     this.fetching(false);
     after();
   });
+
 };
