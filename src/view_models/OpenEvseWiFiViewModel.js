@@ -477,6 +477,54 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   // -----------------------------------------------------------------------
+  // Event: OCPP 1.6 save
+  // -----------------------------------------------------------------------
+  self.ocppGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      ocpp_enabled: self.config.ocpp_enabled(),
+      ocpp_server: self.config.ocpp_server(),
+      ocpp_chargeBoxId: self.config.ocpp_chargeBoxId(),
+      ocpp_idTag: self.config.ocpp_idTag(),
+      tx_start_point: self.config.tx_start_point(),
+      ocpp_suspend_evse: self.config.ocpp_suspend_evse(),
+      ocpp_energize_plug: self.config.ocpp_energize_plug()
+    };
+  }).validate((ocpp) => {
+
+    if (ocpp.ocpp_enabled == false) {
+      return true;
+    }
+
+    let csUrl = ocpp.ocpp_server.trim();
+    if (csUrl.length <= 0) {
+      alert("Please enter OCPP server URL");
+      return false;
+    }
+
+    if (csUrl.charAt(csUrl.length - 1) !== '/') {
+      csUrl += '/';
+    }
+
+    let cbId = ocpp.ocpp_chargeBoxId.trim();
+    csUrl += cbId;
+    
+    let validatedUrl;
+    try {
+      validatedUrl = new URL(csUrl);
+    } catch (_) {
+      alert("Please enter valid OCPP server URL and valid charge box ID");
+      return false;  
+    }
+
+    if (validatedUrl.protocol !== "ws:" && validatedUrl.protocol !== "wss:") {
+      alert("OCPP only allows ws: and wss: as protocol");
+      return false;
+    }
+
+    return true;
+  });
+
+  // -----------------------------------------------------------------------
   // Event: Vehicle settings save
   // -----------------------------------------------------------------------
   self.vehicleGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {

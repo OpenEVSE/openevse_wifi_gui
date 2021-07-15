@@ -332,7 +332,7 @@
             <p data-bind="visible: config.mqtt_enabled">
               <b>Voltage topic:</b>
               <input data-bind="textInput: config.mqtt_vrms" type="text" autocapitalize="none" hint="emon/emonpi/vrms"><br>
-              <span class="small-text">Voltage MQTT topic to improve power calculations
+              <span class="small-text">Voltage MQTT topic to improve power calculations</span>
             </p>
             <p>
               <button data-bind="click: mqttGroup.save, text: (mqttGroup.fetching() ? 'Saving' : (mqttGroup.success() ? 'Saved' : 'Save')), disable: mqttGroup.fetching">Save</button>
@@ -447,6 +447,51 @@
 
             <p data-bind="visible: isEcoModeAvailable">
               <button data-bind="click: divertGroup.save, text: (divertGroup.fetching() ? 'Saving' : (divertGroup.success() ? 'Saved' : 'Save')), disable: divertGroup.fetching">Save</button>
+            </p>
+          </div>
+
+          <div class="box380 left">
+            <h2>OCPP 1.6</h2>
+            <p>
+              <input type="checkbox" id="ocpp_enabled" data-bind="checked: config.ocpp_enabled" />
+              <label for="ocpp_enabled"><b>Enable OCPP</b></label>
+            </p>
+            <div data-bind="visible: config.ocpp_enabled">
+              <b>Central System URL*:</b><br>
+              <input data-bind="textInput: config.ocpp_server" type="text" autocapitalize="none"><br/>
+              <span class="small-text">e.g 'wss://ocpp.my-cpms.com/steve/websocket/CentralSystemService'</span>
+            </div>
+            <p data-bind="visible: config.ocpp_enabled">
+              <b>Charge box ID*:</b>
+              <input data-bind="textInput: config.ocpp_chargeBoxId" type="text" autocapitalize="none">
+            </p>
+            <p data-bind="visible: config.ocpp_enabled">
+              <b>ID Tag*:</b>
+              <input data-bind="textInput: config.ocpp_idTag" type="text" autocapitalize="none">
+            </p>
+            <p data-bind="visible: config.ocpp_enabled">
+              <b>Transaction start point:</b><br>
+              <select data-bind="visible: config.ocpp_enabled,
+                                    options: config.supported_tx_start_points,
+                                    optionsText: function(item) {
+                                      if (item === 'tx_pending') {return 'StartTransaction pending';} else if (item === 'tx_accepted') {return 'StartTransaction accepted';} else {return 'only RemoteStartTransaction';}
+                                    },
+                                    value: config.tx_start_point"></select>
+            </p>
+            <p data-bind="visible: config.ocpp_enabled">
+              <b>Access control:</b><br>
+              <span>
+                <input id="ocpp_suspend_evse" type="checkbox" data-bind="checked: config.ocpp_suspend_evse" />
+                <label for="ocpp_suspend_evse">OCPP can suspend EVSE</label>
+              </span><br>
+              <span>
+                <input id="ocpp_energize_plug" type="checkbox" data-bind="checked: config.ocpp_energize_plug" />
+                <label for="ocpp_energize_plug">OCPP can energize plug</label>
+              </span>
+            </p>
+            <p>
+              <button data-bind="click: ocppGroup.save, text: (ocppGroup.fetching() ? 'Saving' : (ocppGroup.success() ? 'Saved' : 'Save')), disable: ocppGroup.fetching">Save</button>
+              <span data-bind="visible: config.ocpp_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.ocpp_connected() ? 'Yes' : 'No'"></span></b></span>
             </p>
           </div>
         </div>
