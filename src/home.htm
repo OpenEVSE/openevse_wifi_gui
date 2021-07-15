@@ -526,7 +526,7 @@
               <span data-bind="css: {selected: ecoMode }">Eco (PV divert)</span><br/>
             </div>
 
-            <p data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
+            <p data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; (!isEcoModeAvailable() || !ecoMode())">
               <button data-bind="click: setStatus.bind($data, 'enable'), visible: isPaused()">Start</button>
               <button data-bind="click: setStatus.bind($data, 'pause'), visible: !isPaused()">Pause</button>
             </p>
