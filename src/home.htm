@@ -181,6 +181,11 @@
               <b>NTP Server:</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname" pattern=".{31}">
             </p>
+            <p data-bind="visible: false !== config.apass()">
+              <b>WiFi Access Point passphrase:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.apass" pattern=".{8,63}" title="Passphrase to use when the WiFi is in Access Point mode" required="">
+              <span class="small-text validMessage">Minimum 8 chars, GUI doesn't check!!!</span>
+            </p>
             <p>
               <button data-bind="click: advancedGroup.save, text: (advancedGroup.fetching() ? 'Saving' : (advancedGroup.success() ? 'Saved' : 'Save')), disable: advancedGroup.fetching">Save</button>
             </p>
