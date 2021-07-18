@@ -577,7 +577,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   self.isEcoModeAvailable = ko.pureComputed(function () {
-    return self.config.mqtt_enabled() &&
+    return self.config.mqtt_enabled() && self.config.divert_enabled() &&
            ("" !== self.config.mqtt_solar() ||
             "" !== self.config.mqtt_grid_ie());
   });
