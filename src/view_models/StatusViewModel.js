@@ -52,7 +52,15 @@ function StatusViewModel(baseEndpoint) {
     "divert_active": false,
     "ota_update": false,
     "time": false,
-    "offset": false
+    "offset": false,
+    "tesla_vehicle_count": false,
+    "tesla_vehicle_id": false,
+    "tesla_vehicle_name": false,
+    "battery_range": false,
+    "battery_level": false,
+    "time_to_full_charge": false,
+    "tesla_error": false,
+    "vehicle_state_update": 0
   }, endpoint);
 
   // Some devired values

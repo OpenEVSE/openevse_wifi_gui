@@ -37,16 +37,19 @@ var mergeOptions = {
       "src/view_models/WiFiScanViewModel.js",
       "src/view_models/WiFiConfigViewModel.js",
       "src/view_models/PasswordViewModel.js",
-      "src/view_models/ConfigGroupViewModel.js",
-      "src/view_models/ScheduleViewModel.js"
+      "src/view_models/ConfigGroupViewModel.js"
     ],
     "home.js": [
       "src/openevse.js",
+      //"src/tesla_auth.js",
       "src/view_models/RapiViewModel.js",
       "src/view_models/TimeViewModel.js",
       "src/view_models/ZonesViewModel.js",
       "src/view_models/OpenEvseViewModel.js",
       "src/view_models/OpenEvseWiFiViewModel.js",
+      "src/view_models/ScheduleViewModel.js",
+      "src/view_models/VehicleViewModel.js",
+      "src/view_models/TeslaViewModel.js",
       "src/home.js"
     ],
     "term.js": [
@@ -105,7 +108,8 @@ module.exports = {
         "/debug",
         "/evse",
         "/schedule",
-        "/override"
+        "/override",
+        "/tesla"
       ],
       target: openevseEndpoint
     },

@@ -26,6 +26,10 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_grid_ie": "",
     "mqtt_vrms": "",
     "mqtt_enabled": 0,
+    "mqtt_vehicle_soc": "",
+    "mqtt_vehicle_range": "",
+    "mqtt_vehicle_range_miles": false,
+    "mqtt_vehicle_eta": "",
     "mqtt_supported_protocols": ["mqtt"],
     "ocpp_server": "",
     "ocpp_enabled": 0,
@@ -63,7 +67,14 @@ function ConfigViewModel(baseEndpoint) {
     "divert_min_charge_time": 600,
     "charge_mode": "full",
     "pause_uses_disabled": false,
-    "led_brightness": false
+    "led_brightness": false,
+    "tesla_enabled": false,
+    "ovms_enabled": false,
+    "tesla_access_token": false,
+    "tesla_refresh_token": false,
+    "tesla_created_at": false,
+    "tesla_expires_in": false,
+    "tesla_vehicle_id": false
   }, endpoint);
 
   function trim(prop, val) {
@@ -101,6 +112,18 @@ ConfigViewModel.prototype.update = function (after = function () { }) {
     // HACK: not sure why this is needed
     if(data.hasOwnProperty("mqtt_protocol")) {
       this.mqtt_protocol(data.mqtt_protocol);
+    }
+    if(data.hasOwnProperty("tesla_access_token")) {
+      this.tesla_access_token(data.tesla_access_token);
+    }
+    if(data.hasOwnProperty("tesla_refresh_token")) {
+      this.tesla_refresh_token(data.tesla_refresh_token);
+    }
+    if(data.hasOwnProperty("tesla_created_at")) {
+      this.tesla_created_at(data.tesla_created_at);
+    }
+    if(data.hasOwnProperty("tesla_expires_in")) {
+      this.tesla_expires_in(data.tesla_expires_in);
     }
   }, "json").always(() => {
     this.fetching(false);

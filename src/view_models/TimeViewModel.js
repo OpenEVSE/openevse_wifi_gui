@@ -18,9 +18,8 @@ function TimeViewModel(openevse)
       if(openevse.isCharging()) {
         self.elapsedNow(new Date((openevse.status.elapsed() * 1000) + ((new Date()) - self.elapsedLocal())));
       }
-      /*if(openevse.isEcoModeAvailable())*/ {
-        self.divertUpdateNow(new Date((openevse.status.divert_update() * 1000) + ((new Date()) - self.divertUpdateLocal())));
-      }
+      self.divertUpdateNow(new Date((openevse.status.divert_update() * 1000) + ((new Date()) - self.divertUpdateLocal())));
+      self.vehicleUpdateNow(new Date((openevse.status.vehicle_state_update() * 1000) + ((new Date()) - self.vehicleUpdateLocal())));
     }, 1000);
   }
 
@@ -39,6 +38,8 @@ function TimeViewModel(openevse)
   self.elapsedLocal = ko.observable(new Date());
   self.divertUpdateNow = ko.observable(new Date(0));
   self.divertUpdateLocal = ko.observable(new Date());
+  self.vehicleUpdateNow = ko.observable(new Date(0));
+  self.vehicleUpdateLocal = ko.observable(new Date());
 
   self.date = ko.pureComputed({
     read: function () {
@@ -102,6 +103,19 @@ function TimeViewModel(openevse)
   openevse.status.divert_update.subscribe(function (val) {
     self.divertUpdateNow(new Date(val * 1000));
     self.divertUpdateLocal(new Date());
+  });
+
+  self.vehicle_state_update = ko.pureComputed(function () {
+    if(null === self.nowTimedate()) {
+      return false;
+    }
+    var time = self.vehicleUpdateNow().getTime();
+    return Math.floor(time / 1000);
+  });
+
+  openevse.status.vehicle_state_update.subscribe(function (val) {
+    self.vehicleUpdateNow(new Date(val * 1000));
+    self.vehicleUpdateLocal(new Date());
   });
 
   var timeUpdateTimeout = null;

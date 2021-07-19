@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel, VehicleViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -38,6 +38,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.config, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
   self.schedule = new ScheduleViewModel(self.baseEndpoint);
+  self.vehicle = new VehicleViewModel(self.baseEndpoint, self.config, self.status);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -139,6 +140,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.isServices = ko.pureComputed(function() { return "services" === self.tab(); });
   self.isStatus = ko.pureComputed(function() { return "status" === self.tab(); });
   self.isRapi = ko.pureComputed(function() { return "rapi" === self.tab(); });
+  self.isVehicle = ko.pureComputed(function() { return "vehicle" === self.tab(); });
 
   // Upgrade URL
   self.upgradeUrl = ko.observable("about:blank");
@@ -477,6 +479,32 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   // -----------------------------------------------------------------------
+  // Event: Vehicle MQTT save
+  // -----------------------------------------------------------------------
+  self.vehicleStateGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    if(false === self.config.tesla_enabled()) {
+      self.config.tesla_access_token("");
+      self.config.tesla_refresh_token("");
+      self.config.tesla_created_at(0);
+      self.config.tesla_expires_in(0);
+    }
+
+    return {
+      mqtt_vehicle_soc: self.config.mqtt_vehicle_soc(),
+      mqtt_vehicle_range: self.config.mqtt_vehicle_range(),
+      mqtt_vehicle_range_miles: self.config.mqtt_vehicle_range_miles(),
+      mqtt_vehicle_eta: self.config.mqtt_vehicle_eta(),
+      tesla_enabled: self.config.tesla_enabled(),
+      tesla_access_token: self.config.tesla_access_token(),
+      tesla_refresh_token: self.config.tesla_refresh_token(),
+      tesla_created_at: self.config.tesla_created_at(),
+      tesla_expires_in: self.config.tesla_expires_in(),
+      tesla_vehicle_id: self.config.tesla_vehicle_id(),
+      ovms_enabled: self.config.ovms_enabled()
+    };
+
+  });
+
   // Event: OCPP 1.6 save
   // -----------------------------------------------------------------------
   self.ocppGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
@@ -501,19 +529,19 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       return false;
     }
 
-    if (csUrl.charAt(csUrl.length - 1) !== '/') {
-      csUrl += '/';
+    if (csUrl.charAt(csUrl.length - 1) !== "/") {
+      csUrl += "/";
     }
 
     let cbId = ocpp.ocpp_chargeBoxId.trim();
     csUrl += cbId;
-    
+
     let validatedUrl;
     try {
       validatedUrl = new URL(csUrl);
     } catch (_) {
       alert("Please enter valid OCPP server URL and valid charge box ID");
-      return false;  
+      return false;
     }
 
     if (validatedUrl.protocol !== "ws:" && validatedUrl.protocol !== "wss:") {
@@ -612,8 +640,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.divertFeedType = ko.computed({
     read: () => {
       var ret = self.haveSolar() ? "solar" :
-                self.haveGridIe() ? "grid_ie" :
-                self._divertFeedType;
+        self.haveGridIe() ? "grid_ie" :
+          self._divertFeedType;
       self._divertFeedType = ret;
       return ret;
     },
@@ -631,8 +659,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.divertFeedValue = ko.computed({
     read: () => {
       return "solar" === self.divertFeedType() ?
-                self.config.mqtt_solar() :
-                self.config.mqtt_grid_ie();
+        self.config.mqtt_solar() :
+        self.config.mqtt_grid_ie();
     },
     write: (val) => {
       if("solar" === self.divertFeedType()) {
