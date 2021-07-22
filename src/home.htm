@@ -1206,13 +1206,13 @@
               </div>
 
               <p data-bind="visible: config.mqtt_enabled()">
-                <b>State of Charge:</b><br>
+                <b>State of Charge topic:</b><br>
                 <input data-bind="textInput: config.mqtt_vehicle_soc" type="text" autocapitalize="none"><br>
                 <span class="small-text">The battery level of charge as a percentage</span>
               </p>
 
               <div data-bind="visible: config.mqtt_enabled()">
-                <b>Range:</b><br>
+                <b>Range topic:</b><br>
                 <div class="divert">
                   <input data-bind="textInput: config.mqtt_vehicle_range" type="text" autocapitalize="none">
                   <select data-bind="value: vehicle.mqtt_vehicle_range_units">
@@ -1224,7 +1224,7 @@
               </div>
 
               <p data-bind="visible: config.mqtt_enabled()">
-                <b>Time to charge:</b><br>
+                <b>Time to charge topic:</b><br>
                 <input data-bind="textInput: config.mqtt_vehicle_eta" type="text" autocapitalize="none"><br>
                 <span class="small-text">The time until the battery is fully charged in seconds</span>
               </p>
