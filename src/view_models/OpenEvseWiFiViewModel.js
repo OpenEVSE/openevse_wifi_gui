@@ -889,6 +889,9 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       console.log(msg);
       if("OK" == msg) {
         self.updateComplete(true);
+        setTimeout(() => {
+          location.reload();
+        }, 2500);
       } else {
         self.updateError(msg);
       }
