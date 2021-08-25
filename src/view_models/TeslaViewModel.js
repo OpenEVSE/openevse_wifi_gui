@@ -33,7 +33,7 @@ function TeslaViewModel(baseEndpoint, config, status)
             config.tesla_expires_in() !== "";
   });
 
-  const teslaLogin = "https://tesla.bigjungle.net/login";
+  const teslaLogin = "https://auth.openevse.com/login";
 
   this.setForTime = function (flag, time) {
     flag(true);
