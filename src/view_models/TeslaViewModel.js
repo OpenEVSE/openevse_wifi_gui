@@ -17,9 +17,20 @@ function TeslaViewModel(baseEndpoint, config, status)
 
   this.fetching = ko.observable(false);
   this.success = ko.observable(false);
+  this.advanced = ko.observable(false);
+
+  this.advancedUpdate = ko.observable(false);
 
   status.tesla_vehicle_count.subscribe(() => {
     this.update();
+  });
+
+  config.tesla_access_token.subscribe((val) => {
+    if(this.advanced() && val !== "") {
+      this.advancedUpdate(true);
+      config.tesla_created_at(Date.now());
+      config.tesla_expires_in(3888000);
+    }
   });
 
   this.have_credentials = ko.computed(() => {
@@ -27,13 +38,20 @@ function TeslaViewModel(baseEndpoint, config, status)
             config.tesla_access_token() !== "" &&
             config.tesla_refresh_token() !== false &&
             config.tesla_refresh_token() !== "" &&
+            config.tesla_created_at() !== 0 &&
             config.tesla_created_at() !== false &&
             config.tesla_created_at() !== "" &&
+            config.tesla_expires_in() !== 0 &&
             config.tesla_expires_in() !== false &&
-            config.tesla_expires_in() !== "";
+            config.tesla_expires_in() !== "" &&
+            this.advancedUpdate() === false;
   });
 
   const teslaLogin = "https://auth.openevse.com/login";
+
+  this.showAdvanced = () => {
+    this.advanced(true);
+  };
 
   this.setForTime = function (flag, time) {
     flag(true);
@@ -93,14 +111,15 @@ function TeslaViewModel(baseEndpoint, config, status)
     }).done(() => {
       config.tesla_access_token("");
       config.tesla_refresh_token("");
-      config.tesla_created_at("");
-      config.tesla_expires_in("");
+      config.tesla_created_at(0);
+      config.tesla_expires_in(0);
+      this.advanced(false);
       this.setForTime(this.success, 2000);
     }).fail(() => {
     }).always(() => {
       this.fetching(false);
     });
-};
+  };
 }
 TeslaViewModel.prototype = Object.create(BaseViewModel.prototype);
 TeslaViewModel.prototype.constructor = TeslaViewModel;

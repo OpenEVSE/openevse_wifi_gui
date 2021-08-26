@@ -1165,13 +1165,29 @@
             <div data-bind="visible: 'tesla' == vehicle.type()">
               <hr/>
               <h3>Tesla</h3>
-              <p data-bind="visible: !vehicle.tesla.have_credentials()">
+              <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; !vehicle.tesla.advanced()">
                 <b>Username:</b>
                 <input data-bind="textInput: vehicle.tesla.username" type="text" autocapitalize="none">
               </p>
-              <p data-bind="visible: !vehicle.tesla.have_credentials()">
+              <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; !vehicle.tesla.advanced()">
                 <b>Password:</b>
                 <input type="password" autocapitalize="none" data-bind="textInput: vehicle.tesla.password" /><br />
+                <!--span>
+                  <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
+                  <label for="mqttPassword">Show password</label>
+                </span-->
+              </p>
+              <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; vehicle.tesla.advanced()">
+                <b>Access token</b>
+                <input data-bind="textInput: config.tesla_access_token" type="password" autocapitalize="none">
+                <!--span>
+                  <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
+                  <label for="mqttPassword">Show password</label>
+                </span-->
+              </p>
+              <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; vehicle.tesla.advanced()">
+                <b>Refresh token</b>
+                <input data-bind="textInput: config.tesla_refresh_token" type="password" autocapitalize="none">
                 <!--span>
                   <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
                   <label for="mqttPassword">Show password</label>
@@ -1238,11 +1254,15 @@
                                  disable: vehicleStateGroup.fetching">
                 Save
               </button>
-              <button data-bind="visible: !vehicle.tesla.have_credentials(),
+              <button data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
                                   click: vehicle.tesla.login,
                                   text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Login')),
                                   disable: vehicle.tesla.fetching">
                 Login
+              </button>
+              <button data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
+                                  click: vehicle.tesla.showAdvanced">
+                Advanced
               </button>
               <button data-bind="visible: vehicle.tesla.have_credentials(),
                                  click: vehicle.tesla.logout,

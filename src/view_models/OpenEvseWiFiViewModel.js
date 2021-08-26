@@ -503,6 +503,23 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       ovms_enabled: self.config.ovms_enabled()
     };
 
+  }).validate((vehicle) => {
+    if (vehicle.tesla_enabled && vehicle.tesla_access_token === "") {
+      alert("No Tesla API Access token set");
+      return false;
+    }
+
+    if (vehicle.tesla_enabled && vehicle.tesla_refresh_token === "") {
+      alert("No Tesla API Refresh token set");
+      return false;
+    }
+
+    return true;
+  });
+  self.vehicleStateGroup.success.subscribe((val) => {
+    if (val) {
+      self.vehicle.tesla.advancedUpdate(false);
+    }
   });
 
   // Event: OCPP 1.6 save
