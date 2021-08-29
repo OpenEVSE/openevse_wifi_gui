@@ -1193,6 +1193,18 @@
                   <label for="mqttPassword">Show password</label>
                 </span-->
               </p>
+              <div class="box" data-bind="visible: showTeslaAdvancedInfo()">
+                The Tesla login may break from time-to-time as Tesla change their login API, hopefully OpenEVSE will be able to resolve the
+                issue on <a href="https://github.com/OpenEVSE/ESP32_WiFi_V4.x/tree/master/tesla_login" target="_blank">our server</a>, 
+                but should the login fail you can use a 3rd Party app to generate the appropriate tokens.
+                
+                <ul>
+                  <li><b>Apple</b>: <a href="https://apps.apple.com/us/app/auth-app-for-tesla/id1552058613" target="_blank">Auth app for Tesla</a></li>
+                  <li><b>Andriod</b>: <a href="https://play.google.com/store/apps/details?id=net.leveugle.teslatokens&hl=en_GB&gl=US" target="_blank">Tesla Tokens</a></li>
+                </ul>
+
+                These can be entered in the `Advanced` section as an alternative method of logging in.
+              </div>
               <p data-bind="visible: vehicle.tesla.have_credentials()">
                 <select data-bind="options: vehicle.tesla.vehicles,
                   optionsText: 'name',
@@ -1261,9 +1273,11 @@
                 Login
               </button>
               <button data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
-                                  click: vehicle.tesla.showAdvanced">
+                                 click: vehicle.tesla.showAdvanced">
                 Advanced
               </button>
+              <span class="info" data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
+                                            click: toggle.bind($data, showTeslaAdvancedInfo)"></span>
               <button data-bind="visible: vehicle.tesla.have_credentials(),
                                  click: vehicle.tesla.logout,
                                  text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Logout')),

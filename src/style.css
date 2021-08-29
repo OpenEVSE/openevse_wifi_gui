@@ -447,6 +447,12 @@ input:checked + .slider:before {
   content: "i";
 }
 
+button>span.info
+{
+  background-color: #ffffff;
+  color: #008080;
+}
+
 span.selected
 {
   color: #008080;

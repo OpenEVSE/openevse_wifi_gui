@@ -59,6 +59,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.showSolarDivert = ko.observable(false);
   self.showSafety = ko.observable(false);
   self.showVehiclePauseStatus = ko.observable(false);
+  self.showTeslaAdvancedInfo = ko.observable(false);
+
+  self.vehicle.tesla.advanced.subscribe(() => {
+    self.showTeslaAdvancedInfo(false);
+  });
 
   self.toggle = function (flag) {
     flag(!flag());
