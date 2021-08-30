@@ -55,7 +55,8 @@ function VehicleViewModel(baseEndpoint, config, status)
 
   this.show_save = ko.computed(() => {
     return "tesla" !== this.type() ||
-           this.tesla.have_credentials();
+           this.tesla.have_credentials() ||
+           this.tesla.advanced();
   });
 
   this.mqtt_vehicle_range_units = ko.computed({

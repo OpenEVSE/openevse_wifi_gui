@@ -59,6 +59,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.showSolarDivert = ko.observable(false);
   self.showSafety = ko.observable(false);
   self.showVehiclePauseStatus = ko.observable(false);
+  self.showTeslaAdvancedInfo = ko.observable(false);
+
+  self.vehicle.tesla.advanced.subscribe(() => {
+    self.showTeslaAdvancedInfo(false);
+  });
 
   self.toggle = function (flag) {
     flag(!flag());
@@ -503,6 +508,23 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       ovms_enabled: self.config.ovms_enabled()
     };
 
+  }).validate((vehicle) => {
+    if (vehicle.tesla_enabled && vehicle.tesla_access_token === "") {
+      alert("No Tesla API Access token set");
+      return false;
+    }
+
+    if (vehicle.tesla_enabled && vehicle.tesla_refresh_token === "") {
+      alert("No Tesla API Refresh token set");
+      return false;
+    }
+
+    return true;
+  });
+  self.vehicleStateGroup.success.subscribe((val) => {
+    if (val) {
+      self.vehicle.tesla.advancedUpdate(false);
+    }
   });
 
   // Event: OCPP 1.6 save

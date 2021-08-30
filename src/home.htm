@@ -1165,11 +1165,11 @@
             <div data-bind="visible: 'tesla' == vehicle.type()">
               <hr/>
               <h3>Tesla</h3>
-              <p data-bind="visible: !vehicle.tesla.have_credentials()">
+              <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; !vehicle.tesla.advanced()">
                 <b>Username:</b>
                 <input data-bind="textInput: vehicle.tesla.username" type="text" autocapitalize="none">
               </p>
-              <p data-bind="visible: !vehicle.tesla.have_credentials()">
+              <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; !vehicle.tesla.advanced()">
                 <b>Password:</b>
                 <input type="password" autocapitalize="none" data-bind="textInput: vehicle.tesla.password" /><br />
                 <!--span>
@@ -1177,6 +1177,34 @@
                   <label for="mqttPassword">Show password</label>
                 </span-->
               </p>
+              <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; vehicle.tesla.advanced()">
+                <b>Access token</b>
+                <input data-bind="textInput: config.tesla_access_token" type="password" autocapitalize="none">
+                <!--span>
+                  <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
+                  <label for="mqttPassword">Show password</label>
+                </span-->
+              </p>
+              <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; vehicle.tesla.advanced()">
+                <b>Refresh token</b>
+                <input data-bind="textInput: config.tesla_refresh_token" type="password" autocapitalize="none">
+                <!--span>
+                  <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
+                  <label for="mqttPassword">Show password</label>
+                </span-->
+              </p>
+              <div class="box" data-bind="visible: showTeslaAdvancedInfo()">
+                The Tesla login may break from time-to-time as Tesla change their login API, hopefully OpenEVSE will be able to resolve the
+                issue on <a href="https://github.com/OpenEVSE/ESP32_WiFi_V4.x/tree/master/tesla_login" target="_blank">our server</a>, 
+                but should the login fail you can use a 3rd Party app to generate the appropriate tokens.
+                
+                <ul>
+                  <li><b>Apple</b>: <a href="https://apps.apple.com/us/app/auth-app-for-tesla/id1552058613" target="_blank">Auth app for Tesla</a></li>
+                  <li><b>Andriod</b>: <a href="https://play.google.com/store/apps/details?id=net.leveugle.teslatokens&hl=en_GB&gl=US" target="_blank">Tesla Tokens</a></li>
+                </ul>
+
+                These can be entered in the `Advanced` section as an alternative method of logging in.
+              </div>
               <p data-bind="visible: vehicle.tesla.have_credentials()">
                 <select data-bind="options: vehicle.tesla.vehicles,
                   optionsText: 'name',
@@ -1238,12 +1266,18 @@
                                  disable: vehicleStateGroup.fetching">
                 Save
               </button>
-              <button data-bind="visible: !vehicle.tesla.have_credentials(),
+              <button data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
                                   click: vehicle.tesla.login,
                                   text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Login')),
                                   disable: vehicle.tesla.fetching">
                 Login
               </button>
+              <button data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
+                                 click: vehicle.tesla.showAdvanced">
+                Advanced
+              </button>
+              <span class="info" data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
+                                            click: toggle.bind($data, showTeslaAdvancedInfo)"></span>
               <button data-bind="visible: vehicle.tesla.have_credentials(),
                                  click: vehicle.tesla.logout,
                                  text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Logout')),
