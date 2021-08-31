@@ -893,11 +893,19 @@
                 <th>OpenEVSE WiFi</th>
                 <th></th>
               </tr>
+              <tr data-bind="visible: false !== config.buildenv()">
+                <td>Firmware config:</td>
+                <td><span data-bind="text: config.buildenv"></span></td>
+              </tr>
               <tr>
-                <td>Firmware:</td>
+                <td>Firmware version:</td>
                 <td><span data-bind="text: config.version"></span></td>
               </tr>
-               <tr>
+              <tr data-bind="visible: false !== config.espinfo()">
+                <td>ESP info:</td>
+                <td><span data-bind="text: config.espinfo"></span></td>
+              </tr>
+              <tr>
                 <td>Flash Size:</td>
                 <td><span data-bind="text: scaleString(config.espflash(), 1024, 0) + 'K'"></span></td>
               </tr>
@@ -1195,9 +1203,9 @@
               </p>
               <div class="box" data-bind="visible: showTeslaAdvancedInfo()">
                 The Tesla login may break from time-to-time as Tesla change their login API, hopefully OpenEVSE will be able to resolve the
-                issue on <a href="https://github.com/OpenEVSE/ESP32_WiFi_V4.x/tree/master/tesla_login" target="_blank">our server</a>, 
+                issue on <a href="https://github.com/OpenEVSE/ESP32_WiFi_V4.x/tree/master/tesla_login" target="_blank">our server</a>,
                 but should the login fail you can use a 3rd Party app to generate the appropriate tokens.
-                
+
                 <ul>
                   <li><b>Apple</b>: <a href="https://apps.apple.com/us/app/auth-app-for-tesla/id1552058613" target="_blank">Auth app for Tesla</a></li>
                   <li><b>Andriod</b>: <a href="https://play.google.com/store/apps/details?id=net.leveugle.teslatokens&hl=en_GB&gl=US" target="_blank">Tesla Tokens</a></li>

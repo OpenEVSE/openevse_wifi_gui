@@ -59,6 +59,8 @@ function ConfigViewModel(baseEndpoint) {
     "scale": 1,
     "offset": 0,
     "version": "0.0.0",
+    "espinfo": false,
+    "buildenv": false,
     "time_zone": false,
     "divert_enabled": false,
     "divert_PV_ratio": 1.0,
