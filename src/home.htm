@@ -123,22 +123,40 @@
           </div>
 
           <div class="box380 right">
-            <h2>Administration</h2>
-            <p>
-              <b>Username:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.www_username" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="">
-              <span class="small-text validMessage">15 characters max</span>
+            <form>
+              <h2>Administration</h2>
+              <p>
+                <b>Username:</b><br>
+                  <input type="text" autocapitalize="none" autocomplete="username" data-bind="textInput: config.www_username" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="">
+                <span class="small-text validMessage">15 characters max</span>
+              </p>
+              <p>
+                <b>Password:</b><br>
+                  <input type="password" autocapitalize="none" autocomplete="new-password" data-bind="textInput: wwwPassword.value, attr: { type: wwwPassword.show() ? 'text' : 'password' }" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="" /><br />
+                <span>
+                  <input id="wwwPassword" type="checkbox" data-bind="checked: wwwPassword.show" />
+                  <label for="wwwPassword">Show password</label>
+                </span><br />
+                <span class="small-text validMessage">15 characters max</span><br>
+                <span class="small-text">Web interface HTTP authentication.</span><br><br>
+                  <button data-bind="click: saveAdmin, text: (saveAdminFetching() ? 'Saving' : (saveAdminSuccess() ? 'Saved' : 'Save')), disable: saveAdminFetching">Save</button>
+              </p>
+            </form>
+          </div>
+
+          <div class="box380 left" data-bind="visible: advancedMode()">
+            <h2>Advanced Settings</h2>
+            <p data-bind="visible: false !== config.hostname()">
+              <b>Hostname:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
+              <span class="small-text validMessage">31 characters max</span>
+            </p>
+            <p data-bind="visible: false !== config.sntp_hostname()">
+              <b>NTP Server:</b><br>
+              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname" pattern=".{31}">
             </p>
             <p>
-              <b>Password:</b><br>
-              <input type="password" autocapitalize="none" data-bind="textInput: wwwPassword.value, attr: { type: wwwPassword.show() ? 'text' : 'password' }" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="" /><br />
-              <span>
-                <input id="wwwPassword" type="checkbox" data-bind="checked: wwwPassword.show" />
-                <label for="wwwPassword">Show password</label>
-              </span><br />
-              <span class="small-text validMessage">15 characters max</span><br>
-              <span class="small-text">Web interface HTTP authentication.</span><br><br>
-              <button data-bind="click: saveAdmin, text: (saveAdminFetching() ? 'Saving' : (saveAdminSuccess() ? 'Saved' : 'Save')), disable: saveAdminFetching">Save</button>
+              <button data-bind="click: advancedGroup.save, text: (advancedGroup.fetching() ? 'Saving' : (advancedGroup.success() ? 'Saved' : 'Save')), disable: advancedGroup.fetching">Save</button>
             </p>
           </div>
 
@@ -157,8 +175,8 @@
             </div>
             <div data-bind="visible: updateFetching() && !updateComplete()">
               Updating... <br/>
-              <div id="progressBack">
-                <div id="progressBar" data-bind="style: { width: updateProgress()+'%' }"></div>
+              <div id="progressBack" class="progressBack">
+                <div id="progressBar" class="progressBar" data-bind="style: { width: updateProgress()+'%' }"></div>
               </div>
             </div>
             <div  data-bind="visible: updateComplete">
@@ -170,20 +188,28 @@
             </p>
           </div>
 
-          <div class="box380 left" data-bind="visible: advancedMode()">
-            <h2>Advanced Settings</h2>
-            <p data-bind="visible: false !== config.hostname()">
-              <b>Hostname:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
-              <span class="small-text validMessage">31 characters max</span>
-            </p>
-            <p data-bind="visible: false !== config.sntp_hostname()">
-              <b>NTP Server:</b><br>
-              <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname" pattern=".{31}">
-            </p>
-            <p>
-              <button data-bind="click: advancedGroup.save, text: (advancedGroup.fetching() ? 'Saving' : (advancedGroup.success() ? 'Saved' : 'Save')), disable: advancedGroup.fetching">Save</button>
-            </p>
+          <div class="box380 right" data-bind="visible: config.canUpdateControllerFirmware()">
+            <h2>Controller Firmware</h2>
+            <p><b>Version: </b><span data-bind="text: config.firmware"></span></p>
+            <div data-bind="visible: !updateControllerFetching() && !updateControllerComplete()">
+              <form action="#" method="post" enctype="multipart/form-data" id="upload_controller_form" data-bind="submit: otaUpdateController">
+                <input type="file" name="updateController" data-bind="value: updateControllerFilename">
+                <button data-bind="click: otaUpdateController, text: (updateControllerFetching() ? 'Updating...' : 'Update'), disable: ('' == updateControllerFilename())">Update</button>
+              </form>
+            </div>
+            <div data-bind="visible: (updateControllerError() !== '')" class="box error">
+              <h4>Error:</h4>
+              <span data-bind="text: updateControllerError"></span>
+            </div>
+            <div data-bind="visible: updateControllerFetching() && !updateControllerComplete()">
+              Updating... <br />
+              <div id="progressControllerBack" class="progressBack">
+                <div id="progressControllerBar" class="progressBar" data-bind="style: { width: updateControllerProgress()+'%' }"></div>
+              </div>
+            </div>
+            <div data-bind="visible: updateControllerComplete">
+              Firmware update completed ok
+            </div>
           </div>
 
           <div class="box380 left">
@@ -233,12 +259,14 @@
               <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_node">
             </p>
             <p data-bind="visible: config.emoncms_enabled">
+            <form>
               <b>Emoncms write-apikey*:</b><br />
-              <input type="password" autocapitalize="none" data-bind="textInput: emoncmsApiKey.value, attr: { type: emoncmsApiKey.show() ? 'text' : 'password' }" /><br />
+              <input type="password" autocapitalize="none" autocomplete="new-password" data-bind="textInput: emoncmsApiKey.value, attr: { type: emoncmsApiKey.show() ? 'text' : 'password' }" /><br />
               <span>
                 <input id="emoncmsApiKey" type="checkbox" data-bind="checked: emoncmsApiKey.show" />
                 <label for="emoncmsApiKey">Show password</label>
               </span>
+            </form>
             </p>
             <p data-bind="visible: config.emoncms_enabled && config.http_supported_protocols().length === 0">
               <b>Emoncms SSL SHA-1 Fingerprint (optional):</b><br>
@@ -312,18 +340,20 @@
               Certificate validation is disabled, although the connection to MQTT server will be encrypted the connection is still
               vulnerable to man-in-the-middle attacks.
             </div>
-            <p data-bind="visible: config.mqtt_enabled">
-              <b>Username:</b><span> blank - no authentication</span>
-              <input data-bind="textInput: config.mqtt_user" type="text" autocapitalize="none">
-            </p>
-            <p data-bind="visible: config.mqtt_enabled">
-              <b>Password:</b><span> blank - no authentication</span>
-              <input type="password" autocapitalize="none" data-bind="textInput: mqttPassword.value, attr: { type: mqttPassword.show() ? 'text' : 'password' }" /><br />
-              <span>
-                <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
-                <label for="mqttPassword">Show password</label>
-              </span>
-            </p>
+            <form>
+              <p data-bind="visible: config.mqtt_enabled">
+                <b>Username:</b><span> blank - no authentication</span>
+                  <input data-bind="textInput: config.mqtt_user" type="text" autocapitalize="none" autocomplete="username">
+              </p>
+              <p data-bind="visible: config.mqtt_enabled">
+                <b>Password:</b><span> blank - no authentication</span>
+                  <input type="password" autocapitalize="none" autocomplete="new-password" data-bind="textInput: mqttPassword.value, attr: { type: mqttPassword.show() ? 'text' : 'password' }" /><br />
+                <span>
+                  <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
+                  <label for="mqttPassword">Show password</label>
+                </span>
+              </p>
+            </form>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Base-topic*:</b><br>
               <input data-bind="textInput: config.mqtt_topic" type="text" autocapitalize="none"><br/>
@@ -399,7 +429,7 @@
               </p>
             </div>
 
-            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+            <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() !== 'internal'">
               <br>
               <span data-bind="visible: divertFeedType() === 'solar'"><b>Solar:</b></span>
               <span data-bind="visible: divertFeedType() === 'grid_ie'"><b>Grid Import/Export:</b></span>
@@ -414,38 +444,40 @@
                 <select data-bind="value: divertFeedType">
                   <option value="solar">SolarPV-gen</option>
                   <option value="grid_ie">Grid (+I/-E)</option>
+                  <option data-bind="visible: openevse.isSmartEVSE" value="internal">Internal</option>
                 </select>
-                <input data-bind="textInput: divertFeedValue" type="text" autocapitalize="none"><br/>
+                <input data-bind="textInput: divertFeedValue, visible: divertFeedType() !== 'internal'" type="text" autocapitalize="none"><br/>
                 <span data-bind="visible: divertFeedType() === 'solar'" class="small-text">Solar PV MQTT topic to modulate charge rate based on solar</span>
                 <span data-bind="visible: divertFeedType() === 'grid_ie'" class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
+                <span data-bind="visible: divertFeedType() === 'internal'" class="small-text">SmartEVSE internal solar mode</span>
               </div>
             </div>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() === 'grid_ie'">
-              <b>Required PV power ratio:</b><br>
+              <b>Required PV power ratio:</b><br>  
               <input data-bind="textInput: config.divert_PV_ratio" type="number" autocapitalize="none" hint="1.1" min="0.05" max="1.5" step="0.01"><br>
               <span class="small-text">The fraction of PV current that suffices to start charging or increment current </span>
             </p>
 
-            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() !== 'internal'">
               <b>Divert smoothing attack:</b><br>
               <input data-bind="textInput: config.divert_attack_smoothing_factor" type="number" autocapitalize="none" hint="0.4" min="0" max="1" step="0.01"><br>
               <span class="small-text">The amount of the new feed value to add to the divert available power rolling average </span>
             </p>
 
-            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() !== 'internal'">
               <b>Divert smoothing decay:</b><br>
               <input data-bind="textInput: config.divert_decay_smoothing_factor" type="number" autocapitalize="none" hint="0.05" min="0" max="1" step="0.01"><br>
               <span class="small-text">The amount of the new feed value to remove to the divert available power rolling average </span>
             </p>
 
-            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
+            <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() !== 'internal'">
               <b>Minimum charge time:</b><br>
               <input data-bind="textInput: config.divert_min_charge_time" type="number" autocapitalize="none" hint="600" min="0" max="100000" step="10"><br>
               <span class="small-text">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tear on the EVSE.</span>
             </p>
 
-            <p data-bind="visible: isEcoModeAvailable">
+            <p data-bind="visible: config.mqtt_enabled">
               <button data-bind="click: divertGroup.save, text: (divertGroup.fetching() ? 'Saving' : (divertGroup.success() ? 'Saved' : 'Save')), disable: divertGroup.fetching">Save</button>
             </p>
           </div>
@@ -492,9 +524,12 @@
             
             <div data-bind="visible: ecoMode() &amp;&amp; isEcoModeAvailable()">
               <br>
-              <span data-bind="visible: haveSolar"><b>Solar:</b></span>
-              <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
-              <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
+              <span data-bind="visible: haveSolar() &amp;&amp; divertFeedType() !== 'internal'"><b>Solar:</b></span>
+              <span data-bind="visible: haveGridIe() &amp;&amp; divertFeedType() !== 'internal'"><b>Grid Import/Export:</b></span>
+              <span data-bind="visible: divertFeedType() === 'internal'"><b>Internal:</b></span>
+              <div data-bind="visible: divertFeedType() !== 'internal'">
+                <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
+              </div>
               <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
               |
               <span data-bind="visible: openevse.isReady()"><b>Vehicle not connected</b></span>
@@ -531,7 +566,7 @@
               <button data-bind="click: setStatus.bind($data, 'pause'), visible: !isPaused()">Pause</button>
             </p>
 
-            <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
+            <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode() &amp;&amp; !openevse.isSmartEVSE()">
               <hr \>
               <p>
                 <b>Time limit:</b><br\>
@@ -554,8 +589,8 @@
               </p>
             </span>
 
-            <hr> <br>
-            <div data-bind="with: openevse">
+            <div data-bind="with: openevse, visible: !openevse.isSmartEVSE()">
+              <hr> <br>
               <b>Timer:</b><br>
                 Start: <input type="time" data-bind="value: delayTimerStart, disable: isError" />
                 &nbsp;&nbsp;
@@ -655,16 +690,17 @@
               <button data-bind="click: setTime, text: (setTimeFetching() ? 'Saving' : (setTimeSuccess() ? 'Saved' : 'Set time')), disable: setTimeFetching">Set time</button>
             </div>
             <hr>
-            <p>
-              <b>Service Level:</b><br/>
-              <select data-bind="options: openevse.serviceLevels,
-                                 optionsText: 'name',
-                                 optionsValue: 'value',
-                                 value: openevse.serviceLevel,
-                                 disable: openevse.updatingServiceLevel(),
-                                 css: { saved: openevse.savedServiceLevel }"></select>
-            </p>
-
+            <div data-bind="visible: !openevse.isSmartEVSE()">
+              <p>
+                <b>Service Level:</b><br/>
+                <select data-bind="options: openevse.serviceLevels,
+                                  optionsText: 'name',
+                                  optionsValue: 'value',
+                                  value: openevse.serviceLevel,
+                                  disable: openevse.updatingServiceLevel(),
+                                  css: { saved: openevse.savedServiceLevel }"></select>
+              </p>
+            </div>
             <p>
               <b>Max Current:</b><br/>
               <select data-bind="options: openevse.currentLevels,
@@ -733,7 +769,7 @@
                 <th>Test</th>
                 <th>Status</th>
               </tr>
-              <tr data-bind="css: {error: 9 === status.state() }">
+              <tr data-bind="css: {error: 9 === status.state() }, visible: !openevse.isSmartEVSE()">
                 <td>GFI Self Test:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -743,7 +779,7 @@
                   <span data-bind="text: openevse.gfiSelfTestEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="css: {error: 7 === status.state() }">
+              <tr data-bind="css: {error: 7 === status.state() }, visible: !openevse.isSmartEVSE()">
                 <td>Ground Monitoring:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -753,7 +789,7 @@
                   <span data-bind="text: openevse.groundCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="css: {error: 8 === status.state() }">
+              <tr data-bind="css: {error: 8 === status.state() }, visible: !openevse.isSmartEVSE()">
                 <td>Stuck Contact Detection:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -783,7 +819,7 @@
                   <span data-bind="text: openevse.diodeCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr data-bind="css: {error: 4 === status.state() }">
+              <tr data-bind="css: {error: 4 === status.state() }, visible: !openevse.isSmartEVSE()">
                 <td>Vent Required:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
@@ -793,19 +829,19 @@
                   <span data-bind="text: openevse.ventRequiredEnabled() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
-              <tr>
+              <tr data-bind="visible: !openevse.isSmartEVSE()">
                 <th>Error</th>
                 <th>Count</th>
               </tr>
-              <tr>
+              <tr data-bind="visible: !openevse.isSmartEVSE()">
                 <td>GFCI:</td>
                 <td><span data-bind="text: status.gfcicount"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: !openevse.isSmartEVSE()">
                 <td>No Ground:</td>
                 <td><span data-bind="text: status.nogndcount"></span></td>
               </tr>
-              <tr>
+              <tr data-bind="visible: !openevse.isSmartEVSE()">
                 <td>Stuck Contact:</td>
                 <td><span data-bind="text: status.stuckcount"></span></td>
               </tr>
@@ -1011,6 +1047,14 @@
                 <td>$GV</td>
                 <td>Get Versions, evse_firmware protocol_version</td>
               </tr>
+              <tr>
+                <td>$GX</td>
+                <td>Get current mode for SmartEVSE (0=Normal, 1=Smart, 2=Solar)</td>
+              </tr>
+              <tr>
+                <td>$GY</td>
+                <td>Get per phase values (EV Amps L1,2,3; Main Amps L1,2,3; Voltage L1,2,3)</td>
+              </tr>
             </table>
           </div>
           <div class="box380 right">
@@ -1067,6 +1111,10 @@
               <tr>
                 <td>$SV</td>
                 <td>Set voltage for power calculations, millivolts</td>
+              </tr>
+              <tr>
+                <td>$SX</td>
+                <td>Set current mode for SmartEVSE (0=Normal, 1=Smart, 2=Solar)</td>
               </tr>
             </table>
           </div>

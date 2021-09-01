@@ -498,7 +498,7 @@ border: none;
   color: rgb(255,125,20);
 }
 
-#progressBack {
+.progressBack {
   width: 100%;
   border-color: #19a6ff;
   border-style: solid;
@@ -506,7 +506,7 @@ border: none;
   border-radius: 4px
 }
 
-#progressBar {
+.progressBar {
   width: 1%;
   height: 30px;
   background-color: #008080;

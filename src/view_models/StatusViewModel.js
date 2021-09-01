@@ -44,6 +44,7 @@ function StatusViewModel(baseEndpoint) {
     "divert_update": 0,
     "divert_active": false,
     "ota_update": false,
+    "controller_update": false,
     "time": false,
     "offset": false
   }, endpoint);
