@@ -970,6 +970,32 @@
                                  disable: displayGroup.fetching">Save</button>
             </p-->
           </div>
+
+          <div class="box box-full left">
+            <h2 class="left">History</h2>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Energy</th>
+                  <th>Temp</th>
+                </tr>
+              </thead>
+              <tbody data-bind="foreach: logs.events">
+                <tr>
+                  <td><span data-bind="text: time"></span></td>
+                  <td><span data-bind="text: type"></span></td>
+                  <td><span data-bind="text: estate"></span></td>
+                  <td><span data-bind="text: scaleString(energy(), 1000, 2) + ' kWh'"></span></td>
+                  <td><span data-bind="text: scaleString(tempuratureMax(), 1, 1) + ' &deg;C'"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
         <!--end tab 3-->
 

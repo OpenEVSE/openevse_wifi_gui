@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel, VehicleViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel, VehicleViewModel, EventLogsViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -39,6 +39,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.zones = new ZonesViewModel(self.baseEndpoint);
   self.schedule = new ScheduleViewModel(self.baseEndpoint);
   self.vehicle = new VehicleViewModel(self.baseEndpoint, self.config, self.status);
+  self.logs = new EventLogViewModel(self.baseEndpoint);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -225,7 +226,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.itemsLoaded = ko.pureComputed(function () {
     return self.loadedCount() + self.openevse.updateCount();
   });
-  self.itemsTotal = ko.observable(3 + self.openevse.updateTotal());
+  self.itemsTotal = ko.observable(4 + self.openevse.updateTotal());
   self.start = function () {
     self.updating(true);
     self.status.update(function () {
@@ -234,19 +235,22 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
         self.loadedCount(self.loadedCount() + 1);
         self.schedule.update(function () {
           self.loadedCount(self.loadedCount() + 1);
-          if(self.status.rapi_connected()) {
-            self.openevse.update(self.finishedStarting);
-          } else {
-            self.finishedStarting();
-            self.status.rapi_connected.subscribe((val) => {
-              if(val) {
-                self.config.update(() => {
-                  self.openevse.update(() => {
+          self.logs.update(() => {
+            self.loadedCount(self.loadedCount() + 1);
+            if(self.status.rapi_connected()) {
+              self.openevse.update(self.finishedStarting);
+            } else {
+              self.finishedStarting();
+              self.status.rapi_connected.subscribe((val) => {
+                if(val) {
+                  self.config.update(() => {
+                    self.openevse.update(() => {
+                    });
                   });
-                });
-              }
-            });
-          }
+                }
+              });
+            }
+          });
         });
       });
       self.connect();
