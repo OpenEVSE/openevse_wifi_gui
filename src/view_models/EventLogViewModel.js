@@ -1,4 +1,4 @@
-/* global $, ko */
+/* global $, ko, StatusText */
 /* exported EventLogViewModel */
 
 function EventLogEntryViewModel(data, block, index)
@@ -6,8 +6,10 @@ function EventLogEntryViewModel(data, block, index)
   "use strict";
 
   ko.mapping.fromJS(data, {}, this);
-  this.id = ko.observable(block+"-"+index);
-  this.vehicle = ko.computed(() => { return 0 !== (this.evseFlags & 0x0100); });
+  this.key = ko.observable(block+"-"+index);
+  this.block = ko.observable(block);
+  this.index = ko.observable(index);
+  this.localTime = this.time.extend({ date: true });  this.vehicle = ko.computed(() => { return 0 !== (this.evseFlags & 0x0100); });
   this.estate = StatusText(this.evseState, this.vehicle);
 }
 
@@ -26,7 +28,7 @@ function EventLogViewModel(baseEndpoint)
   const logsMappingSettings =
   {
     key: (data) => {
-      return ko.utils.unwrapObservable(data.id);
+      return ko.utils.unwrapObservable(data.key);
     },
     create: (options) => {
       return new EventLogEntryViewModel(options.data, block, index++);
@@ -57,6 +59,12 @@ function EventLogViewModel(baseEndpoint)
     index = 0;
     $.get(endpoint()+"/"+fetchBlock, (data) => {
       ko.mapping.fromJS(data, this.events);
+      this.events.sort((left, right) => {
+        if(right.block() != left.block()) {
+          return right.block() - left.block();
+        }
+        return right.index() - left.index();
+       });
     }, "json").always(() => {
       this.fetchingBlock(false);
       after();
