@@ -993,6 +993,11 @@
                   <td><span data-bind="text: scaleString(temperatureMax(), 1, 1) + ' &deg;C'"></span></td>
                 </tr>
               </tbody>
+              <tfoot data-bind="visible: logs.hasMore, disable: logs.fetchingBlock">
+                <tr>
+                  <td colspan="5" data-bind="click: logs.updateNext, clickBubble: false" style="text-align: center;">Load more</td>
+                </tr>
+              </tfoot>
             </table>
           </div>
 

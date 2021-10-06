@@ -29,24 +29,15 @@ function EventLogViewModel(baseEndpoint)
   "use strict";
   const endpoint = ko.pureComputed(function () { return baseEndpoint() + "/logs"; });
 
-  var block = 0;
+  this.block = ko.observable(0);
   var index = 0;
   ko.mapping.fromJS({
     min: 0,
     max: 0
   }, {}, this);
 
-  const logsMappingSettings =
-  {
-    key: (data) => {
-      return ko.utils.unwrapObservable(data.key);
-    },
-    create: (options) => {
-      return new EventLogEntryViewModel(options.data, block, index++);
-    }
-  };
-
-  this.events = ko.mapping.fromJS([], logsMappingSettings);
+  this.hasMore = ko.computed(() => { return this.block() > this.min(); });
+  this.events = ko.observableArray([]);
   this.fetching = ko.observable(false);
   this.fetchingBlock = ko.observable(false);
 
@@ -54,28 +45,36 @@ function EventLogViewModel(baseEndpoint)
     this.fetching(true);
     $.get(endpoint(), (data) => {
       ko.mapping.fromJS(data, this);
-      this.updateBlock(this.max(), () => {
-        this.fetching(false);
-        after();
+      updateBlock(this.max(), () => {
+        if(this.events.length < 5 && this.block() > this.min()) {
+          this.updateNext();
+        }
       });
-    }, "json").fail(() => {
+    }, "json").always(() => {
       this.fetching(false);
       after();
     });
   };
 
+  this.updateNext = () => {
+    updateBlock(this.block() - 1);
+  }
+
   var maxBlock = -1;
   var maxBlockIndex = 0;
 
-  this.updateBlock = (fetchBlock, after = () => { }) => {
+  const updateBlock = (fetchBlock, after = () => { }) => {
     this.fetchingBlock(true);
-    block = fetchBlock;
+    this.block(fetchBlock);
     index = 0;
     $.get(endpoint()+"/"+fetchBlock, (data) => {
-      ko.mapping.fromJS(data, this.events);
+      for (const event of data) {
+        // IMPROVE: handle updating log entries
+        this.events.push(new EventLogEntryViewModel(event, fetchBlock, index++));
+      }
 
-      if(block > maxBlock) {
-        maxBlock = block;
+      if(fetchBlock > maxBlock) {
+        maxBlock = fetchBlock;
         maxBlockIndex = index;
       }
 
