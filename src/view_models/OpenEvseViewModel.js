@@ -101,37 +101,14 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
   self.tempCheckSupported = ko.observable(false);
 
   // Derived states
-  self.isConnected = ko.pureComputed(function () {
-    return [2, 3].indexOf(self.status.state()) !== -1;
-  });
-
-  self.isReady = ko.pureComputed(function () {
-    return [0, 1].indexOf(self.status.state()) !== -1;
-  });
-
-  self.isCharging = ko.pureComputed(function () {
-    return 3 === self.status.state();
-  });
-
-  self.isError = ko.pureComputed(function () {
-    return [4, 5, 6, 7, 8, 9, 10, 11].indexOf(self.status.state()) !== -1;
-  });
-
-  self.isEnabled = ko.pureComputed(function () {
-    return [0, 1, 2, 3].indexOf(self.status.state()) !== -1;
-  });
-
-  self.isSleeping = ko.pureComputed(function () {
-    return 254 === self.status.state();
-  });
-
-  self.isDisabled = ko.pureComputed(function () {
-    return 255 === self.status.state();
-  });
-
-  self.isPaused = ko.pureComputed(function () {
-    return [254, 255].indexOf(self.status.state()) !== -1;
-  });
+  self.isConnected = self.status.isConnected;
+  self.isReady = self.status.isReady;
+  self.isCharging = self.status.isCharging;
+  self.isError = self.status.isError;
+  self.isEnabled = self.status.isEnabled;
+  self.isSleeping = self.status.isSleeping;
+  self.isDisabled = self.status.isDisabled;
+  self.isPaused = self.status.isPaused;
 
   // helper to select an appropriate value for time limit
   self.selectTimeLimit = function(limit)

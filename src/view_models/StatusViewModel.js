@@ -33,6 +33,7 @@ function StatusViewModel(baseEndpoint) {
     "temp3": false,
     "temp4": false,
     "state": 0,
+    "flags": 0,
     "vehicle": false,
     "colour": false,
     "manual_override": false,
@@ -91,8 +92,17 @@ function StatusViewModel(baseEndpoint) {
     return "Unknown (" + self.mode() + ")";
   });
 
-
-  this.estate = StatusText(this.state, this.vehicle);
+  // Derived states
+  const stateHelper = new StateHelperViewModel(this.state, this.vehicle);
+  this.isConnected = stateHelper.isConnected;
+  this.isReady = stateHelper.isReady;
+  this.isCharging = stateHelper.isCharging;
+  this.isError = stateHelper.isError;
+  this.isEnabled = stateHelper.isEnabled;
+  this.isSleeping = stateHelper.isSleeping;
+  this.isDisabled = stateHelper.isDisabled;
+  this.isPaused = stateHelper.isPaused;
+  this.estate = stateHelper.estate;
 }
 StatusViewModel.prototype = Object.create(BaseViewModel.prototype);
 StatusViewModel.prototype.constructor = StatusViewModel;

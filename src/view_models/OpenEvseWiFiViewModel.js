@@ -70,6 +70,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     flag(!flag());
   };
 
+  self.status.state.subscribe((state) => {
+    self.logs.addLog(self.status);
+  });
+  self.status.flags.subscribe((flags) => {
+    self.logs.addLog(self.status);
+  });
+
   // Advanced mode
   self.advancedMode = ko.observable(false);
   self.advancedMode.subscribe(function (val) {

@@ -1,5 +1,5 @@
-function StatusText(state, vehicle) {
-  return ko.pureComputed(function () {
+function StateHelperViewModel(state, vehicle) {
+  this.estate = ko.pureComputed(function () {
     var estate;
     switch (state()) {
       case 0:
@@ -57,4 +57,37 @@ function StatusText(state, vehicle) {
     }
     return estate;
   });
+
+  this.isConnected = ko.pureComputed(() => {
+    return [2, 3].indexOf(state()) !== -1;
+  });
+
+  this.isReady = ko.pureComputed(() => {
+    return [0, 1].indexOf(state()) !== -1;
+  });
+
+  this.isCharging = ko.pureComputed(() => {
+    return 3 === state();
+  });
+
+  this.isError = ko.pureComputed(() => {
+    return [4, 5, 6, 7, 8, 9, 10, 11].indexOf(state()) !== -1;
+  });
+
+  this.isEnabled = ko.pureComputed(() => {
+    return [0, 1, 2, 3].indexOf(state()) !== -1;
+  });
+
+  this.isSleeping = ko.pureComputed(() => {
+    return 254 === state();
+  });
+
+  this.isDisabled = ko.pureComputed(() => {
+    return 255 === state();
+  });
+
+  this.isPaused = ko.pureComputed(() => {
+    return [254, 255].indexOf(state()) !== -1;
+  });
+
 }

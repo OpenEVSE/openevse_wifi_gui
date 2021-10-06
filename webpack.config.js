@@ -33,7 +33,7 @@ var mergeOptions = {
       "node_modules/knockout-mapping/dist/knockout.mapping.js",
       "src/view_models/BaseViewModel.js",
       "src/view_models/ConfigViewModel.js",
-      "src/view_models/StatusTextHelper.js",
+      "src/view_models/StateHelperViewModel.js",
       "src/view_models/StatusViewModel.js",
       "src/view_models/WiFiScanViewModel.js",
       "src/view_models/WiFiConfigViewModel.js",
