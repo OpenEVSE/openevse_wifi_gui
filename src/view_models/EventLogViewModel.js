@@ -1,4 +1,4 @@
-/* global $, ko, StatusText */
+/* global $, ko, StateHelperViewModel */
 /* exported EventLogViewModel */
 
 function EventLogEntryViewModel(data, block, index)
@@ -10,8 +10,8 @@ function EventLogEntryViewModel(data, block, index)
   this.block = ko.observable(block);
   this.index = ko.observable(index);
   this.localTime = this.time.extend({ date: true });
-  this.vehicle = ko.computed(() => { return 0 !== (this.evseFlags & 0x0100); });
-  
+  this.vehicle = ko.computed(() => { return (0 !== (this.evseFlags() & 0x0100)) ? 1 : 0; });
+
   const stateHelper = new StateHelperViewModel(this.evseState, this.vehicle);
   this.isConnected = stateHelper.isConnected;
   this.isReady = stateHelper.isReady;
@@ -58,7 +58,7 @@ function EventLogViewModel(baseEndpoint)
 
   this.updateNext = () => {
     updateBlock(this.block() - 1);
-  }
+  };
 
   var maxBlock = -1;
   var maxBlockIndex = 0;
@@ -95,24 +95,31 @@ function EventLogViewModel(baseEndpoint)
 
     var data = {
       time: now.toISOString(),
-      type: status.isError() ? "warning" : "information",
+      type: "",
       managerState: status.status(),
       evseState: status.state(),
       evseFlags: status.flags(),
+      elapsed: status.elapsed(),
       pilot: status.pilot(),
       energy: status.session_energy(),
       temperature: status.temp() / 10,
       temperatureMax: status.temp_max() / 10,
-      divertmode: status.divertmode()
-    }
-    this.events.push(new EventLogEntryViewModel(data, maxBlock, maxBlockIndex++));
+      divertMode: status.divertmode()
+    };
+    var event = new EventLogEntryViewModel(data, maxBlock, maxBlockIndex++);
+
+    // Derived types in status have not been properly re-evaluated at this point but
+    // the values in the event are correct.
+    event.type(event.isError() ? "warning" : "information");
+
+    this.events.push(event);
     this.events.sort(eventSort);
-  }
+  };
 
   const eventSort = (left, right) => {
     if(right.block() != left.block()) {
       return right.block() - left.block();
     }
     return right.index() - left.index();
-  }
+  };
 }
