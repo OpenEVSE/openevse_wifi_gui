@@ -28,6 +28,23 @@
 
 })();
 
+ko.extenders.date = function(target) {
+  var result = ko.computed({
+    read: function() {
+      var value = target();
+      if(typeof value === "string") {
+        value = new Date(value);
+      }
+
+      value = value.toLocaleString();
+
+      return value;
+    },
+    write: target
+  });
+
+  return result;
+};
 
 // Convert string to number, divide by scale, return result
 // as a string with specified precision

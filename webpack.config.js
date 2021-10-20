@@ -33,6 +33,7 @@ var mergeOptions = {
       "node_modules/knockout-mapping/dist/knockout.mapping.js",
       "src/view_models/BaseViewModel.js",
       "src/view_models/ConfigViewModel.js",
+      "src/view_models/StateHelperViewModel.js",
       "src/view_models/StatusViewModel.js",
       "src/view_models/WiFiScanViewModel.js",
       "src/view_models/WiFiConfigViewModel.js",
@@ -50,6 +51,7 @@ var mergeOptions = {
       "src/view_models/ScheduleViewModel.js",
       "src/view_models/VehicleViewModel.js",
       "src/view_models/TeslaViewModel.js",
+      "src/view_models/EventLogViewModel.js",
       "src/home.js"
     ],
     "term.js": [
@@ -109,7 +111,8 @@ module.exports = {
         "/evse",
         "/schedule",
         "/override",
-        "/tesla"
+        "/tesla",
+        "/logs"
       ],
       target: openevseEndpoint
     },

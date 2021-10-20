@@ -970,6 +970,37 @@
                                  disable: displayGroup.fetching">Save</button>
             </p-->
           </div>
+
+          <div class="box box-full left">
+            <h2 class="left">History</h2>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Energy</th>
+                  <th>Temp</th>
+                </tr>
+              </thead>
+              <tbody data-bind="foreach: logs.events">
+                <tr>
+                  <td><span data-bind="text: localTime"></span></td>
+                  <td><span data-bind="text: type"></span></td>
+                  <td><span data-bind="text: estate"></span></td>
+                  <td><span data-bind="text: scaleString(energy(), 1000, 2) + ' kWh'"></span></td>
+                  <td><span data-bind="text: scaleString(temperatureMax(), 1, 1) + ' &deg;C'"></span></td>
+                </tr>
+              </tbody>
+              <tfoot data-bind="visible: logs.hasMore, disable: logs.fetchingBlock">
+                <tr>
+                  <td colspan="5" data-bind="click: logs.updateNext, clickBubble: false" style="text-align: center;">Load more</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
         </div>
         <!--end tab 3-->
 

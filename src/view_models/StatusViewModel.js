@@ -33,6 +33,7 @@ function StatusViewModel(baseEndpoint) {
     "temp3": false,
     "temp4": false,
     "state": 0,
+    "flags": 0,
     "vehicle": false,
     "colour": false,
     "manual_override": false,
@@ -91,65 +92,17 @@ function StatusViewModel(baseEndpoint) {
     return "Unknown (" + self.mode() + ")";
   });
 
-
-  this.estate = ko.pureComputed(function () {
-    var estate;
-    switch (self.state()) {
-      case 0:
-        estate = "Starting";
-        break;
-      case 1:
-        estate = "EV Not connected";
-        break;
-      case 2:
-        estate = "EV Connected";
-        break;
-      case 3:
-        estate = "Charging";
-        break;
-      case 4:
-        estate = "Vent Required";
-        break;
-      case 5:
-        estate = "Diode Check Failed";
-        break;
-      case 6:
-        estate = "GFCI Fault";
-        break;
-      case 7:
-        estate = "No Earth Ground";
-        break;
-      case 8:
-        estate = "Stuck Relay";
-        break;
-      case 9:
-        estate = "GFCI Self Test Failed";
-        break;
-      case 10:
-        estate = "Over Temperature";
-        break;
-      case 11:
-        estate = "Over Current";
-        break;
-      case 254:
-      case 255:
-        estate = "Waiting";
-        if(false !== self.vehicle())
-        {
-          estate += " - EV " ;
-          if(1 === self.vehicle()) {
-            estate += "Connected";
-          } else {
-            estate += "Not connected";
-          }
-        }
-        break;
-      default:
-        estate = "Invalid";
-        break;
-    }
-    return estate;
-  });
+  // Derived states
+  const stateHelper = new StateHelperViewModel(this.state, this.vehicle);
+  this.isConnected = stateHelper.isConnected;
+  this.isReady = stateHelper.isReady;
+  this.isCharging = stateHelper.isCharging;
+  this.isError = stateHelper.isError;
+  this.isEnabled = stateHelper.isEnabled;
+  this.isSleeping = stateHelper.isSleeping;
+  this.isDisabled = stateHelper.isDisabled;
+  this.isPaused = stateHelper.isPaused;
+  this.estate = stateHelper.estate;
 }
 StatusViewModel.prototype = Object.create(BaseViewModel.prototype);
 StatusViewModel.prototype.constructor = StatusViewModel;
