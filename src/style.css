@@ -368,6 +368,14 @@ input[type="time"] {
   border-left-width: 5px;
 }
 
+span.error {
+  color: #a94442;
+}
+
+span.ok {
+  color: rgb(50,200,50);
+}
+
 /* Nice slider switch */
 
 .switch {
