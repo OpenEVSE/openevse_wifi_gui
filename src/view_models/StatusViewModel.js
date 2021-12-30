@@ -27,7 +27,10 @@ function StatusViewModel(baseEndpoint) {
     "amp": 0,
     "voltage": false,
     "pilot": 0,
-    "temp": false,
+    "session_energy": 0,
+    "total_energy": 0,
+    "temp": 272,
+    "temp_max": 272,
     "temp1": false,
     "temp2": false,
     "temp3": false,
@@ -38,8 +41,6 @@ function StatusViewModel(baseEndpoint) {
     "colour": false,
     "manual_override": false,
     "elapsed": 0,
-    "wattsec": 0,
-    "watthour": 0,
     "gfcicount": 0,
     "nogndcount": 0,
     "stuckcount": 0,
@@ -54,6 +55,7 @@ function StatusViewModel(baseEndpoint) {
     "ota_update": false,
     "time": false,
     "offset": false,
+    "service_level": false,
     "tesla_vehicle_count": false,
     "tesla_vehicle_id": false,
     "tesla_vehicle_name": false,
@@ -61,7 +63,9 @@ function StatusViewModel(baseEndpoint) {
     "battery_level": false,
     "time_to_full_charge": false,
     "tesla_error": false,
-    "vehicle_state_update": 0
+    "vehicle_state_update": 0,
+    "status": false,
+    "config_version": false
   }, endpoint);
 
   // Some devired values

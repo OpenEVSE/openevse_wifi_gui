@@ -50,14 +50,18 @@ function ConfigViewModel(baseEndpoint) {
     "firmware": "-",
     "protocol": "-",
     "espflash": 0,
-    "diodet": 0,
-    "gfcit": 0,
-    "groundt": 0,
-    "relayt": 0,
-    "ventt": 0,
-    "tempt": 0,
-    "scale": 1,
+    "diode_check": false,
+    "gfci_check": false,
+    "ground_check": false,
+    "relay_check": false,
+    "vent_check": false,
+    "temp_check": false,
+    "service": 0,
+    "scale": 220,
     "offset": 0,
+    "max_current_soft": false,
+    "min_current_hard": false,
+    "max_current_hard": false,
     "version": "0.0.0",
     "espinfo": false,
     "buildenv": false,
@@ -100,6 +104,16 @@ function ConfigViewModel(baseEndpoint) {
   this.www_username.subscribe((v) => { trim(this.www_username, v); });
   this.hostname.subscribe((v) => { trim(this.hostname, v); });
   this.sntp_hostname.subscribe((v) => { trim(this.sntp_hostname, v); });
+
+  // Derived config
+  this.all_tests_enabled = ko.pureComputed(() => {
+    return this.diode_check() &&
+           this.gfci_check() &&
+           this.ground_check() &&
+           this.relay_check() &&
+           this.vent_check() &&
+           this.temp_check();
+  });
 }
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);
 ConfigViewModel.prototype.constructor = ConfigViewModel;

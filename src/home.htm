@@ -505,7 +505,7 @@
         <div id="content-3" data-bind="visible: isStatus">
 
           <!-- Session Status -->
-          <div data-bind="visible: openevse.isError" class="box box-full left error">
+          <div data-bind="visible: status.isError" class="box box-full left error">
             <h4>EVSE Error</h4>
             <span data-bind="text: status.estate"></span>
           </div>
@@ -515,12 +515,12 @@
             <span>OpenEVSE not responding or not connected</span>
           </div>
 
-          <div data-bind="visible: !openevse.isError() &amp;&amp; status.evse_connected(),
-                          css: { ready: openevse.isReady(),
-                                 connected: openevse.isConnected() &amp;&amp; !openevse.isCharging(),
-                                 charging: openevse.isCharging(),
-                                 sleeping: openevse.isPaused() &amp;&amp; 0 == status.vehicle(),
-                                 sleeping_connected: openevse.isPaused() &amp;&amp; 1 == status.vehicle() }"
+          <div data-bind="visible: !status.isError() &amp;&amp; status.evse_connected(),
+                          css: { ready: status.isReady(),
+                                 connected: status.isConnected() &amp;&amp; !status.isCharging(),
+                                 charging: status.isCharging(),
+                                 sleeping: status.isPaused() &amp;&amp; 0 == status.vehicle(),
+                                 sleeping_connected: status.isPaused() &amp;&amp; 1 == status.vehicle() }"
                class="box box-full left">
             <h2 class="left">Status</h2>
             <h2 class="right" data-bind="text: status.estate"></h2>
@@ -534,7 +534,7 @@
               </tr>
               <tr>
                 <td><span data-bind="text: scaleString(status.amp(), 1000, 2) + ' A'"></span></td>
-                <td><span data-bind="text: scaleString(status.wattsec(), 3600000, 2) + ' kWh'"></span></td>
+                <td><span data-bind="text: scaleString(status.session_energy(), 1000, 2) + ' kWh'"></span></td>
                 <td><span data-bind="text: scaleString(status.temp(), 10, 1) + ' &deg;C'"></span></td>
                 <td><span data-bind="text: openevse.time.elapsed"></span></td>
               </tr>
@@ -547,11 +547,11 @@
               <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
               <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
               |
-              <span data-bind="visible: openevse.isReady()"><b>Vehicle not connected</b></span>
-              <span data-bind="visible: openevse.isSleeping() || (openevse.isConnected() &amp;&amp; !openevse.isCharging())"><b>Waiting for solar</b></span>
-              <span data-bind="visible: openevse.isCharging()"><b>Charging from solar</b></span>
-              <!--span data-bind="visible: openevse.isCharging()"><b>Fast charging</b></span-->
-              <span data-bind="visible: openevse.isCharging()">
+              <span data-bind="visible: status.isReady()"><b>Vehicle not connected</b></span>
+              <span data-bind="visible: status.isSleeping() || (status.isConnected() &amp;&amp; !status.isCharging())"><b>Waiting for solar</b></span>
+              <span data-bind="visible: status.isCharging()"><b>Charging from solar</b></span>
+              <!--span data-bind="visible: status.isCharging()"><b>Fast charging</b></span-->
+              <span data-bind="visible: status.isCharging()">
                 | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A
               </span>
               <span data-bind="visible: advancedMode">
@@ -576,55 +576,55 @@
               <span data-bind="css: {selected: ecoMode }">Eco (PV divert)</span><br/>
             </div>
 
-            <p data-bind="visible: !openevse.isError() &amp;&amp; !ecoMode()">
+            <p data-bind="visible: !status.isError() &amp;&amp; !ecoMode()">
               <h3 data-bind="visible: status.manual_override">Manual Override</h3>
               <button data-bind="click: setOverride,
                                  enable: !setOverrideFetching(),
                                  visible: !status.manual_override(),
-                                 text: openevse.isPaused() ? 'Start' : 'Pause'">Start</button>
+                                 text: status.isPaused() ? 'Start' : 'Pause'">Start</button>
               <button data-bind="click: clearOverride,
                                  enable: !clearOverrideFetching(),
                                  visible: status.manual_override()">Clear</button>
             </p>
 
-            <span data-bind="with: openevse, visible: !openevse.isError() &amp;&amp; !ecoMode()">
+            <span data-bind="visible: !status.isError() &amp;&amp; !ecoMode()">
               <hr \>
               <p>
                 <b>Time limit:</b><br\>
-                <select data-bind="options: timeLimits,
+                <select data-bind="options: openevse.timeLimits,
                                    optionsText: 'name',
                                    optionsValue: 'value',
-                                   value: timeLimit,
-                                   enable: !updatingTimeLimit() &amp;&amp; isConnected(),
-                                   css: { saved: savedTimeLimit }"></select>
+                                   value: openevse.timeLimit,
+                                   enable: !openevse.updatingTimeLimit() &amp;&amp; status.isConnected(),
+                                   css: { saved: openevse.savedTimeLimit }"></select>
               </p>
 
               <p>
                 <b>Energy limit:</b><br\>
-                <select data-bind="options: chargeLimits,
+                <select data-bind="options: openevse.chargeLimits,
                                    optionsText: 'name',
                                    optionsValue: 'value',
-                                   value: chargeLimit,
-                                   enable: !updatingChargeLimit() &amp;&amp; isConnected(),
-                                   css: { saved: savedChargeLimit }" ></select>
+                                   value: openevse.chargeLimit,
+                                   enable: !openevse.updatingChargeLimit() &amp;&amp; status.isConnected(),
+                                   css: { saved: openevse.savedChargeLimit }" ></select>
               </p>
             </span>
 
             <hr> <br>
             <div data-bind="with: schedule">
               <b>Timer:</b><br>
-                Start: <input type="time" data-bind="value: delayTimerStart, disable: $root.openevse.isError" />
+                Start: <input type="time" data-bind="value: delayTimerStart, disable: $root.status.isError" />
                 &nbsp;&nbsp;
-                Stop: <input type="time" data-bind="value: delayTimerStop, disable: $root.openevse.isError" /><br/>
+                Stop: <input type="time" data-bind="value: delayTimerStop, disable: $root.status.isError" /><br/>
                 <br>
                 <button data-bind="text: delayTimerEnabled() ? 'Update' : 'Set',
                                    enable: !updatingDelayTimer() &amp;&amp;
                                            delayTimerValid() &amp;&amp;
-                                           !$root.openevse.isError(),
+                                           !$root.status.isError(),
                                    click: startDelayTimer">Set</button>
                 <button data-bind="visible: delayTimerEnabled(),
                                    enable: !updatingDelayTimer() &amp;&amp;
-                                           !$root.openevse.isError(),
+                                           !$root.status.isError(),
                                    click: stopDelayTimer">Cancel</button>
             </div>
           </div>
@@ -639,11 +639,11 @@
               </tr>
               <tr>
                 <td>This Session:</td>
-                <td><span data-bind="text: scaleString(status.wattsec(), 3600000, 2)+ ' kWh'"></span></td>
+                <td><span data-bind="text: scaleString(status.session_energy(), 1000, 2)+ ' kWh'"></span></td>
               </tr>
               <tr>
                 <td>Total:</td>
-                <td><span data-bind="text: scaleString(status.watthour(), 1000, 2)+ ' kWh'"></span></td>
+                <td><span data-bind="text: scaleString(status.total_energy(), 1, 2)+ ' kWh'"></span></td>
               </tr>
             </table>
           </div>
@@ -720,9 +720,9 @@
               <select data-bind="options: openevse.serviceLevels,
                                  optionsText: 'name',
                                  optionsValue: 'value',
-                                 value: openevse.serviceLevel,
-                                 disable: openevse.updatingServiceLevel(),
-                                 css: { saved: openevse.savedServiceLevel }"></select>
+                                 value: config.service,
+                                 disable: openEvseService.fetching,
+                                 css: { saved: openEvseService.success }"></select>
             </p>
 
             <p>
@@ -730,9 +730,9 @@
               <select data-bind="options: openevse.currentLevels,
                                   optionsText: 'name',
                                   optionsValue: 'value',
-                                  value: openevse.currentCapacity,
-                                  disable: openevse.updatingServiceLevel() || openevse.updatingCurrentCapacity(),
-                                  css: { saved: openevse.savedCurrentCapacity }"></select>
+                                  value: config.max_current_soft,
+                                  disable: openEvseMaxCurrentSoft.fetching,
+                                  css: { saved: openEvseMaxCurrentSoft.success }"></select>
             </p>
           </div>
 
@@ -748,19 +748,19 @@
               <tr>
                 <td>Service Level:</td>
                 <td>
-                  <span data-bind="text: openevse.actualServiceLevel"></span>
+                  <span data-bind="text: status.service_level"></span>
                 </td>
               </tr>
               <tr>
-                <td>Level <span data-bind="text: openevse.actualServiceLevel"></span> Minimum:</td>
+                <td>Level <span data-bind="text: status.service_level"></span> Minimum:</td>
                 <td>
-                  <span data-bind="text: openevse.minCurrentLevel() + ' A'"></span>
+                  <span data-bind="text: config.min_current_hard() + ' A'"></span>
                 </td>
               </tr>
               <tr>
-                <td>Level <span data-bind="text: openevse.actualServiceLevel"></span> Maximum:</td>
+                <td>Level <span data-bind="text: status.service_level"></span> Maximum:</td>
                 <td>
-                  <span data-bind="text: openevse.maxCurrentLevel() + ' A'"></span>
+                  <span data-bind="text: config.max_current_hard() + ' A'"></span>
                 </td>
               </tr>
               <tr>
@@ -775,15 +775,14 @@
           </div>
 
           <!-- Safety -->
-          <div class="box380 left" data-bind="visible: status.evse_connected() &amp;&amp; (advancedMode() || !openevse.allTestsEnabled())">
+          <div class="box380 left" data-bind="visible: status.evse_connected() &amp;&amp; (advancedMode() || !config.all_tests_enabled())">
             <h2>Safety<span class="info" data-bind="click: toggle.bind($data, showSafety)"></span></h2>
 
             <div class="box" data-bind="visible: showSafety()">
               Hardware safety checks. Enable dev mode (System > Developer Mode) to enable/disable or use the physical LCD + menu button.
             </div>
 
-
-            <div data-bind="visible: !openevse.allTestsEnabled()" class="box warning">
+            <div data-bind="visible: !config.all_tests_enabled()" class="box warning">
               <h4>Warning!!</h4>
               Not all the safety tests are enabled, please take extra care before charging your vehicle.
             </div>
@@ -797,60 +796,60 @@
                 <td>GFI Self Test:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.gfiSelfTestEnabled" />
+                    <input type="checkbox" data-bind="checked: config.gfci_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: openevse.gfiSelfTestEnabled() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.gfci_check() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 7 === status.state() }">
                 <td>Ground Monitoring:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.groundCheckEnabled" />
+                    <input type="checkbox" data-bind="checked: config.ground_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: openevse.groundCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.ground_check() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 8 === status.state() }">
                 <td>Stuck Contact Detection:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.stuckRelayEnabled" />
+                    <input type="checkbox" data-bind="checked: config.relay_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: openevse.stuckRelayEnabled() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.relay_check() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 10 === status.state() }">
                 <td>Temperature Monitoring:</td>
                 <td>
-                  <label class="switch" data-bind="visible: developerMode() &amp;&amp; openevse.tempCheckSupported()">
-                    <input type="checkbox" data-bind="checked: openevse.tempCheckEnabled" />
+                  <label class="switch" data-bind="visible: developerMode">
+                    <input type="checkbox" data-bind="checked: config.temp_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: openevse.tempCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.temp_check() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 5 === status.state() }">
                 <td>Diode Check:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.diodeCheckEnabled" />
+                    <input type="checkbox" data-bind="checked: config.diode_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: openevse.diodeCheckEnabled() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.diode_check() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 4 === status.state() }">
                 <td>Vent Required:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
-                    <input type="checkbox" data-bind="checked: openevse.ventRequiredEnabled" />
+                    <input type="checkbox" data-bind="checked: config.vent_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: openevse.ventRequiredEnabled() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.vent_check() ? 'Enabled' : 'Disabled'"></span>
                 </td>
               </tr>
               <tr>
@@ -940,8 +939,8 @@
           </div>
 
           <div class="box380" data-bind="visible: status.evse_connected,
-                                         css: { right: !advancedMode() &amp;&amp; !openevse.allTestsEnabled(),
-                                                left: advancedMode() || openevse.allTestsEnabled() }">
+                                         css: { right: !advancedMode() &amp;&amp; !config.all_tests_enabled(),
+                                                left: advancedMode() || config.all_tests_enabled() }">
             <h2>Display</h2>
             <div>
               <span data-bind="css: {selected: !advancedMode() }">Simple</span>
