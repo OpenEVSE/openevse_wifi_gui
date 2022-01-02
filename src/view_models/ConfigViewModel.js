@@ -76,7 +76,17 @@ function ConfigViewModel(baseEndpoint) {
     "tesla_refresh_token": false,
     "tesla_created_at": false,
     "tesla_expires_in": false,
-    "tesla_vehicle_id": false
+    "tesla_vehicle_id": false,
+    "rfid_enabled": 0,
+    "rfid_storage": "",
+    "load_balancing_enabled": 0,
+    "safe_current_level": 0,
+    "total_current": 0,
+    "load_balancing_topics": "",
+    "sleep_timer_enabled_flags": 0,
+    "sleep_timer_not_connected": 0,
+    "sleep_timer_connected": 0,
+    "sleep_timer_disconnected": 0
   }, endpoint);
 
   function trim(prop, val) {
@@ -100,6 +110,7 @@ function ConfigViewModel(baseEndpoint) {
   this.www_username.subscribe((v) => { trim(this.www_username, v); });
   this.hostname.subscribe((v) => { trim(this.hostname, v); });
   this.sntp_hostname.subscribe((v) => { trim(this.sntp_hostname, v); });
+  this.load_balancing_topics.subscribe((v) => { trim(this.load_balancing_topics, v); });
 }
 ConfigViewModel.prototype = Object.create(BaseViewModel.prototype);
 ConfigViewModel.prototype.constructor = ConfigViewModel;
