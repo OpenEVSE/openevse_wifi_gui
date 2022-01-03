@@ -612,13 +612,17 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   {
     let setting = self.config[name];
 
-    var optGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    var optGroup = new ConfigGroupViewModel(self.baseEndpoint, () =>
+    {
       let data = {};
       data[name] = setting();
       return data;
     });
-    setting.subscribe(() => {
-      optGroup.save();
+    setting.subscribe(() => 
+    {
+      if(self.config.loaded()) {
+        optGroup.save();
+      }
     });
 
     return optGroup;

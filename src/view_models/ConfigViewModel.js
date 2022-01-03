@@ -80,7 +80,8 @@ function ConfigViewModel(baseEndpoint) {
     "tesla_refresh_token": false,
     "tesla_created_at": false,
     "tesla_expires_in": false,
-    "tesla_vehicle_id": false
+    "tesla_vehicle_id": false,
+    "loaded": false
   }, endpoint);
 
   function trim(prop, val) {
@@ -141,6 +142,7 @@ ConfigViewModel.prototype.update = function (after = function () { }) {
     if(data.hasOwnProperty("tesla_expires_in")) {
       this.tesla_expires_in(data.tesla_expires_in);
     }
+    this.loaded(true);
   }, "json").always(() => {
     this.fetching(false);
     after();

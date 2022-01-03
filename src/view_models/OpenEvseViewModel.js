@@ -22,12 +22,16 @@ function OpenEvseViewModel(baseEndpoint, config, status) {
 
   self.time = new TimeViewModel(status);
 
+  self.createCurrentArray = (min, max) => {
+    return Array((max - min) + 1).fill().map((_, i) => { return { name: (min+i)+" A", value: (min+i)}});
+  };
+
   // Option lists
   self.serviceLevels = [
     { name: "Auto", value: 0 },
     { name: "1", value: 1 },
     { name: "2", value: 2 }];
-  self.currentLevels = ko.observableArray([]);
+  self.currentLevels = ko.observableArray(self.createCurrentArray(6, 80));
   self.timeLimits = [
     { name: "none", value: 0 },
     { name: "15 min", value: 15 },
@@ -135,12 +139,10 @@ function OpenEvseViewModel(baseEndpoint, config, status) {
   };
 
   self.generateCurrentList = () => {
-    var capacity = config.max_current_soft();
-    self.currentLevels.removeAll();
-    for(var i = config.min_current_hard(); i <= config.max_current_hard(); i++) {
-      self.currentLevels.push({name: i+" A", value: i});
-    }
-    config.max_current_soft(capacity);
+    let min = config.min_current_hard();
+    let max = config.max_current_hard();
+    var list = self.createCurrentArray(min, max);
+    ko.mapping.fromJS(list, {}, self.currentLevels);
   };
 
   var subscribed = false;
