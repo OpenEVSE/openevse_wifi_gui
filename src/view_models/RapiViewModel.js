@@ -5,12 +5,64 @@ function RapiViewModel(baseEndpoint) {
   "use strict";
   var self = this;
 
+  const openevse_flags = {
+    OPENEVSE_ECF_L2:                 0x0001, // service level 2
+    OPENEVSE_ECF_DIODE_CHK_DISABLED: 0x0002, // no diode check
+    OPENEVSE_ECF_VENT_REQ_DISABLED:  0x0004, // no vent required state
+    OPENEVSE_ECF_GND_CHK_DISABLED:   0x0008, // no chk for ground fault
+    OPENEVSE_ECF_STUCK_RELAY_CHK_DISABLED: 0x0010, // no chk for stuck relay
+    OPENEVSE_ECF_AUTO_SVC_LEVEL_DISABLED:  0x0020, // auto detect svc level - requires ADVPWR
+    OPENEVSE_ECF_AUTO_START_DISABLED: 0x0040,  // no auto start charging
+    OPENEVSE_ECF_SERIAL_DBG:         0x0080, // enable debugging messages via serial
+    OPENEVSE_ECF_MONO_LCD:           0x0100, // monochrome LCD backlight
+    OPENEVSE_ECF_GFI_TEST_DISABLED:  0x0200, // no GFI self test
+    OPENEVSE_ECF_TEMP_CHK_DISABLED:  0x0400, // no Temperature Monitoring
+    OPENEVSE_ECF_BUTTON_DISABLED:    0x8000  // front panel button disabled
+  };
+
+  const openevse_vflags = {
+    OPENEVSE_VFLAG_AUTOSVCLVL_SKIPPED:   0x0001, // auto svc level test skipped during post
+    OPENEVSE_VFLAG_HARD_FAULT:           0x0002, // in non-autoresettable fault
+    OPENEVSE_VFLAG_LIMIT_SLEEP:          0x0004, // currently sleeping after reaching time/charge limit
+    OPENEVSE_VFLAG_AUTH_LOCKED:          0x0008, // locked pending authentication
+    OPENEVSE_VFLAG_AMMETER_CAL:          0x0010, // ammeter calibration mode
+    OPENEVSE_VFLAG_NOGND_TRIPPED:        0x0020, // no ground has tripped at least once
+    OPENEVSE_VFLAG_CHARGING_ON:          0x0040, // charging relay is closed
+    OPENEVSE_VFLAG_GFI_TRIPPED:          0x0080, // gfi has tripped at least once since boot
+    OPENEVSE_VFLAG_EV_CONNECTED:         0x0100, // EV connected - valid only when pilot not N12
+    OPENEVSE_VFLAG_SESSION_ENDED:        0x0200, // used for charging session time calc
+    OPENEVSE_VFLAG_EV_CONNECTED_PREV:    0x0400, // prev EV connected flag
+    OPENEVSE_VFLAG_UI_IN_MENU:           0x0800, // onboard UI currently in a menu
+  };
+
+  const openevse_state = {
+    0: "OPENEVSE_STATE_STARTING",
+    1: "OPENEVSE_STATE_NOT_CONNECTED",
+    2: "OPENEVSE_STATE_CONNECTED",
+    3: "OPENEVSE_STATE_CHARGING",
+    4: "OPENEVSE_STATE_VENT_REQUIRED",
+    5: "OPENEVSE_STATE_DIODE_CHECK_FAILED",
+    6: "OPENEVSE_STATE_GFI_FAULT",
+    7: "OPENEVSE_STATE_NO_EARTH_GROUND",
+    8: "OPENEVSE_STATE_STUCK_RELAY",
+    9: "OPENEVSE_STATE_GFI_SELF_TEST_FAILED",
+    10: "OPENEVSE_STATE_OVER_TEMPERATURE",
+    11: "OPENEVSE_STATE_OVER_CURRENT",
+    254: "OPENEVSE_STATE_SLEEPING",
+    255: "OPENEVSE_STATE_DISABLED"
+  };
+
   self.baseEndpoint = baseEndpoint;
 
   self.rapiSend = ko.observable(false);
   self.cmd = ko.observable("");
   self.ret = ko.observable("");
   self.history = ko.observable("");
+
+  self.flags = ko.observableArray("");
+  self.vflags = ko.observableArray("");
+  self.evsestate = ko.observableArray("");
+  self.pilotstate = ko.observableArray("");
 
   self.get_commands = [
     {
@@ -74,7 +126,22 @@ function RapiViewModel(baseEndpoint) {
       description: "get settings",
       tokens: [
         { name: "amps", val: ko.observable(""), description: "(decimal)" },
-        { name: "flags", val: ko.observable(""), description: "(hex)" }
+        { name: "flags", val: self.flags, description: "(hex)", 
+          parsed: ko.computed(() => {
+            var ret = [];
+            const val = parseInt(self.flags(), 16);
+            if(!isNaN(val)) {
+              for (const flag in openevse_flags) {
+                if (Object.hasOwnProperty.call(openevse_flags, flag)) {
+                  const mask = openevse_flags[flag];
+                  if(val & mask) {
+                    ret.push({val: flag});
+                  }                    
+                }
+              }
+            }
+            return ret;
+          }) }
       ]
     },
     {
@@ -145,10 +212,42 @@ function RapiViewModel(baseEndpoint) {
       ret: ko.observable(""),
       description: "get state",
       tokens: [
-        { name: "evsestate", val: ko.observable(""), description: "(hex), EVSE_STATE_xxx" },
+        { name: "evsestate", val: self.evsestate, description: "(hex), EVSE_STATE_xxx",
+          parsed: ko.computed(() => {
+            const val = parseInt(self.evsestate());
+            if(!isNaN(val) && val in openevse_state) {
+              return [ { val: openevse_state[val] } ];
+            }
+            return [ { val: "UNKNOWN" } ];
+          })
+        },
         { name: "elapsed", val: ko.observable(""), description: "(dec), elapsed charge time in seconds of current or last charging session" },
-        { name: "pilotstate", val: ko.observable(""), description: "(hex), EVSE_STATE_xxx" },
-        { name: "vflags", val: ko.observable(""), description: "(hex), EVCF_xxx" }
+        { name: "pilotstate", val: self.pilotstate, description: "(hex), EVSE_STATE_xxx",
+          parsed: ko.computed(() => {
+            const val = parseInt(self.pilotstate());
+            if(!isNaN(val) && val in openevse_state) {
+              return [ { val: openevse_state[val] } ];
+            }
+            return [ { val: "UNKNOWN" } ];
+          })
+        },
+        { name: "vflags", val: self.vflags, description: "(hex), EVCF_xxx", 
+          parsed: ko.computed(() => {
+            var ret = [];
+            const val = parseInt(self.vflags(), 16);
+            if(!isNaN(val)) {
+              for (const flag in openevse_vflags) {
+                if (Object.hasOwnProperty.call(openevse_vflags, flag)) {
+                  const mask = openevse_vflags[flag];
+                  if(val & mask) {
+                    ret.push({val: flag});
+                  }                    
+                }
+              }
+            }
+            return ret;
+          })
+       }
       ]
     },
     {

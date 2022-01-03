@@ -1041,6 +1041,16 @@
                       <span data-bind="text: ret, css: { error: ret().startsWith('$NK'), ok: ret().startsWith('$OK')}"></span><br/>
                       <div data-bind="foreach: tokens, visible: ret().startsWith('$OK')">
                         <span data-bind="text: name"></span> = <span data-bind="text: val"></span><br/>
+                        <span data-bind="if: $data.hasOwnProperty('parsed')">
+                          <ul data-bind="foreach: parsed">
+                            <li>
+                              <span data-bind="if: $data.hasOwnProperty('name')">
+                                <span data-bind="text: name"></span> =
+                              </span>
+                              <span data-bind="text: val"></span>
+                            </li>
+                          </ul>
+                        </span>
                       </div>
                     </div>
                   </td>
