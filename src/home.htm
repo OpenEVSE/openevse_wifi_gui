@@ -1020,7 +1020,7 @@
           </div>
           <div class="box box-full left">
             <h2>RAPI Get Commands</h2>
-            <button data-bind="click: rapi.read">Read</button>
+            <button data-bind="click: rapi.read, disable: rapi.reading">Read</button>
             <table data-bind="with: rapi">
               <thead>
                 <tr>

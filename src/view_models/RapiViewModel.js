@@ -59,10 +59,11 @@ function RapiViewModel(baseEndpoint) {
   self.ret = ko.observable("");
   self.history = ko.observable("");
 
-  self.flags = ko.observableArray("");
-  self.vflags = ko.observableArray("");
-  self.evsestate = ko.observableArray("");
-  self.pilotstate = ko.observableArray("");
+  self.flags = ko.observable("");
+  self.vflags = ko.observable("");
+  self.evsestate = ko.observable("");
+  self.pilotstate = ko.observable("");
+  self.reading = ko.observable(false);
 
   self.get_commands = [
     {
@@ -295,6 +296,7 @@ function RapiViewModel(baseEndpoint) {
 
   self.readCount = ko.observable(0);
   self.read = () => {
+    self.reading(true);
     self.readCount(0);
     self.readNext();
   };
@@ -325,6 +327,8 @@ function RapiViewModel(baseEndpoint) {
         self.readCount(self.readCount() + 1);
         self.readNext();
       });
+    } else {
+      self.reading(false);
     }
   };
 
