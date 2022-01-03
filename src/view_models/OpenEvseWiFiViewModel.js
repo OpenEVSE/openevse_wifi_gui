@@ -66,7 +66,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.vehicle.tesla.advanced.subscribe(() => {
     self.showTeslaAdvancedInfo(false);
   });
-  self.showTotalCurrentInfo = ko.observable(false);
 
   self.toggle = function (flag) {
     flag(!flag());
@@ -91,114 +90,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     self.setCookie("developerMode", val.toString());
     if(val) {
       self.advancedMode(true); // Enabling dev mode implicitly enables advanced mode
-    }
-  });
-
-  // Sleep timer not connected
-  self.sleepTimerNotConnectedEnabled = ko.computed({
-    read: function() {
-      return (self.config.sleep_timer_enabled_flags() & (1 << 0)) == (1 << 0);
-    },
-    write: function(enabled) {
-      if(enabled){
-        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() | (1 << 0));
-      }else{
-        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() & ~(1 << 0));
-      }
-    }
-  });
-
-  self.sleepTimerNotConnectedMinutes = ko.computed({
-    read: function(){
-      return Math.floor(self.config.sleep_timer_not_connected() / 60);
-    },
-    write: function(val){
-      if(!val)
-        val = 0;
-      self.config.sleep_timer_not_connected(eval(val) * 60 + eval(self.sleepTimerNotConnectedSeconds()));
-    }
-  });
-
-  self.sleepTimerNotConnectedSeconds = ko.computed({
-    read: function(){
-      return self.config.sleep_timer_not_connected() % 60;
-    },
-    write: function(val){
-      if(!val)
-        val = 0;
-      self.config.sleep_timer_not_connected(eval(self.sleepTimerNotConnectedMinutes()) * 60 + eval(val));
-    }
-  });
-
-  // Sleep timer connected
-  self.sleepTimerConnectedEnabled = ko.computed({
-    read: function() {
-      return (self.config.sleep_timer_enabled_flags() & (1 << 1)) == (1 << 1);
-    },
-    write: function(enabled) {
-      if(enabled){
-        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() | (1 << 1));
-      }else{
-        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() & ~(1 << 1));
-      }
-    }
-  });
-
-  self.sleepTimerConnectedMinutes = ko.computed({
-    read: function(){
-      return Math.floor(self.config.sleep_timer_connected() / 60);
-    },
-    write: function(val){
-      if(!val)
-        val = 0;
-      self.config.sleep_timer_connected(eval(val) * 60 + eval(self.sleepTimerConnectedSeconds()));
-    }
-  });
-
-  self.sleepTimerConnectedSeconds = ko.computed({
-    read: function(){
-      return self.config.sleep_timer_connected() % 60;
-    },
-    write: function(val){
-      if(!val)
-        val = 0;
-      self.config.sleep_timer_connected(eval(self.sleepTimerConnectedMinutes()) * 60 + eval(val));
-    }
-  });
-
-  // Sleep timer connected
-  self.sleepTimerDisconnectedEnabled = ko.computed({
-    read: function() {
-      return (self.config.sleep_timer_enabled_flags() & (1 << 2)) == (1 << 2);
-    },
-    write: function(enabled) {
-      if(enabled){
-        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() | (1 << 2));
-      }else{
-        self.config.sleep_timer_enabled_flags(self.config.sleep_timer_enabled_flags() & ~(1 << 2));
-      }
-    }
-  });
-
-  self.sleepTimerDisconnectedMinutes = ko.computed({
-    read: function(){
-      return Math.floor(self.config.sleep_timer_disconnected() / 60);
-    },
-    write: function(val){
-      if(!val)
-        val = 0;
-      self.config.sleep_timer_disconnected(eval(val) * 60 + eval(self.sleepTimerDisconnectedSeconds()));
-    }
-  });
-
-  self.sleepTimerDisconnectedSeconds = ko.computed({
-    read: function(){
-      return self.config.sleep_timer_disconnected() % 60;
-    },
-    write: function(val){
-      if(!val)
-        val = 0;
-      self.config.sleep_timer_disconnected(eval(self.sleepTimerDisconnectedMinutes()) * 60 + eval(val));
     }
   });
 
@@ -594,33 +485,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
   self.config.rfid_enabled.subscribe(() => {
     self.rfidGroup.save();
-  });
-
-  // -----------------------------------------------------------------------
-  // Event: Sleep timer save
-  // -----------------------------------------------------------------------
-  self.sleepTimerGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
-    return {
-      sleep_timer_enabled_flags: self.config.sleep_timer_enabled_flags(),
-      sleep_timer_not_connected: self.config.sleep_timer_not_connected(),
-      sleep_timer_connected: self.config.sleep_timer_connected(),
-      sleep_timer_disconnected: self.config.sleep_timer_disconnected()
-    }
-  });
-
-  // -----------------------------------------------------------------------
-  // Event: Load Balancing Current Levels save
-  // -----------------------------------------------------------------------
-  self.loadBalancingGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
-    return {
-      load_balancing_enabled: self.config.load_balancing_enabled(),
-      safe_current_level: self.config.safe_current_level(),
-      total_current: self.config.total_current(),
-      load_balancing_topics: self.config.load_balancing_topics()
-    };
-  });
-  self.config.load_balancing_enabled.subscribe(() => {
-    self.loadBalancingGroup.save();
   });
 
   // -----------------------------------------------------------------------

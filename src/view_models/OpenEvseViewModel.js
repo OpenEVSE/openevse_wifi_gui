@@ -29,7 +29,6 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
     { name: "1", value: 1 },
     { name: "2", value: 2 }];
   self.currentLevels = ko.observableArray([]);
-  self.safeCurrentLevels = ko.observableArray([]);
   self.timeLimits = [
     { name: "none", value: 0 },
     { name: "15 min", value: 15 },
@@ -204,11 +203,8 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
       self.maxCurrentLevel(max);
       var capacity = self.currentCapacity();
       self.currentLevels.removeAll();
-      self.safeCurrentLevels.removeAll();
-      self.safeCurrentLevels.push({name: "0 A (Stay asleep)", value: 0});
       for(var i = self.minCurrentLevel(); i <= self.maxCurrentLevel(); i++) {
         self.currentLevels.push({name: i+" A", value: i});
-        self.safeCurrentLevels.push({name: i+" A", value: i});
       }
       self.currentCapacity(capacity);
     });

@@ -190,13 +190,6 @@ button.on {
   color: #000000;
 }
 
-.add-btn{
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-  padding: 5px 14px;
-  margin: 0px 4px;
-}
-
 input[type="text"],
 input[type="number"],
 input[type="password"],
