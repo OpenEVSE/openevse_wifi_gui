@@ -219,7 +219,7 @@ function RapiViewModel(baseEndpoint) {
       tokens: [
         { name: "evsestate", val: self.evsestate, description: "(hex), EVSE_STATE_xxx",
           parsed: ko.computed(() => {
-            const val = parseInt(self.evsestate());
+            const val = parseInt(self.evsestate(), 16);
             if(!isNaN(val) && val in openevse_state) {
               return [ { val: openevse_state[val] } ];
             }
@@ -229,7 +229,7 @@ function RapiViewModel(baseEndpoint) {
         { name: "elapsed", val: ko.observable(""), description: "(dec), elapsed charge time in seconds of current or last charging session" },
         { name: "pilotstate", val: self.pilotstate, description: "(hex), EVSE_STATE_xxx",
           parsed: ko.computed(() => {
-            const val = parseInt(self.pilotstate());
+            const val = parseInt(self.pilotstate(), 16);
             if(!isNaN(val) && val in openevse_state) {
               return [ { val: openevse_state[val] } ];
             }
