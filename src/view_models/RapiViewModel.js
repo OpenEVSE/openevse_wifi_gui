@@ -6,50 +6,54 @@ function RapiViewModel(baseEndpoint) {
   var self = this;
 
   const openevse_flags = {
-    OPENEVSE_ECF_L2:                 0x0001, // service level 2
-    OPENEVSE_ECF_DIODE_CHK_DISABLED: 0x0002, // no diode check
-    OPENEVSE_ECF_VENT_REQ_DISABLED:  0x0004, // no vent required state
-    OPENEVSE_ECF_GND_CHK_DISABLED:   0x0008, // no chk for ground fault
-    OPENEVSE_ECF_STUCK_RELAY_CHK_DISABLED: 0x0010, // no chk for stuck relay
-    OPENEVSE_ECF_AUTO_SVC_LEVEL_DISABLED:  0x0020, // auto detect svc level - requires ADVPWR
-    OPENEVSE_ECF_AUTO_START_DISABLED: 0x0040,  // no auto start charging
-    OPENEVSE_ECF_SERIAL_DBG:         0x0080, // enable debugging messages via serial
-    OPENEVSE_ECF_MONO_LCD:           0x0100, // monochrome LCD backlight
-    OPENEVSE_ECF_GFI_TEST_DISABLED:  0x0200, // no GFI self test
-    OPENEVSE_ECF_TEMP_CHK_DISABLED:  0x0400, // no Temperature Monitoring
-    OPENEVSE_ECF_BUTTON_DISABLED:    0x8000  // front panel button disabled
+    ECF_L2:                 0x0001, // service level 2
+    ECF_DIODE_CHK_DISABLED: 0x0002, // no diode check
+    ECF_VENT_REQ_DISABLED:  0x0004, // no vent required state
+    ECF_GND_CHK_DISABLED:   0x0008, // no chk for ground fault
+    ECF_STUCK_RELAY_CHK_DISABLED: 0x0010, // no chk for stuck relay
+    ECF_AUTO_SVC_LEVEL_DISABLED:  0x0020, // auto detect svc level - requires ADVPWR
+    ECF_AUTO_START_DISABLED: 0x0040,  // no auto start charging
+    ECF_SERIAL_DBG:         0x0080, // enable debugging messages via serial
+    ECF_MONO_LCD:           0x0100, // monochrome LCD backlight
+    ECF_GFI_TEST_DISABLED:  0x0200, // no GFI self test
+    ECF_TEMP_CHK_DISABLED:  0x0400, // no Temperature Monitoring
+    ECF_BUTTON_DISABLED:    0x8000  // front panel button disabled
   };
 
   const openevse_vflags = {
-    OPENEVSE_VFLAG_AUTOSVCLVL_SKIPPED:   0x0001, // auto svc level test skipped during post
-    OPENEVSE_VFLAG_HARD_FAULT:           0x0002, // in non-autoresettable fault
-    OPENEVSE_VFLAG_LIMIT_SLEEP:          0x0004, // currently sleeping after reaching time/charge limit
-    OPENEVSE_VFLAG_AUTH_LOCKED:          0x0008, // locked pending authentication
-    OPENEVSE_VFLAG_AMMETER_CAL:          0x0010, // ammeter calibration mode
-    OPENEVSE_VFLAG_NOGND_TRIPPED:        0x0020, // no ground has tripped at least once
-    OPENEVSE_VFLAG_CHARGING_ON:          0x0040, // charging relay is closed
-    OPENEVSE_VFLAG_GFI_TRIPPED:          0x0080, // gfi has tripped at least once since boot
-    OPENEVSE_VFLAG_EV_CONNECTED:         0x0100, // EV connected - valid only when pilot not N12
-    OPENEVSE_VFLAG_SESSION_ENDED:        0x0200, // used for charging session time calc
-    OPENEVSE_VFLAG_EV_CONNECTED_PREV:    0x0400, // prev EV connected flag
-    OPENEVSE_VFLAG_UI_IN_MENU:           0x0800, // onboard UI currently in a menu
+    ECVF_AUTOSVCLVL_SKIPPED:    0x0001, // auto svc level test skipped during post
+    ECVF_HARD_FAULT:            0x0002, // in non-autoresettable fault
+    ECVF_LIMIT_SLEEP:           0x0004, // currently sleeping after reaching time/charge limit
+    ECVF_AUTH_LOCKED:           0x0008, // locked pending authentication
+    ECVF_TIME_LIMIT:            0x0010, // time limit set
+    ECVF_NOGND_TRIPPED:         0x0020, // no ground has tripped at least once
+    ECVF_CHARGING_ON:           0x0040, // charging relay is closed
+    ECVF_GFI_TRIPPED:           0x0080, // gfi has tripped at least once since boot
+    ECVF_EV_CONNECTED:          0x0100, // EV connected - valid only when pilot not N12
+    ECVF_SESSION_ENDED:         0x0200, // used for charging session time calc
+    ECVF_EV_CONNECTED_PREV:     0x0400, // prev EV connected flag
+    ECVF_UI_IN_MENU:            0x0800, // onboard UI currently in a menu
+    ECVF_TIMER_ON:              0x1000, // delay timer enabled
+    ECVF_CHARGE_LIMIT:          0x2000,
+    ECVF_BOOT_LOCK:             0x4000, // locked at boot
+    ECVF_AMMETER_CAL:           0x8000, // ammeter calibration mode
   };
 
   const openevse_state = {
-    0: "OPENEVSE_STATE_STARTING",
-    1: "OPENEVSE_STATE_NOT_CONNECTED",
-    2: "OPENEVSE_STATE_CONNECTED",
-    3: "OPENEVSE_STATE_CHARGING",
-    4: "OPENEVSE_STATE_VENT_REQUIRED",
-    5: "OPENEVSE_STATE_DIODE_CHECK_FAILED",
-    6: "OPENEVSE_STATE_GFI_FAULT",
-    7: "OPENEVSE_STATE_NO_EARTH_GROUND",
-    8: "OPENEVSE_STATE_STUCK_RELAY",
-    9: "OPENEVSE_STATE_GFI_SELF_TEST_FAILED",
-    10: "OPENEVSE_STATE_OVER_TEMPERATURE",
-    11: "OPENEVSE_STATE_OVER_CURRENT",
-    254: "OPENEVSE_STATE_SLEEPING",
-    255: "OPENEVSE_STATE_DISABLED"
+    0: "EVSE_STATE_UNKNOWN",
+    1: "EVSE_STATE_A (not connected)",
+    2: "EVSE_STATE_B (connected, ready)",
+    3: "EVSE_STATE_C (charging)",
+    4: "EVSE_STATE_D (vent required)",
+    5: "EVSE_STATE_DIODE_CHK_FAILED",
+    6: "EVSE_STATE_GFCI_FAULT",
+    7: "EVSE_STATE_NO_GROUND",
+    8: "EVSE_STATE_STUCK_RELAY",
+    9: "EVSE_STATE_GFI_TEST_FAILED",
+    10: "EVSE_STATE_OVER_TEMPERATURE",
+    11: "EVSE_STATE_OVER_CURRENT",
+    254: "EVSE_STATE_SLEEPING",
+    255: "EVSE_STATE_DISABLED"
   };
 
   self.baseEndpoint = baseEndpoint;
@@ -127,7 +131,7 @@ function RapiViewModel(baseEndpoint) {
       description: "get settings",
       tokens: [
         { name: "amps", val: ko.observable(""), description: "(decimal)" },
-        { name: "flags", val: self.flags, description: "(hex)", 
+        { name: "flags", val: self.flags, description: "(hex)",
           parsed: ko.computed(() => {
             var ret = [];
             const val = parseInt(self.flags(), 16);
@@ -137,7 +141,7 @@ function RapiViewModel(baseEndpoint) {
                   const mask = openevse_flags[flag];
                   if(val & mask) {
                     ret.push({val: flag});
-                  }                    
+                  }
                 }
               }
             }
@@ -232,7 +236,7 @@ function RapiViewModel(baseEndpoint) {
             return [ { val: "UNKNOWN" } ];
           })
         },
-        { name: "vflags", val: self.vflags, description: "(hex), EVCF_xxx", 
+        { name: "vflags", val: self.vflags, description: "(hex), EVCF_xxx",
           parsed: ko.computed(() => {
             var ret = [];
             const val = parseInt(self.vflags(), 16);
@@ -242,7 +246,7 @@ function RapiViewModel(baseEndpoint) {
                   const mask = openevse_vflags[flag];
                   if(val & mask) {
                     ret.push({val: flag});
-                  }                    
+                  }
                 }
               }
             }
