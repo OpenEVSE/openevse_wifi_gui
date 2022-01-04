@@ -152,7 +152,13 @@ function OpenEvseViewModel(baseEndpoint, config, status) {
       return;
     }
 
-    status.service_level.subscribe(() => {
+    config.min_current_hard.subscribe(() => {
+      self.generateCurrentList();
+    });
+    config.max_current_hard.subscribe(() => {
+      if(config.max_current_soft() > config.max_current_hard()) {
+        config.max_current_soft(config.max_current_hard());
+      }
       self.generateCurrentList();
     });
     self.generateCurrentList();
