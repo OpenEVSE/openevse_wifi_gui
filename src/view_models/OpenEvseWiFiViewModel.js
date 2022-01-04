@@ -293,7 +293,9 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
     // Subscribe to config changes
     self.status.config_version.subscribe(() => {
-      self.config.update();
+      self.config.update(() => {
+        self.status.update();
+      });
     });
 
     self.updating(false);
@@ -618,7 +620,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       data[name] = setting();
       return data;
     });
-    setting.subscribe(() => 
+    setting.subscribe(() =>
     {
       if(self.config.loaded()) {
         optGroup.save();
