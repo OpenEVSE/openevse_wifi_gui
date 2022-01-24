@@ -1,7 +1,7 @@
 /* global ko */
 /* exported TimeViewModel */
 
-function TimeViewModel(openevse)
+function TimeViewModel(status)
 {
   "use strict";
   var self = this;
@@ -15,11 +15,11 @@ function TimeViewModel(openevse)
       if(self.automaticTime()) {
         self.nowTimedate(new Date(self.evseTimedate().getTime() + ((new Date()) - self.localTimedate())));
       }
-      if(openevse.isCharging()) {
-        self.elapsedNow(new Date((openevse.status.elapsed() * 1000) + ((new Date()) - self.elapsedLocal())));
+      if(status.isCharging()) {
+        self.elapsedNow(new Date((status.elapsed() * 1000) + ((new Date()) - self.elapsedLocal())));
       }
-      self.divertUpdateNow(new Date((openevse.status.divert_update() * 1000) + ((new Date()) - self.divertUpdateLocal())));
-      self.vehicleUpdateNow(new Date((openevse.status.vehicle_state_update() * 1000) + ((new Date()) - self.vehicleUpdateLocal())));
+      self.divertUpdateNow(new Date((status.divert_update() * 1000) + ((new Date()) - self.divertUpdateLocal())));
+      self.vehicleUpdateNow(new Date((status.vehicle_state_update() * 1000) + ((new Date()) - self.vehicleUpdateLocal())));
     }, 1000);
   }
 
@@ -87,7 +87,7 @@ function TimeViewModel(openevse)
     return hours+":"+addZero(minutes)+":"+addZero(seconds);
   });
 
-  openevse.status.elapsed.subscribe(function (val) {
+  status.elapsed.subscribe(function (val) {
     self.elapsedNow(new Date(val * 1000));
     self.elapsedLocal(new Date());
   });
@@ -100,7 +100,7 @@ function TimeViewModel(openevse)
     return Math.floor(time / 1000);
   });
 
-  openevse.status.divert_update.subscribe(function (val) {
+  status.divert_update.subscribe(function (val) {
     self.divertUpdateNow(new Date(val * 1000));
     self.divertUpdateLocal(new Date());
   });
@@ -113,7 +113,7 @@ function TimeViewModel(openevse)
     return Math.floor(time / 1000);
   });
 
-  openevse.status.vehicle_state_update.subscribe(function (val) {
+  status.vehicle_state_update.subscribe(function (val) {
     self.vehicleUpdateNow(new Date(val * 1000));
     self.vehicleUpdateLocal(new Date());
   });
