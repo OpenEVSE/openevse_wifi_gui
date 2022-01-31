@@ -4,7 +4,7 @@ This is the Web UI for OpenEVSE WiFi module. It is intended to be served via the
 
 ## Building the UI
 
-```shell
+```bash
 npm install
 npm run build
 ```

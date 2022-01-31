@@ -11,7 +11,7 @@ function DummyRequest()
   };
 }
 
-function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
+function OpenEvseViewModel(baseEndpoint, config, status) {
   "use strict";
   var self = this;
   var endpoint = ko.pureComputed(function () { return baseEndpoint() + "/r"; });
@@ -19,16 +19,19 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
   endpoint.subscribe(function (end) {
     self.openevse.setEndpoint(end);
   });
-  self.status = statusViewModel;
-  self.config = configViewModel;
-  self.time = new TimeViewModel(self);
+
+  self.time = new TimeViewModel(status);
+
+  self.createCurrentArray = (min, max) => {
+    return Array((max - min) + 1).fill().map((_, i) => { return { name: (min+i)+" A", value: (min+i)}});
+  };
 
   // Option lists
   self.serviceLevels = [
     { name: "Auto", value: 0 },
     { name: "1", value: 1 },
     { name: "2", value: 2 }];
-  self.currentLevels = ko.observableArray([]);
+  self.currentLevels = ko.observableArray(self.createCurrentArray(6, 80));
   self.timeLimits = [
     { name: "none", value: 0 },
     { name: "15 min", value: 15 },
@@ -57,8 +60,8 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
     { name: "8 kWh", value: 8 },
     { name: "9 kWh", value: 9 },
     { name: "10 kWh", value: 10 },
-    { name: "15 kWh", value: 11 },
-    { name: "20 kWh", value: 12 },
+    { name: "15 kWh", value: 15 },
+    { name: "20 kWh", value: 20 },
     { name: "25 kWh", value: 25 },
     { name: "30 kWh", value: 30 },
     { name: "35 kWh", value: 35 },
@@ -71,44 +74,8 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
     { name: "80 kWh", value: 80 },
     { name: "90 kWh", value: 90 }];
 
-  self.serviceLevel = ko.observable(-1);
-  self.actualServiceLevel = ko.observable(-1);
-  self.minCurrentLevel = ko.observable(-1);
-  self.maxCurrentLevel = ko.observable(-1);
-  self.currentCapacity = ko.observable(-1);
   self.timeLimit = ko.observable(-1);
   self.chargeLimit = ko.observable(-1);
-  self.delayTimerEnabled = ko.observable(false);
-  self.delayTimerStart = ko.observable("--:--");
-  self.delayTimerStop = ko.observable("--:--");
-
-  // Saftey tests
-  self.gfiSelfTestEnabled = ko.observable(false);
-  self.groundCheckEnabled = ko.observable(false);
-  self.stuckRelayEnabled = ko.observable(false);
-  self.tempCheckEnabled = ko.observable(false);
-  self.diodeCheckEnabled = ko.observable(false);
-  self.ventRequiredEnabled = ko.observable(false);
-  self.allTestsEnabled = ko.pureComputed(function () {
-    return self.gfiSelfTestEnabled() &&
-           self.groundCheckEnabled() &&
-           self.stuckRelayEnabled() &&
-           self.tempCheckEnabled() &&
-           self.diodeCheckEnabled() &&
-           self.ventRequiredEnabled();
-  });
-
-  self.tempCheckSupported = ko.observable(false);
-
-  // Derived states
-  self.isConnected = self.status.isConnected;
-  self.isReady = self.status.isReady;
-  self.isCharging = self.status.isCharging;
-  self.isError = self.status.isError;
-  self.isEnabled = self.status.isEnabled;
-  self.isSleeping = self.status.isSleeping;
-  self.isDisabled = self.status.isDisabled;
-  self.isPaused = self.status.isPaused;
 
   // helper to select an appropriate value for time limit
   self.selectTimeLimit = function(limit)
@@ -145,99 +112,37 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
   // List of items to update on calling update(). The list will be processed one item at
   // a time.
   var updateList = [
-    function () { 
-      if(false === self.status.time()) {
+    function () {
+      if(false === status.time()) {
         return self.openevse.time(self.time.timeUpdate);
       }
       return new DummyRequest();
     },
-    function () { return self.openevse.service_level(function (level, actual) {
-      self.serviceLevel(level);
-      self.actualServiceLevel(actual);
-    }); },
-    function () { return self.updateCurrentCapacity(); },
-    function () { return self.openevse.current_capacity(function (capacity) {
-      self.currentCapacity(capacity);
-    }); },
     function () { return self.openevse.time_limit(function (limit) {
       self.selectTimeLimit(limit);
     }); },
     function () { return self.openevse.charge_limit(function (limit) {
       self.selectChargeLimit(limit);
-    }); },
-    function () { return self.openevse.gfi_self_test(function (enabled) {
-      self.gfiSelfTestEnabled(enabled);
-    }); },
-    function () { return self.openevse.ground_check(function (enabled) {
-      self.groundCheckEnabled(enabled);
-    }); },
-    function () { return self.openevse.stuck_relay_check(function (enabled) {
-      self.stuckRelayEnabled(enabled);
-    }); },
-    function () { return self.openevse.temp_check(function (enabled) {
-      self.tempCheckEnabled(enabled);
-    }); },
-    function () { return self.openevse.diode_check(function (enabled) {
-      self.diodeCheckEnabled(enabled);
-    }); },
-    function () { return self.openevse.vent_required(function (enabled) {
-      self.ventRequiredEnabled(enabled);
-    }); },
-    function () { return self.openevse.temp_check(function () {
-      self.tempCheckSupported(true);
-    }, self.tempCheckEnabled()).error(function () {
-      self.tempCheckSupported(false);
-    }); },
-    function () { return self.openevse.timer(function (enabled, start, stop) {
-      self.delayTimerEnabled(enabled);
-      self.delayTimerStart(start);
-      self.delayTimerStop(stop);
-    }); },
+    }); }
   ];
   self.updateCount = ko.observable(0);
   self.updateTotal = ko.observable(updateList.length);
 
-  self.updateCurrentCapacity = function () {
-    return self.openevse.current_capacity_range(function (min, max) {
-      self.minCurrentLevel(min);
-      self.maxCurrentLevel(max);
-      var capacity = self.currentCapacity();
-      self.currentLevels.removeAll();
-      for(var i = self.minCurrentLevel(); i <= self.maxCurrentLevel(); i++) {
-        self.currentLevels.push({name: i+" A", value: i});
-      }
-      self.currentCapacity(capacity);
-    });
-  };
-
-  self.updatingServiceLevel = ko.observable(false);
-  self.savedServiceLevel = ko.observable(false);
-  self.updatingCurrentCapacity = ko.observable(false);
-  self.savedCurrentCapacity = ko.observable(false);
   self.updatingTimeLimit = ko.observable(false);
   self.savedTimeLimit = ko.observable(false);
   self.updatingChargeLimit = ko.observable(false);
   self.savedChargeLimit = ko.observable(false);
-  self.updatingDelayTimer = ko.observable(false);
-  self.savedDelayTimer = ko.observable(false);
-  self.updatingStatus = ko.observable(false);
-  self.savedStatus = ko.observable(false);
-  self.updatingGfiSelfTestEnabled = ko.observable(false);
-  self.savedGfiSelfTestEnabled = ko.observable(false);
-  self.updatingGroundCheckEnabled = ko.observable(false);
-  self.savedGroundCheckEnabled = ko.observable(false);
-  self.updatingStuckRelayEnabled = ko.observable(false);
-  self.savedStuckRelayEnabled = ko.observable(false);
-  self.updatingTempCheckEnabled = ko.observable(false);
-  self.savedTempCheckEnabled = ko.observable(false);
-  self.updatingDiodeCheckEnabled = ko.observable(false);
-  self.savedDiodeCheckEnabled = ko.observable(false);
-  self.updatingVentRequiredEnabled = ko.observable(false);
-  self.savedVentRequiredEnabled = ko.observable(false);
 
   self.setForTime = function (flag, time) {
     flag(true);
     setTimeout(function () { flag(false); }, time);
+  };
+
+  self.generateCurrentList = () => {
+    let min = config.min_current_hard();
+    let max = config.max_current_hard();
+    var list = self.createCurrentArray(min, max);
+    ko.mapping.fromJS(list, {}, self.currentLevels);
   };
 
   var subscribed = false;
@@ -247,34 +152,16 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
       return;
     }
 
-    // Updates to the service level
-    self.serviceLevel.subscribe(function (val) {
-      self.updatingServiceLevel(true);
-      self.openevse.service_level(function (level, actual) {
-        self.setForTime(self.savedServiceLevel, 2000);
-        self.actualServiceLevel(actual);
-        self.updateCurrentCapacity().always(function () {
-        });
-      }, val).always(function() {
-        self.updatingServiceLevel(false);
-      });
+    config.min_current_hard.subscribe(() => {
+      self.generateCurrentList();
     });
-
-    // Updates to the current capacity
-    self.currentCapacity.subscribe(function (val) {
-      if(true === self.updatingServiceLevel()) {
-        return;
+    config.max_current_hard.subscribe(() => {
+      if(config.max_current_soft() > config.max_current_hard()) {
+        config.max_current_soft(config.max_current_hard());
       }
-      self.updatingCurrentCapacity(true);
-      self.openevse.current_capacity(function (capacity) {
-        self.setForTime(self.savedCurrentCapacity, 2000);
-        if(val !== capacity) {
-          self.currentCapacity(capacity);
-        }
-      }, val).always(function() {
-        self.updatingCurrentCapacity(false);
-      });
+      self.generateCurrentList();
     });
+    self.generateCurrentList();
 
     // Updates to the time limit
     self.timeLimit.subscribe(function (val) {
@@ -299,86 +186,6 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
         }
       }, val).always(function() {
         self.updatingChargeLimit(false);
-      });
-    });
-
-    // Updates to the GFI self test
-    self.gfiSelfTestEnabled.subscribe(function (val) {
-      self.updatingGfiSelfTestEnabled(true);
-      self.openevse.gfi_self_test(function (enabled) {
-        self.setForTime(self.savedGfiSelfTestEnabled, 2000);
-        if(val !== enabled) {
-          self.gfiSelfTestEnabled(enabled);
-        }
-      }, val).always(function() {
-        self.updatingGfiSelfTestEnabled(false);
-      });
-    });
-
-    // Updates to the ground check
-    self.groundCheckEnabled.subscribe(function (val) {
-      self.updatingGroundCheckEnabled(true);
-      self.openevse.ground_check(function (enabled) {
-        self.setForTime(self.savedGroundCheckEnabled, 2000);
-        if(val !== enabled) {
-          self.groundCheckEnabled(enabled);
-        }
-      }, val).always(function() {
-        self.updatingGroundCheckEnabled(false);
-      });
-    });
-
-    // Updates to the stuck relay check
-    self.stuckRelayEnabled.subscribe(function (val) {
-      self.updatingStuckRelayEnabled(true);
-      self.savedStuckRelayEnabled(false);
-      self.openevse.stuck_relay_check(function (enabled) {
-        self.savedStuckRelayEnabled(true);
-        setTimeout(function () { self.savedStuckRelayEnabled(false); }, 2000);
-        if(val !== enabled) {
-          self.stuckRelayEnabled(enabled);
-        }
-      }, val).always(function() {
-        self.updatingStuckRelayEnabled(false);
-      });
-    });
-
-    // Updates to the temp check
-    self.tempCheckEnabled.subscribe(function (val) {
-      self.updatingTempCheckEnabled(true);
-      self.openevse.temp_check(function (enabled) {
-        self.setForTime(self.savedTempCheckEnabled, 2000);
-        if(val !== enabled) {
-          self.tempCheckEnabled(enabled);
-        }
-      }, val).always(function() {
-        self.updatingTempCheckEnabled(false);
-      });
-    });
-
-    // Updates to the diode check
-    self.diodeCheckEnabled.subscribe(function (val) {
-      self.updatingDiodeCheckEnabled(true);
-      self.openevse.diode_check(function (enabled) {
-        self.setForTime(self.savedDiodeCheckEnabled, 2000);
-        if(val !== enabled) {
-          self.diodeCheckEnabled(enabled);
-        }
-      }, val).always(function() {
-        self.updatingDiodeCheckEnabled(false);
-      });
-    });
-
-    // Updates to the vent required
-    self.ventRequiredEnabled.subscribe(function (val) {
-      self.updatingVentRequiredEnabled(true);
-      self.openevse.vent_required(function (enabled) {
-        self.setForTime(self.savedVentRequiredEnabled, 2000);
-        if(val !== enabled) {
-          self.ventRequiredEnabled(enabled);
-        }
-      }, val).always(function() {
-        self.updatingVentRequiredEnabled(false);
       });
     });
 
@@ -425,51 +232,6 @@ function OpenEvseViewModel(baseEndpoint, configViewModel, statusViewModel) {
       self.delayTimerEnabled(false);
     }).always(function() {
       self.updatingDelayTimer(false);
-    });
-  };
-
-  // support for changing status
-  self.setStatus = function (action)
-  {
-    if("pause" === action) {
-      action = self.config.pause_uses_disabled() ? "disable" : "sleep";
-    }
-
-    var currentState = self.status.state();
-    if(("disable" === action && 255 === currentState) ||
-       ("sleep" === action && 254 === currentState) ||
-       ("enable" === action && currentState < 254))
-    {
-      // nothing to do
-      return;
-    }
-
-    self.updatingStatus(true);
-    if(self.delayTimerEnabled() && ("sleep" === action || "enable" === action))
-    {
-      // If the delay Timer is enabled we have to do a bit of hackery to work around a
-      // firmware issue
-      //
-      // When in timer mode the RAPI cpmmands to change state might not work, but
-      // Emulating a button press does toggle between sleep/enable
-
-      self.openevse.press_button(function () {
-        action = false;
-      }).always(function () {
-        self.openevse.status(function (state) {
-          self.status.state(state);
-        }, action).always(function() {
-          self.updatingStatus(false);
-        });
-      });
-
-      return;
-    }
-
-    self.openevse.status(function (state) {
-      self.status.state(state);
-    }, action).always(function() {
-      self.updatingStatus(false);
     });
   };
 

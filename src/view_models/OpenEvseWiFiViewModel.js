@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel, VehicleViewModel, EventLogsViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel, VehicleViewModel, EventLogViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -71,10 +71,10 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     flag(!flag());
   };
 
-  self.status.state.subscribe((state) => {
+  self.status.state.subscribe(() => {
     self.logs.addLog(self.status);
   });
-  self.status.flags.subscribe((flags) => {
+  self.status.flags.subscribe(() => {
     self.logs.addLog(self.status);
   });
 
@@ -305,6 +305,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
         self.config.time_zone.valueHasMutated();
       });
     }
+
+    // Subscribe to config changes
+    self.status.config_version.subscribe(() => {
+      self.config.update(() => {
+        self.status.update();
+      });
+    });
 
     self.updating(false);
   };
@@ -663,6 +670,41 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.config.led_brightness.subscribe(() => {
     self.displayGroup.save();
   });
+
+  // -----------------------------------------------------------------------
+  // Event: OpenEVSE settings save
+  // -----------------------------------------------------------------------
+
+  self.openEvseSetting = (name) =>
+  {
+    let setting = self.config[name];
+
+    var optGroup = new ConfigGroupViewModel(self.baseEndpoint, () =>
+    {
+      let data = {};
+      data[name] = setting();
+      return data;
+    });
+    setting.subscribe(() =>
+    {
+      if(self.config.loaded()) {
+        optGroup.save();
+      }
+    });
+
+    return optGroup;
+  };
+
+  self.openEvseGfciCheckDisabled = self.openEvseSetting("gfci_check");
+  self.openEvseGroundCheckDisabled = self.openEvseSetting("ground_check");
+  self.openEvseRelayCheckDisabled = self.openEvseSetting("relay_check");
+  self.openEvseTempCheckDisabled = self.openEvseSetting("temp_check");
+  self.openEvseDiodeCheckDisabled = self.openEvseSetting("diode_check");
+  self.openEvseVentCheckDisabled = self.openEvseSetting("vent_check");
+  self.openEvseService = self.openEvseSetting("service");
+  self.openEvseScale = self.openEvseSetting("scale");
+  self.openEvseOffset = self.openEvseSetting("offset");
+  self.openEvseMaxCurrentSoft = self.openEvseSetting("max_current_soft");
 
   // -----------------------------------------------------------------------
   // Event: PV Divert save
