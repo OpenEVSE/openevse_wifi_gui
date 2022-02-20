@@ -18,18 +18,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     return endpoint;
   });
 
-  self.wsEndpoint = ko.pureComputed(function () {
-    var endpoint = "ws://" + self.baseHost();
-    if("https:" === self.baseProtocol()){
-      endpoint = "wss://" + self.baseHost();
-    }
-    if(80 !== self.basePort()) {
-      endpoint += ":"+self.basePort();
-    }
-    endpoint += "/ws";
-    return endpoint;
-  });
-
   self.config = new ConfigViewModel(self.baseEndpoint);
   self.status = new StatusViewModel(self.baseEndpoint);
   self.rapi = new RapiViewModel(self.baseEndpoint);
@@ -260,7 +248,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
           });
         });
       });
-      self.connect();
+      self.status.connect();
     });
 
     // Set the advanced and developer modes from Cookies
@@ -965,47 +953,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     }).always(function () {
       self.updateFetching(false);
     });
-  };
-
-  // -----------------------------------------------------------------------
-  // Receive events from the server
-  // -----------------------------------------------------------------------
-  self.pingInterval = false;
-  self.reconnectInterval = false;
-  self.socket = false;
-  self.connect = function () {
-    self.socket = new WebSocket(self.wsEndpoint());
-    self.socket.onopen = function (ev) {
-      console.log(ev);
-      self.pingInterval = setInterval(function () {
-        self.socket.send("{\"ping\":1}");
-      }, 1000);
-    };
-    self.socket.onclose = function (ev) {
-      console.log(ev);
-      self.reconnect();
-    };
-    self.socket.onmessage = function (msg) {
-      console.log(msg);
-      ko.mapping.fromJSON(msg.data, self.status);
-    };
-    self.socket.onerror = function (ev) {
-      console.log(ev);
-      self.socket.close();
-      self.reconnect();
-    };
-  };
-  self.reconnect = function() {
-    if(false !== self.pingInterval) {
-      clearInterval(self.pingInterval);
-      self.pingInterval = false;
-    }
-    if(false === self.reconnectInterval) {
-      self.reconnectInterval = setTimeout(function () {
-        self.reconnectInterval = false;
-        self.connect();
-      }, 500);
-    }
   };
 
   // Cookie management, based on https://www.w3schools.com/js/js_cookies.asp
