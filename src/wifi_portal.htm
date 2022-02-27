@@ -62,6 +62,29 @@
         </table>
       </div>
 
+      <div class="box" data-bind="visible: status.evse_connected">
+        <h2>Setup</h2>
+        <p>
+          <b>Service Level:</b><br/>
+          <select data-bind="options: serviceLevels,
+                             optionsText: 'name',
+                             optionsValue: 'value',
+                             value: config.service,
+                             disable: openEvseService.fetching,
+                             css: { saved: openEvseService.success }"></select>
+        </p>
+
+        <p>
+          <b>Max Current:</b><br/>
+          <select data-bind="options: currentLevels,
+                              optionsText: 'name',
+                              optionsValue: 'value',
+                              value: config.max_current_soft,
+                              disable: openEvseMaxCurrentSoft.fetching,
+                              css: { saved: openEvseMaxCurrentSoft.success }"></select>
+        </p>
+      </div>
+
       <div class="box" data-bind="visible: wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting()">
         <h2>WiFi Setup</h2>
         <p><b>Mode:</b> <span id="mode" data-bind="text: status.fullMode"></span></p>
@@ -128,7 +151,7 @@
 
 
       <div id="footer">
-        <br><b> Powered by <a href="http://www.openevse.com">OpenEVSE</a> and <a href="https://openenergymonitor.org">OpenEnergyMonitor</a></b>
+        <br><b> Powered by <a href="http://www.com">OpenEVSE</a> and <a href="https://openenergymonitor.org">OpenEnergyMonitor</a></b>
         <br>
         <b>Version: </b>V<span data-bind="text: config.version"></span>
       </div>

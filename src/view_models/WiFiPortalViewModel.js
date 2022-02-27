@@ -52,6 +52,14 @@ function WiFiPortalViewModel(baseHost, basePort)
         self.updating(false);
 
         self.status.connect();
+
+        self.config.min_current_hard.subscribe(() => {
+          self.generateCurrentList();
+        });
+        self.config.max_current_hard.subscribe(() => {
+          self.generateCurrentList();
+        });
+        self.generateCurrentList();
       });
     });
   };
@@ -73,5 +81,50 @@ function WiFiPortalViewModel(baseHost, basePort)
       self.updating(false);
     });
   };
+
+  // -----------------------------------------------------------------------
+  // Event: OpenEVSE settings save
+  // -----------------------------------------------------------------------
+
+  self.openEvseSetting = (name) =>
+  {
+    let setting = self.config[name];
+
+    var optGroup = new ConfigGroupViewModel(self.baseEndpoint, () =>
+    {
+      let data = {};
+      data[name] = setting();
+      return data;
+    });
+    setting.subscribe(() =>
+    {
+      if(self.config.loaded()) {
+        optGroup.save();
+      }
+    });
+
+    return optGroup;
+  };
+
+  self.openEvseService = self.openEvseSetting("service");
+  self.openEvseMaxCurrentSoft = self.openEvseSetting("max_current_soft");
+
+  self.createCurrentArray = (min, max) => {
+    return Array((max - min) + 1).fill().map((_, i) => { return { name: (min+i)+" A", value: (min+i)}});
+  };
+
+  self.generateCurrentList = () => {
+    let min = self.config.min_current_hard();
+    let max = self.config.max_current_hard();
+    var list = self.createCurrentArray(min, max);
+    ko.mapping.fromJS(list, {}, self.currentLevels);
+  };
+
+  self.serviceLevels = [
+    { name: "Auto", value: 0 },
+    { name: "1", value: 1 },
+    { name: "2", value: 2 }];
+  self.currentLevels = ko.observableArray(self.createCurrentArray(6, 80));
+
 }
 
