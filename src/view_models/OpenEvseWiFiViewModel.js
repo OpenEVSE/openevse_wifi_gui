@@ -936,7 +936,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     self.setOverrideSuccess(false);
 
     let props = {
-      state: self.openevse.isPaused() ? "active" : "disabled",
+      state: self.status.isPaused() ? "active" : "disabled",
     };
 
     $.ajax({
