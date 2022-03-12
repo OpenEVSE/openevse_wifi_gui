@@ -24,7 +24,11 @@
       <h3>WiFi</h3>
     </div>
 
-    <div class="container">
+    <div class="container" data-bind="visible: !initialised()">
+      Loading, please wait...</span>
+    </div>
+
+    <div class="container" data-bind="visible: initialised" style="display: none">
       <!-- Session Status -->
       <div data-bind="visible: status.isError" class="box error">
         <h4>EVSE Error</h4>
