@@ -4,11 +4,8 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
-const webpack = require("webpack"); //to access built-in plugins
 const path = require("path");
 const UglifyJS = require("uglify-js");
 const babel = require("@babel/core");
@@ -35,6 +32,7 @@ var mergeOptions = {
       "src/view_models/ConfigViewModel.js",
       "src/view_models/StateHelperViewModel.js",
       "src/view_models/StatusViewModel.js",
+      "src/view_models/TimeViewModel.js",
       "src/view_models/WiFiScanViewModel.js",
       "src/view_models/WiFiConfigViewModel.js",
       "src/view_models/PasswordViewModel.js",
@@ -44,7 +42,6 @@ var mergeOptions = {
       "src/openevse.js",
       //"src/tesla_auth.js",
       "src/view_models/RapiViewModel.js",
-      "src/view_models/TimeViewModel.js",
       "src/view_models/ZonesViewModel.js",
       "src/view_models/OpenEvseViewModel.js",
       "src/view_models/OpenEvseWiFiViewModel.js",
