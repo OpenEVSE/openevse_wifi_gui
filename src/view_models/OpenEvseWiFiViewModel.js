@@ -40,7 +40,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.schedule = new ScheduleViewModel(self.baseEndpoint);
   self.vehicle = new VehicleViewModel(self.baseEndpoint, self.config, self.status);
   self.logs = new EventLogViewModel(self.baseEndpoint);
-  self.rfid = new RFIDViewModel(self.baseEndpoint);
+  self.rfid = new RFIDViewModel(self.baseEndpoint, self.status);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -96,15 +96,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.waitForRFID = function () {
     this.rfid.startWaiting();
     console.log("Waiting for RFID");
-    let checkFunc = function() {
-      self.rfid.poll()
-      if(self.rfid.waiting()){
-        setTimeout(checkFunc, 1000);
-      }else{
-        self.config.update()
-      }
-    }
-    setTimeout(checkFunc, 1000);
   };
 
   var updateTimer = null;
@@ -453,7 +444,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       let newStorage = storage + (storage == '' ? '':',') + tag
       self.config.rfid_storage(newStorage);
     }
-    self.rfid.scanned("");
     self.rfidGroup.save();
   }
 
@@ -461,12 +451,9 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   // Event: Remove RFID tag
   // -----------------------------------------------------------------------
   self.removeRFIDTag = function(tag) {
-    if (confirm(`You are about to remove the tag with UID: '${tag}' permanently!`)) {
-      var replace = new RegExp(`${tag},?`,"g");
-      self.config.rfid_storage(self.config.rfid_storage().replaceAll(replace, ""));
-      self.rfid.scanned("");
-      self.rfidGroup.save();
-    }
+    var replace = new RegExp(`${tag},?`,"g");
+    self.config.rfid_storage(self.config.rfid_storage().replaceAll(replace, ""));
+    self.rfidGroup.save();
   };
 
   // -----------------------------------------------------------------------

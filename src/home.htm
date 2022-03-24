@@ -215,17 +215,17 @@
               <button onclick="window.open('term.html?debug');">Add</button-->
               <div data-bind="visible: config.rfid_enabled">
                 <h3>Manage scanned tag</h3>
-                <button data-bind="click: waitForRFID, disable: rfid.waiting() > 0">Scan</button>
-                <div data-bind="visible: rfid.waiting() > 0">
-                  <b>Place your RFID tag on the scanner... <span data-bind="text: rfid.timeLeft"></span></b>
+                <button data-bind="click: waitForRFID, disable: status.rfid_waiting() > 0">Scan</button>
+                <div data-bind="visible: status.rfid_waiting() > 0">
+                  <b>Place your RFID tag on the scanner... <span data-bind="text: (status.rfid_waiting() >= 5 ? status.rfid_waiting() : 'waiting')"></span></b>
                 </div>
-                <div data-bind="visible: rfid.scanned()">
+                <div data-bind="visible: status.rfid_input()">
                   <b>Tag scanned successfully!</b>
-                  <h3>UID: <span data-bind="text: rfid.scanned"></span></h3>
+                  <h3>UID: <span data-bind="text: status.rfid_input"></span></h3>
                   <div>
-                    <span data-bind="text: config.rfid_storage().split(',').includes(rfid.scanned()) ? 'The tag is already registered' : 'The tag is not registered'"></span><br>
-                    <button data-bind="visible: !config.rfid_storage().split(',').includes(rfid.scanned()), click: function(data, event) { addRFIDTag(rfid.scanned()) }">Register tag</button>
-                    <button data-bind="visible:  config.rfid_storage().split(',').includes(rfid.scanned()), click: function(data, event) { removeRFIDTag(rfid.scanned()) }">Remove tag</button>
+                    <span data-bind="text: config.rfid_storage().split(',').includes(status.rfid_input()) ? 'The tag is already registered' : 'The tag is not registered'"></span><br>
+                    <button data-bind="visible: !config.rfid_storage().split(',').includes(status.rfid_input()), click: function(data, event) { addRFIDTag(status.rfid_input()); status.rfid_input('') }">Register tag</button>
+                    <button data-bind="visible:  config.rfid_storage().split(',').includes(status.rfid_input()), click: function(data, event) { removeRFIDTag(status.rfid_input()); status.rfid_input('') }">Remove tag</button>
                   </div>
                 </div>
               </div>
