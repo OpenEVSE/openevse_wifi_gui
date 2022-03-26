@@ -20,6 +20,7 @@ function StatusViewModel(baseEndpoint) {
     "ocpp_connected": 0,
     "rfid_waiting": 0,
     "rfid_input": "",
+    "rfid_failure": 0,
     "ohm_hour": "",
     "free_heap": 0,
     "comm_sent": 0,
