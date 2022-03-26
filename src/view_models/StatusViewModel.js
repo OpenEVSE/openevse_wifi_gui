@@ -1,4 +1,4 @@
-/* global ko, BaseViewModel */
+/* global ko, BaseViewModel, StateHelperViewModel */
 
 function StatusViewModel(baseEndpoint) {
   "use strict";
@@ -110,6 +110,58 @@ function StatusViewModel(baseEndpoint) {
   this.isDisabled = stateHelper.isDisabled;
   this.isPaused = stateHelper.isPaused;
   this.estate = stateHelper.estate;
+
+
+  // -----------------------------------------------------------------------
+  // Receive events from the server
+  // -----------------------------------------------------------------------
+  self.wsEndpoint = ko.pureComputed(function () {
+    let base = new URL(baseEndpoint(), location.href);
+    var endpoint = ("https" === base.protocol ? "wss://" : "ws://") + base.hostname;
+    if(80 !== base.port) {
+      endpoint += ":"+base.port;
+    }
+    endpoint += "/ws";
+    return endpoint;
+  });
+
+  self.pingInterval = false;
+  self.reconnectInterval = false;
+  self.socket = false;
+  self.connect = function () {
+    self.socket = new WebSocket(self.wsEndpoint());
+    self.socket.onopen = function (ev) {
+      console.log(ev);
+      self.pingInterval = setInterval(function () {
+        self.socket.send("{\"ping\":1}");
+      }, 1000);
+    };
+    self.socket.onclose = function (ev) {
+      console.log(ev);
+      self.reconnect();
+    };
+    self.socket.onmessage = function (msg) {
+      console.log(msg);
+      ko.mapping.fromJSON(msg.data, self);
+    };
+    self.socket.onerror = function (ev) {
+      console.log(ev);
+      self.socket.close();
+      self.reconnect();
+    };
+  };
+  self.reconnect = function() {
+    if(false !== self.pingInterval) {
+      clearInterval(self.pingInterval);
+      self.pingInterval = false;
+    }
+    if(false === self.reconnectInterval) {
+      self.reconnectInterval = setTimeout(function () {
+        self.reconnectInterval = false;
+        self.connect();
+      }, 500);
+    }
+  };
 }
 StatusViewModel.prototype = Object.create(BaseViewModel.prototype);
 StatusViewModel.prototype.constructor = StatusViewModel;
