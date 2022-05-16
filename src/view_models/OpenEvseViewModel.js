@@ -31,7 +31,7 @@ function OpenEvseViewModel(baseEndpoint, config, status) {
     { name: "Auto", value: 0 },
     { name: "1", value: 1 },
     { name: "2", value: 2 }];
-  self.currentLevels = ko.observableArray(self.createCurrentArray(6, 80));
+  self.currentLevels = ko.observableArray(self.createCurrentArray(config.min_current_hard(), 80));
   self.timeLimits = [
     { name: "none", value: 0 },
     { name: "15 min", value: 15 },

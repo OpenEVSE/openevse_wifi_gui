@@ -189,6 +189,50 @@
             </p>
           </div>
 
+          <div class="box380 right" data-bind="visible: false !== status.rfid_failure()">
+            <h2>RFID</h2>
+            <b>Enabled: </b>
+            <label class="switch">
+              <input type="checkbox" data-bind="checked: config.rfid_enabled, click: function() {rfidGroup.save(); return true;}" />
+              <div class="slider round"></div>
+            </label>
+            <span data-bind="visible: status.rfid_failure() && config.rfid_enabled()" style="color:darkred; margin-left: 8px">Reader not found</span>
+            <br>
+            <div data-bind="visible: config.rfid_storage() != ''">
+              <h3>Registered tags</h3>
+              <div id="stored_tags_list">
+                <ul class="list-group" data-bind="foreach: config.rfid_storage().split(',')">
+                  <li class="list-group-item" data-bind="visible: $data">
+                    <span data-bind="text: $data" style="font-family: 'Courier New', monospace;"></span>
+                    <span style="float: right"><a style="cursor: pointer;" data-bind="click: $parent.removeRFIDTag">Remove</a></span>
+                  </li>
+                </ul>
+              </div>
+              <button data-bind="click: clearRFIDTags">Clear tags</button>
+            </div>
+            <div>
+              <!--b>UID:</b><br>
+              <input style="float: left" type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname"><br>
+              <button onclick="window.open('term.html?debug');">Add</button-->
+              <div data-bind="visible: config.rfid_enabled">
+                <h3>Manage scanned tag</h3>
+                <button data-bind="click: waitForRFID, disable: status.rfid_waiting() > 0">Scan</button>
+                <div data-bind="visible: status.rfid_waiting() > 0">
+                  <b>Place your RFID tag on the scanner... <span data-bind="text: (status.rfid_waiting() >= 5 ? status.rfid_waiting() : 'waiting')"></span></b>
+                </div>
+                <div data-bind="visible: status.rfid_input()">
+                  <b>Tag scanned successfully!</b>
+                  <h3>UID: <span data-bind="text: status.rfid_input"></span></h3>
+                  <div>
+                    <span data-bind="text: config.rfid_storage().split(',').includes(status.rfid_input()) ? 'The tag is already registered' : 'The tag is not registered'"></span><br>
+                    <button data-bind="visible: !config.rfid_storage().split(',').includes(status.rfid_input()), click: function(data, event) { addRFIDTag(status.rfid_input()); status.rfid_input('') }">Register tag</button>
+                    <button data-bind="visible:  config.rfid_storage().split(',').includes(status.rfid_input()), click: function(data, event) { removeRFIDTag(status.rfid_input()); status.rfid_input('') }">Remove tag</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="box380 left">
             <h2>Developer Mode</h2>
             <div>
@@ -455,7 +499,7 @@
           </div>
 
           <div class="box380 left">
-            <h2>OCPP 1.6</h2>
+            <h2>OCPP 1.6<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="arduinoocpp.png" align=left></h2>
             <p>
               <input type="checkbox" id="ocpp_enabled" data-bind="checked: config.ocpp_enabled" />
               <label for="ocpp_enabled"><b>Enable OCPP</b></label>

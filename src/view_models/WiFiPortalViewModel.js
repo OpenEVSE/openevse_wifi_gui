@@ -124,7 +124,7 @@ function WiFiPortalViewModel(baseHost, basePort)
     { name: "Auto", value: 0 },
     { name: "1", value: 1 },
     { name: "2", value: 2 }];
-  self.currentLevels = ko.observableArray(self.createCurrentArray(6, 80));
+  self.currentLevels = ko.observableArray(self.createCurrentArray(config.min_current_hard(), 80));
 
 }
 

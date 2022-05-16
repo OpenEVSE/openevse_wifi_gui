@@ -28,6 +28,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.schedule = new ScheduleViewModel(self.baseEndpoint);
   self.vehicle = new VehicleViewModel(self.baseEndpoint, self.config, self.status);
   self.logs = new EventLogViewModel(self.baseEndpoint);
+  self.rfid = new RFIDViewModel(self.baseEndpoint, self.status);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -79,6 +80,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       self.advancedMode(true); // Enabling dev mode implicitly enables advanced mode
     }
   });
+
+  self.waitForRFID = function () {
+    this.rfid.startWaiting();
+    console.log("Waiting for RFID");
+  };
 
   var updateTimer = null;
   var updateTime = 5 * 1000;
@@ -415,6 +421,47 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
         alert("Failed to restart");
       });
     }
+  });
+
+  // -----------------------------------------------------------------------
+  // Event: Add RFID tag
+  // -----------------------------------------------------------------------
+  self.addRFIDTag = function(tag) {
+    let storage = self.config.rfid_storage();
+    if(!storage || !storage.includes(tag)){
+      let newStorage = storage + (storage == '' ? '':',') + tag
+      self.config.rfid_storage(newStorage);
+    }
+    self.rfidGroup.save();
+  }
+
+  // -----------------------------------------------------------------------
+  // Event: Remove RFID tag
+  // -----------------------------------------------------------------------
+  self.removeRFIDTag = function(tag) {
+    var replace = new RegExp(`${tag},?`,"g");
+    self.config.rfid_storage(self.config.rfid_storage().replaceAll(replace, ""));
+    self.rfidGroup.save();
+  };
+
+  // -----------------------------------------------------------------------
+  // Event: Clear RFID tags
+  // -----------------------------------------------------------------------
+  self.clearRFIDTags = function() {
+    if (confirm(`You are about to remove all stored tags permanently!`)){
+      self.config.rfid_storage("");
+      self.rfidGroup.save();
+    }
+  }
+
+  // -----------------------------------------------------------------------
+  // Event: RFID save
+  // -----------------------------------------------------------------------
+  self.rfidGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      rfid_enabled: self.config.rfid_enabled(),
+      rfid_storage: self.config.rfid_storage()
+    };
   });
 
   // -----------------------------------------------------------------------
