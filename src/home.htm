@@ -189,14 +189,14 @@
             </p>
           </div>
 
-          <div class="box380 right">
+          <div class="box380 right" data-bind="visible: false !== status.rfid_failure()">
             <h2>RFID</h2>
             <b>Enabled: </b>
             <label class="switch">
-              <input type="checkbox" id="rfid_enabled" data-bind="checked: config.rfid_enabled" />
+              <input type="checkbox" data-bind="checked: config.rfid_enabled, click: function() {rfidGroup.save(); return true;}" />
               <div class="slider round"></div>
             </label>
-            <span data-bind="visible: (status.rfid_failure() && config.rfid_enabled())" style="color:darkred; margin-left: 8px">Reader not found</span>
+            <span data-bind="visible: status.rfid_failure() && config.rfid_enabled()" style="color:darkred; margin-left: 8px">Reader not found</span>
             <br>
             <div data-bind="visible: config.rfid_storage() != ''">
               <h3>Registered tags</h3>

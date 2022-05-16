@@ -462,11 +462,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       rfid_enabled: self.config.rfid_enabled(),
       rfid_storage: self.config.rfid_storage()
     };
-  }).done(() => {
-    setTimeout(self.config.update(), 1000);
-  });
-  self.config.rfid_enabled.subscribe(() => {
-    self.rfidGroup.save();
   });
 
   // -----------------------------------------------------------------------

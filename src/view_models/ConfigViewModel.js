@@ -81,7 +81,7 @@ function ConfigViewModel(baseEndpoint) {
     "tesla_created_at": false,
     "tesla_expires_in": false,
     "tesla_vehicle_id": false,
-    "rfid_enabled": 0,
+    "rfid_enabled": false,
     "rfid_storage": "",
     "loaded": false
   }, endpoint);
