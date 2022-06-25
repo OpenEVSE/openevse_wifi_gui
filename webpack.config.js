@@ -3,13 +3,14 @@
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
 const path = require("path");
 const UglifyJS = require("uglify-js");
 const babel = require("@babel/core");
 const CopyPlugin = require("copy-webpack-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 
 require("dotenv").config();
 const openevseEndpoint = process.env.OPENEVSE_ENDPOINT || "http://openevse.local";
@@ -162,15 +163,18 @@ module.exports = {
       chunkFilename: "[id].css"
     }),
     new MergeIntoSingleFilePlugin(mergeOptions),
-    new CopyPlugin([
-      { from: "assets/*", flatten: true },
-      { from: "posix_tz_db/zones.json", flatten: true }
-    ])
+    new CopyPlugin({ patterns: [
+      { from: "assets/*", to: "[name][ext]" },
+      { from: "posix_tz_db/zones.json", to: "[name][ext]" }
+    ]}),
+    new CompressionPlugin({
+      test: /\.(html|js|json|svg|css)(\?.*)?$/i,
+    })
   ],
   optimization: {
     splitChunks: {},
     minimizer: [
-      new UglifyJsPlugin({}),
+      new TerserPlugin({}),
       new OptimizeCssAssetsPlugin({})
     ]
   }
