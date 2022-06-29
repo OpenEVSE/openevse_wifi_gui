@@ -20,6 +20,7 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_reject_unauthorized": true,
     "mqtt_reject_unauthorized_enable": false,
     "mqtt_topic": "",
+    "mqtt_retained": false,
     "mqtt_user": "",
     "mqtt_pass": "",
     "mqtt_solar": "",
@@ -99,6 +100,7 @@ function ConfigViewModel(baseEndpoint) {
   this.emoncms_fingerprint.subscribe((v) => { trim(this.emoncms_fingerprint, v); });
   this.mqtt_server.subscribe((v) => { trim(this.mqtt_server, v); });
   this.mqtt_topic.subscribe((v) => { trim(this.mqtt_topic, v); });
+  this.mqtt_retained.subscribe((v) => { trim(this.mqtt_retained, v); });
   this.mqtt_user.subscribe((v) => { trim(this.mqtt_user, v); });
   this.mqtt_solar.subscribe((v) => { trim(this.mqtt_solar, v); });
   this.mqtt_grid_ie.subscribe((v) => { trim(this.mqtt_grid_ie, v); });
