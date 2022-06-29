@@ -399,10 +399,13 @@
               <input data-bind="textInput: config.mqtt_topic" type="text" autocapitalize="none"><br/>
               <span class="small-text">e.g 'openevse'</span>
             </p>
-            <p>
-            <input type="checkbox" id="mqtt_retained" data-bind="checked: config.mqtt_retained" />
-              <label for="mqtt_retained"><b>Retain published data</b></label>
-            </p>
+            <div data-bind="visible: config.mqtt_enabled() ">
+              <b>Retain published data</b>
+              <label class="switch">
+                <input type="checkbox" data-bind="checked: config.mqtt_retained" />
+                <div class="slider round"></div>
+              </label>
+            </div>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Voltage topic:</b>
               <input data-bind="textInput: config.mqtt_vrms" type="text" autocapitalize="none" hint="emon/emonpi/vrms"><br>

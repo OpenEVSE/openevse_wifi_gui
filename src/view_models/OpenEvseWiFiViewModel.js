@@ -503,12 +503,14 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.mqttGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
     return {
       mqtt_enabled: self.config.mqtt_enabled(),
+      //does this has to fit there ? 
       divert_enabled: self.config.divert_enabled(),
       mqtt_protocol: self.config.mqtt_protocol(),
       mqtt_server: self.config.mqtt_server(),
       mqtt_port: self.config.mqtt_port(),
       mqtt_reject_unauthorized: self.config.mqtt_reject_unauthorized(),
       mqtt_topic: self.config.mqtt_topic(),
+      mqtt_retained: self.config.mqtt_retained(),
       mqtt_user: self.config.mqtt_user(),
       mqtt_pass: self.config.mqtt_pass(),
       mqtt_vrms: self.config.mqtt_vrms()
