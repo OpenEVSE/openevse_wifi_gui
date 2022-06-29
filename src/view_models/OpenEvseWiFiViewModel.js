@@ -792,6 +792,27 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   };
 
   // -----------------------------------------------------------------------
+  // Event: Save Current Shaper
+  // -----------------------------------------------------------------------
+  self.saveCurrentShaperFetching = ko.observable(false);
+  self.saveCurrentShaperSuccess = ko.observable(false);
+  self.saveCurrentShaper = function () {
+    self.saveCurrentShaperFetching(true);
+    self.saveCurrentShaperSuccess(false);
+    $.post(self.baseEndpoint() + "/saveshaper", {
+      enable: self.config.current_shaper_enabled(),
+      livepwr: self.config.mqtt_live_pwr(),
+      maxpwr: self.config.current_shaper_max_pwr()
+    }, function () {
+      self.saveCurrentShaperSuccess(true);
+    }).fail(function () {
+      alert("Failed to save Current Shaper config");
+    }).always(function () {
+      self.saveCurrentShaperFetching(false);
+    });
+  };
+
+  // -----------------------------------------------------------------------
   // Event: Set the time
   // -----------------------------------------------------------------------
   self.setTimeFetching = ko.observable(false);
