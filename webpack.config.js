@@ -81,8 +81,12 @@ module.exports = {
   },
   devServer: {
     host: devHost,
-    contentBase: "./dist",
-    index: "home.html",
+    static: {
+      directory: "./dist"
+    },
+    devMiddleware: {
+      index: "home.html"
+    },
     proxy: [{
       context: [
         "/config",
