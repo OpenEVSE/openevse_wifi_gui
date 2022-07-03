@@ -7,8 +7,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
 const path = require("path");
-const UglifyJS = require("uglify-js");
-const babel = require("@babel/core");
 const CopyPlugin = require("copy-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 
@@ -64,15 +62,12 @@ var mergeOptions = {
   },
 };
 
+var minimizers = [];
+
 if(enable_uglify)
 {
-  console.log("Enabled Uglify");
-  mergeOptions.transform = {
-    "lib.js": code => uglify("lib.js", code),
-    "home.js": code => uglify("home.js", code),
-    "wifi_portal.js": code => uglify("wifi_portal.js", code),
-    "term.js": code => uglify("term.js", code),
-  };
+  minimizers.push(new TerserPlugin({}));
+  minimizers.push(new OptimizeCssAssetsPlugin({}));
 }
 
 module.exports = {
@@ -173,29 +168,6 @@ module.exports = {
   ],
   optimization: {
     splitChunks: {},
-    minimizer: [
-      new TerserPlugin({}),
-      new OptimizeCssAssetsPlugin({})
-    ]
+    minimizer: minimizers
   }
 };
-
-function uglify(name, code)
-{
-  var compiled = babel.transformSync(code, {
-    presets: ["@babel/preset-env"],
-    sourceMaps: true
-  });
-  var ugly = UglifyJS.minify(compiled.code, {
-    warnings: true,
-    sourceMap: {
-      content: compiled.map,
-      url: name+".map"
-    }
-  });
-  if(ugly.error) {
-    console.log(ugly.error);
-    return code;
-  }
-  return ugly.code;
-}
