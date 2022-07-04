@@ -107,8 +107,8 @@ function ConfigViewModel(baseEndpoint) {
   this.mqtt_solar.subscribe((v) => { trim(this.mqtt_solar, v); });
   this.mqtt_grid_ie.subscribe((v) => { trim(this.mqtt_grid_ie, v); });
   this.mqtt_vrms.subscribe((v) => { trim(this.mqtt_vrms, v); });
-  //this.mqtt_live_pwr.subscribe((v) => { trim(this.mqtt_max_pwr, v); });
-  //this.current_shaper_max_pwr.subscribe((v) => { trim(this.current_shaper_max_pwr, v); });
+  this.mqtt_live_pwr.subscribe((v) => { trim(this.mqtt_live_pwr, v); });
+  this.current_shaper_max_pwr.subscribe((v) => { trim(this.current_shaper_max_pwr, v); });
   this.ohmkey.subscribe((v) => { trim(this.ohmkey, v); });
   this.www_username.subscribe((v) => { trim(this.www_username, v); });
   this.hostname.subscribe((v) => { trim(this.hostname, v); });
