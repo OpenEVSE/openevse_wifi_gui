@@ -402,15 +402,14 @@
               <label for="current_shaper_enabled"><b>Enable Current Shaper</b></label>
             </p>
             <p data-bind="visible: config.current_shaper_enabled">
-              Current Shaper module adapts charge current in real time according to your house loads and maximum power your energy plan can deliver.<br>
-              It needs to get the current load from an mqtt topic.
+              Throttle charge current following your house loads to prevent exceeding what your energy plan can deliver.<br>
             </p>
             <p data-bind="visible: config.current_shaper_enabled">
               <b>Max power allowed (in W):</b><br>
               <input data-bind="textInput: config.current_shaper_max_pwr" type="number" />
             </p>
             <p data-bind="visible: config.current_shaper_enabled">
-              <b>Live power load MQTT Topic</b>
+              <b>Live power load MQTT Topic (in W)</b>
               <input data-bind="textInput: config.mqtt_live_pwr" type="text" />
             </p>
             <p>
