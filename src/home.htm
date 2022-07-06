@@ -305,29 +305,7 @@
             </p>
             <p data-bind="visible: config.emoncms_enabled() &amp;&amp; 0 === status.emoncms_connected() &amp;&amp; false !== status.emoncms_message(), text: status.emoncms_message"></p>
           </div>
-          <!-- Current Shaper -->
-          <div class="box380 left">
-            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="shaper.png" align="left" />Current Shaper</h2>
-            <p>
-              <input type="checkbox" id="current_shaper_enabled" data-bind="checked: config.current_shaper_enabled" />
-              <label for="current_shaper_enabled"><b>Enable Current Shaper</b></label>
-            </p>
-            <p data-bind="visible: config.current_shaper_enabled">
-              Current Shaper module adapts charge current in real time according to your house loads and maximum power your energy plan can deliver.<br>
-              It needs to get the current load from an mqtt topic.
-            </p>
-            <p data-bind="visible: config.current_shaper_enabled">
-              <b>Max power allowed (in W):</b><br>
-              <input data-bind="textInput: config.current_shaper_max_pwr" type="number" />
-            </p>
-            <p data-bind="visible: config.current_shaper_enabled">
-              <b>Live power load MQTT Topic</b>
-              <input data-bind="textInput: config.mqtt_live_pwr" type="text" />
-            </p>
-            <p>
-              <button data-bind="click: saveCurrentShaper, text: (saveCurrentShaperFetching() ? 'Saving' : (saveCurrentShaperSuccess() ? 'Saved' : 'Save')), disable: saveCurrentShaperFetching">Save</button>
-            </p>
-          </div>  
+          <!-- MQTT -->  
           <div class="box380 right">
             <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="mqtt.png" align="left" />MQTT</h2>
             <p>
@@ -409,7 +387,31 @@
               <span data-bind="visible: config.mqtt_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.mqtt_connected() ? 'Yes' : 'No'"></span></b></span>
             </p>
           </div>
+          <!-- Current Shaper -->
+          <div class="box380 left">
+            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="shaper.png" align="left" />Current Shaper</h2>
+            <p>
+              <input type="checkbox" id="current_shaper_enabled" data-bind="checked: config.current_shaper_enabled" />
+              <label for="current_shaper_enabled"><b>Enable Current Shaper</b></label>
+            </p>
+            <p data-bind="visible: config.current_shaper_enabled">
+              Current Shaper module adapts charge current in real time according to your house loads and maximum power your energy plan can deliver.<br>
+              It needs to get the current load from an mqtt topic.
+            </p>
+            <p data-bind="visible: config.current_shaper_enabled">
+              <b>Max power allowed (in W):</b><br>
+              <input data-bind="textInput: config.current_shaper_max_pwr" type="number" />
+            </p>
+            <p data-bind="visible: config.current_shaper_enabled">
+              <b>Live power load MQTT Topic</b>
+              <input data-bind="textInput: config.mqtt_live_pwr" type="text" />
+            </p>
+            <p>
+              <button data-bind="click: saveCurrentShaper, text: (saveCurrentShaperFetching() ? 'Saving' : (saveCurrentShaperSuccess() ? 'Saved' : 'Save')), disable: saveCurrentShaperFetching">Save</button>
+            </p>
+          </div>
 
+          <!-- Ohm -->
           <div class="box380 left">
             <h2>OhmConnect <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="ohm.jpg" align=left></h2>
             <p>
