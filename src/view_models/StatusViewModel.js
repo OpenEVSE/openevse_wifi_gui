@@ -68,7 +68,9 @@ function StatusViewModel(baseEndpoint) {
     "tesla_error": false,
     "vehicle_state_update": 0,
     "status": false,
-    "config_version": false
+    "config_version": false,
+    "schedule_version": false,
+    "schedule_plan_version": false
   }, endpoint);
 
   // Some devired values

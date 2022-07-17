@@ -605,6 +605,12 @@
                 <span data-bind="visible: status.smoothed_available_current() !== false">| <b>Smoothed Current:</b> <span data-bind="text: parseFloat(status.smoothed_available_current()).toFixed(2)"></span>A</span>
               </span>
             </div>
+
+            <div data-bind="visible: schedule_plan.active">
+              <br>
+              <b>Current Event:</b> <span data-bind="text: schedule_plan.current_event_type"></span>, <span data-bind="text: schedule_plan.current_event_time"></span> |
+              <b>Next Event:</b> <span data-bind="text: schedule_plan.next_event_type"></span>, <span data-bind="text: schedule_plan.next_event_time"></span>
+            </div>
           </div>
 
           <!-- Session Options -->
@@ -660,7 +666,12 @@
                 Start: <input type="time" data-bind="value: delayTimerStart, disable: $root.status.isError" />
                 &nbsp;&nbsp;
                 Stop: <input type="time" data-bind="value: delayTimerStop, disable: $root.status.isError" /><br/>
-                <br>
+                <span class="small-text" data-bind="visible: $root.config.scheduler_start_window() !== false &amp;&amp; $root.config.scheduler_start_window() > 0">
+                A random delay of up to +/-<span data-bind="text: Math.round($root.config.scheduler_start_window() / 60)"></span> minutes will be applied to the start time to help prevent sudden
+                load increases on the grid.
+                <br />
+                </span>
+                <br />
                 <button data-bind="text: delayTimerEnabled() ? 'Update' : 'Set',
                                    enable: !updatingDelayTimer() &amp;&amp;
                                            delayTimerValid() &amp;&amp;
