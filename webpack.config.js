@@ -3,8 +3,8 @@
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
-const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const MergeIntoSingleFilePlugin = require("webpack-merge-and-include-globally");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
@@ -46,6 +46,7 @@ var mergeOptions = {
       "src/view_models/OpenEvseViewModel.js",
       "src/view_models/OpenEvseWiFiViewModel.js",
       "src/view_models/ScheduleViewModel.js",
+      "src/view_models/SchedulePlanViewModel.js",
       "src/view_models/VehicleViewModel.js",
       "src/view_models/TeslaViewModel.js",
       "src/view_models/EventLogViewModel.js",
@@ -67,7 +68,7 @@ var minimizers = [];
 if(enable_uglify)
 {
   minimizers.push(new TerserPlugin({}));
-  minimizers.push(new OptimizeCssAssetsPlugin({}));
+  minimizers.push(new CssMinimizerPlugin({}));
 }
 
 module.exports = {
@@ -115,13 +116,18 @@ module.exports = {
       target: openevseEndpoint
     },
     {
-      context: [
-        "/ws",
-        "/debug/console",
-        "/evse/console"
-      ],
-      target: openevseEndpoint,
-      ws: true
+      "/ws": {
+        target: openevseEndpoint.replace("http", "ws")+"/ws",
+        ws: true
+      },
+      "/debug/console": {
+        target: openevseEndpoint.replace("http", "ws")+"/debug/console",
+        ws: true
+      },
+      "/evse/console": {
+        target: openevseEndpoint.replace("http", "ws")+"/evse/console",
+        ws: true
+      },
     }]
   },
   module: {
