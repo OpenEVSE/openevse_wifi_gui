@@ -55,6 +55,7 @@ function StatusViewModel(baseEndpoint) {
     "smoothed_available_current": false,
     "divert_update": 0,
     "divert_active": false,
+    "min_charge_end": false,
     "ota_update": false,
     "time": false,
     "offset": false,
