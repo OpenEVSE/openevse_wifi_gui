@@ -82,53 +82,52 @@ module.exports = {
   },
   devServer: {
     host: devHost,
+    webSocketServer: false,
     static: {
       directory: "./dist"
     },
     devMiddleware: {
       index: "home.html"
     },
-    proxy: [{
-      context: [
-        "/config",
-        "/status",
-        "/update",
-        "/r",
-        "/scan",
-        "/emoncms",
-        "/savenetwork",
-        "/saveemoncms",
-        "/savemqtt",
-        "/saveadmin",
-        "/saveohmkey",
-        "/settime",
-        "/reset",
-        "/restart",
-        "/apoff",
-        "/divertmode",
-        "/debug",
-        "/evse",
-        "/schedule",
-        "/override",
-        "/tesla",
-        "/logs"
-      ],
-      target: openevseEndpoint
-    },
-    {
-      "/ws": {
-        target: openevseEndpoint.replace("http", "ws")+"/ws",
-        ws: true
+    proxy:
+    [
+      {
+        context: [
+          "/config",
+          "/status",
+          "/update",
+          "/r",
+          "/scan",
+          "/emoncms",
+          "/savenetwork",
+          "/saveemoncms",
+          "/savemqtt",
+          "/saveadmin",
+          "/saveohmkey",
+          "/settime",
+          "/reset",
+          "/restart",
+          "/apoff",
+          "/divertmode",
+          "/debug",
+          "/evse",
+          "/schedule",
+          "/override",
+          "/tesla",
+          "/logs"
+        ],
+        target: openevseEndpoint
       },
-      "/debug/console": {
-        target: openevseEndpoint.replace("http", "ws")+"/debug/console",
+      {
+        context: [
+          "/ws",
+          "/evse/console",
+          "/debug/console"
+        ],
+        target: openevseEndpoint.replace("http", "ws"),
         ws: true
-      },
-      "/evse/console": {
-        target: openevseEndpoint.replace("http", "ws")+"/evse/console",
-        ws: true
-      },
-    }]
+      }
+    ]
   },
   module: {
     rules: [
