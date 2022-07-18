@@ -674,6 +674,10 @@
                 <br />
                 </span>
                 <br />
+                <span data-bind="visible: $root.advancedMode() &amp;&amp; delayTimerEnabled()">
+                Random start adjust: <input type="number" data-bind="value: $root.config.scheduler_start_window" min="0" max="1800" step="60" /><br />
+                <br />
+                </span>
                 <button data-bind="text: delayTimerEnabled() ? 'Update' : 'Set',
                                    enable: !updatingDelayTimer() &amp;&amp;
                                            delayTimerValid() &amp;&amp;
