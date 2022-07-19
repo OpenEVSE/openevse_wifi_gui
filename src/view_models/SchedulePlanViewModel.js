@@ -23,9 +23,8 @@ function SchedulePlanViewModel(baseEndpoint)
   function get_type(event)
   {
     return false !== event ?
-      "Timed " + (("active" === event.state()) ? "start" : "finish") :
+      event.state() :
       "";
-
   }
 
   function get_time(event)

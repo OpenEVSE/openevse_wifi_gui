@@ -608,7 +608,7 @@
               </span>
             </div>
 
-            <div data-bind="visible: schedule_plan.active">
+            <div data-bind="visible: advancedMode() &amp;&amp; schedule_plan.active">
               <br>
               <b>Current Event:</b> <span data-bind="text: schedule_plan.current_event_type"></span>, <span data-bind="text: schedule_plan.current_event_time"></span> |
               <b>Next Event:</b> <span data-bind="text: schedule_plan.next_event_type"></span>, <span data-bind="text: schedule_plan.next_event_time"></span>
