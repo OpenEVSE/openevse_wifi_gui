@@ -210,31 +210,6 @@ function OpenEvseViewModel(baseEndpoint, config, status) {
     });
   };
 
-  // delay timer logic
-  function isTime(val) {
-    var timeRegex = /([01]\d|2[0-3]):([0-5]\d)/;
-    return timeRegex.test(val);
-  }
-  self.delayTimerValid = ko.pureComputed(function () {
-    return isTime(self.delayTimerStart()) && isTime(self.delayTimerStop());
-  });
-  self.startDelayTimer = function () {
-    self.updatingDelayTimer(true);
-    self.openevse.timer(function () {
-      self.delayTimerEnabled(true);
-    }, self.delayTimerStart(), self.delayTimerStop()).always(function() {
-      self.updatingDelayTimer(false);
-    });
-  };
-  self.stopDelayTimer = function () {
-    self.updatingDelayTimer(true);
-    self.openevse.cancelTimer(function () {
-      self.delayTimerEnabled(false);
-    }).always(function() {
-      self.updatingDelayTimer(false);
-    });
-  };
-
   // Support for restarting the OpenEVSE
   self.restartFetching = ko.observable(false);
   self.restart = function() {
