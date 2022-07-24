@@ -1,4 +1,4 @@
-/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel, VehicleViewModel, EventLogViewModel */
+/* global $, ko, ConfigViewModel, StatusViewModel, RapiViewModel, WiFiScanViewModel, WiFiConfigViewModel, OpenEvseViewModel, PasswordViewModel, ZonesViewModel, ConfigGroupViewModel, ScheduleViewModel, SchedulePlanViewModel, VehicleViewModel, EventLogViewModel, RFIDViewModel */
 /* exported OpenEvseWiFiViewModel */
 
 function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
@@ -25,7 +25,8 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.wifi = new WiFiConfigViewModel(self.baseEndpoint, self.config, self.status, self.scan);
   self.openevse = new OpenEvseViewModel(self.baseEndpoint, self.config, self.status);
   self.zones = new ZonesViewModel(self.baseEndpoint);
-  self.schedule = new ScheduleViewModel(self.baseEndpoint);
+  self.schedule = new ScheduleViewModel(self.baseEndpoint, self.config);
+  self.schedule_plan = new SchedulePlanViewModel(self.baseEndpoint);
   self.vehicle = new VehicleViewModel(self.baseEndpoint, self.config, self.status);
   self.logs = new EventLogViewModel(self.baseEndpoint);
   self.rfid = new RFIDViewModel(self.baseEndpoint, self.status);
@@ -227,7 +228,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.itemsLoaded = ko.pureComputed(function () {
     return self.loadedCount() + self.openevse.updateCount();
   });
-  self.itemsTotal = ko.observable(4 + self.openevse.updateTotal());
+  self.itemsTotal = ko.observable(5 + self.openevse.updateTotal());
   self.start = function () {
     self.updating(true);
     self.status.update(function () {
@@ -236,21 +237,24 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
         self.loadedCount(self.loadedCount() + 1);
         self.schedule.update(function () {
           self.loadedCount(self.loadedCount() + 1);
-          self.logs.update(() => {
+          self.schedule_plan.update(function () {
             self.loadedCount(self.loadedCount() + 1);
-            if(self.status.rapi_connected()) {
-              self.openevse.update(self.finishedStarting);
-            } else {
-              self.finishedStarting();
-              self.status.rapi_connected.subscribe((val) => {
-                if(val) {
-                  self.config.update(() => {
-                    self.openevse.update(() => {
+            self.logs.update(() => {
+              self.loadedCount(self.loadedCount() + 1);
+              if(self.status.rapi_connected()) {
+                self.openevse.update(self.finishedStarting);
+              } else {
+                self.finishedStarting();
+                self.status.rapi_connected.subscribe((val) => {
+                  if(val) {
+                    self.config.update(() => {
+                      self.openevse.update(() => {
+                      });
                     });
-                  });
-                }
-              });
-            }
+                  }
+                });
+              }
+            });
           });
         });
       });
@@ -290,6 +294,12 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       self.config.update(() => {
         self.status.update();
       });
+    });
+    self.status.schedule_version.subscribe(() => {
+      self.schedule.update();
+    });
+    self.status.schedule_plan_version.subscribe(() => {
+      self.schedule_plan.update();
     });
 
     self.updating(false);

@@ -1,10 +1,10 @@
-/* global ko */
+/* global ko,$,ConfigGroupViewModel */
 /* exported ScheduleViewModel */
 
 function EventInfoViewModel(data)
 {
   "use strict";
-  if(typeof(data) == "object") {
+  if(typeof(data) === "object") {
     ko.mapping.fromJS(data, {}, this);
   } else {
     ko.mapping.fromJS({
@@ -25,7 +25,7 @@ function EventInfoViewModel(data)
   };
 }
 
-function ScheduleViewModel(baseEndpoint)
+function ScheduleViewModel(baseEndpoint, config)
 {
   "use strict";
   var self = this;
@@ -59,6 +59,12 @@ function ScheduleViewModel(baseEndpoint)
     });
   };
 
+  self.timerGroup = new ConfigGroupViewModel(baseEndpoint, () => {
+    return {
+      scheduler_start_window: config.scheduler_start_window()
+    };
+  });
+
   // delay timer logic
   function isTime(val) {
     var timeRegex = /([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?/;
@@ -67,7 +73,7 @@ function ScheduleViewModel(baseEndpoint)
 
   function findEvent(id) {
     for (const event of self.events()) {
-      if(event.id() == id) {
+      if(event.id() === id) {
         return event;
       }
     }
@@ -92,6 +98,7 @@ function ScheduleViewModel(baseEndpoint)
     }).fail(() => {
       alert("Failed to save schedule");
     }).always(() => {
+      self.timerGroup.save();
       self.updatingDelayTimer(false);
     });
   };
@@ -104,7 +111,7 @@ function ScheduleViewModel(baseEndpoint)
         type: "DELETE",
         success: function (data) {
           self.events.remove((item) => {
-            return item.id() == id;
+            return item.id() === id;
           });
           resolve(data);
         },

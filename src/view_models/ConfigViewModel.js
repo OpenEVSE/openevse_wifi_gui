@@ -86,7 +86,8 @@ function ConfigViewModel(baseEndpoint) {
     "tesla_vehicle_id": false,
     "rfid_enabled": false,
     "rfid_storage": "",
-    "loaded": false
+    "loaded": false,
+    "scheduler_start_window": false
   }, endpoint);
 
   function trim(prop, val) {
