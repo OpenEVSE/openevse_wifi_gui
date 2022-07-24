@@ -55,6 +55,7 @@ function StatusViewModel(baseEndpoint) {
     "smoothed_available_current": false,
     "divert_update": 0,
     "divert_active": false,
+    "min_charge_end": false,
     "ota_update": false,
     "time": false,
     "offset": false,
@@ -68,7 +69,9 @@ function StatusViewModel(baseEndpoint) {
     "tesla_error": false,
     "vehicle_state_update": 0,
     "status": false,
-    "config_version": false
+    "config_version": false,
+    "schedule_version": false,
+    "schedule_plan_version": false
   }, endpoint);
 
   // Some devired values
