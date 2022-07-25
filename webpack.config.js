@@ -23,8 +23,10 @@ var htmlMinify = {
 
 var mergeOptions = {
   files: {
+    "jquery.js": [
+      "node_modules/jquery/dist/jquery.js"
+    ],
     "lib.js": [
-      "node_modules/jquery/dist/jquery.js",
       "node_modules/knockout/build/output/knockout-latest.js",
       "node_modules/knockout-mapping/dist/knockout.mapping.js",
       "src/view_models/BaseViewModel.js",
@@ -36,7 +38,7 @@ var mergeOptions = {
       "src/view_models/WiFiConfigViewModel.js",
       "src/view_models/PasswordViewModel.js",
       "src/view_models/ConfigGroupViewModel.js",
-      "src/view_models/RFIDViewModel.js"
+      "src/view_models/ScheduleViewModel.js"
     ],
     "home.js": [
       "src/openevse.js",
@@ -50,10 +52,10 @@ var mergeOptions = {
       "src/view_models/VehicleViewModel.js",
       "src/view_models/TeslaViewModel.js",
       "src/view_models/EventLogViewModel.js",
+      "src/view_models/RFIDViewModel.js",
       "src/home.js"
     ],
     "term.js": [
-      "node_modules/jquery/dist/jquery.js",
       "src/term.js"
     ],
     "wifi_portal.js": [
