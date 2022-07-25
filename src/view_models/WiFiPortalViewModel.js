@@ -1,4 +1,4 @@
-/* global ko, ConfigViewModel, StatusViewModel, WiFiScanViewModel, WiFiConfigViewModel, PasswordViewModel, TimeViewModel */
+/* global ko, ConfigViewModel, StatusViewModel, WiFiScanViewModel, WiFiConfigViewModel, PasswordViewModel, TimeViewModel, ConfigGroupViewModel, ScheduleViewModel */
 /* exported WiFiPortalViewModel */
 
 function WiFiPortalViewModel(baseHost, basePort)
@@ -21,6 +21,7 @@ function WiFiPortalViewModel(baseHost, basePort)
   self.scan = new WiFiScanViewModel(self.baseEndpoint);
   self.wifi = new WiFiConfigViewModel(self.baseEndpoint, self.config, self.status, self.scan);
   self.time = new TimeViewModel(self.status);
+  self.schedule = new ScheduleViewModel(self.baseEndpoint, self.config);
 
   self.initialised = ko.observable(false);
   self.updating = ko.observable(false);
@@ -47,19 +48,21 @@ function WiFiPortalViewModel(baseHost, basePort)
     self.updating(true);
     self.config.update(function () {
       self.status.update(function () {
-        self.initialised(true);
-        updateTimer = setTimeout(self.update, updateTime);
-        self.updating(false);
+        self.schedule.update(function () {
+          self.initialised(true);
+          updateTimer = setTimeout(self.update, updateTime);
+          self.updating(false);
 
-        self.status.connect();
+          self.status.connect();
 
-        self.config.min_current_hard.subscribe(() => {
+          self.config.min_current_hard.subscribe(() => {
+            self.generateCurrentList();
+          });
+          self.config.max_current_hard.subscribe(() => {
+            self.generateCurrentList();
+          });
           self.generateCurrentList();
         });
-        self.config.max_current_hard.subscribe(() => {
-          self.generateCurrentList();
-        });
-        self.generateCurrentList();
       });
     });
   };
@@ -125,6 +128,52 @@ function WiFiPortalViewModel(baseHost, basePort)
     { name: "1", value: 1 },
     { name: "2", value: 2 }];
   self.currentLevels = ko.observableArray(self.createCurrentArray(self.config.min_current_hard(), 80));
+
+  // -----------------------------------------------------------------------
+  // Event: Manual Override
+  // -----------------------------------------------------------------------
+  self.setOverrideFetching = ko.observable(false);
+  self.setOverrideSuccess = ko.observable(false);
+  self.setOverride = () =>
+  {
+    self.setOverrideFetching(true);
+    self.setOverrideSuccess(false);
+
+    let props = {
+      state: self.status.isPaused() ? "active" : "disabled",
+    };
+
+    $.ajax({
+      method: "POST",
+      url: self.baseEndpoint() + "/override",
+      data: JSON.stringify(props),
+      contentType: "application/json"
+    }).done(() => {
+      self.setOverrideSuccess(true);
+    }).fail(() => {
+      alert("Failed to set manual override");
+    }).always(() => {
+      self.setOverrideFetching(false);
+    });
+  };
+
+  self.clearOverrideFetching = ko.observable(false);
+  self.clearOverrideSuccess = ko.observable(false);
+  self.clearOverride = () =>
+  {
+    self.clearOverrideFetching(true);
+    self.clearOverrideSuccess(false);
+    $.ajax({
+      method: "DELETE",
+      url: self.baseEndpoint() + "/override"
+    }).done(() => {
+      self.clearOverrideSuccess(true);
+    }).fail(() => {
+      alert("Failed to clear manual override");
+    }).always(() => {
+      self.clearOverrideFetching(false);
+    });
+  };
 
 }
 
