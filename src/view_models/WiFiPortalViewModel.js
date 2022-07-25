@@ -1,4 +1,4 @@
-/* global ko, ConfigViewModel, StatusViewModel, WiFiScanViewModel, WiFiConfigViewModel, PasswordViewModel, TimeViewModel, ConfigGroupViewModel, ScheduleViewModel */
+/* global ko, $, ConfigViewModel, StatusViewModel, WiFiScanViewModel, WiFiConfigViewModel, PasswordViewModel, TimeViewModel, ConfigGroupViewModel, ScheduleViewModel */
 /* exported WiFiPortalViewModel */
 
 function WiFiPortalViewModel(baseHost, basePort)
@@ -8,7 +8,7 @@ function WiFiPortalViewModel(baseHost, basePort)
 
   self.baseHost = ko.observable("" !== baseHost ? baseHost : "openevse.local");
   self.basePort = ko.observable(basePort);
-  self.baseEndpoint = ko.pureComputed(function () {
+  self.baseEndpoint = ko.pureComputed(() => {
     var endpoint = "//" + self.baseHost();
     if(80 !== self.basePort()) {
       endpoint += ":"+self.basePort();
@@ -44,11 +44,11 @@ function WiFiPortalViewModel(baseHost, basePort)
   // -----------------------------------------------------------------------
   // Initialise the app
   // -----------------------------------------------------------------------
-  self.start = function () {
+  self.start = () => {
     self.updating(true);
-    self.config.update(function () {
-      self.status.update(function () {
-        self.schedule.update(function () {
+    self.config.update(() => {
+      self.status.update(() => {
+        self.schedule.update(() => {
           self.initialised(true);
           updateTimer = setTimeout(self.update, updateTime);
           self.updating(false);
@@ -70,7 +70,7 @@ function WiFiPortalViewModel(baseHost, basePort)
   // -----------------------------------------------------------------------
   // Get the updated state from the ESP
   // -----------------------------------------------------------------------
-  self.update = function () {
+  self.update = () => {
     if (self.updating()) {
       return;
     }
@@ -79,7 +79,7 @@ function WiFiPortalViewModel(baseHost, basePort)
       clearTimeout(updateTimer);
       updateTimer = null;
     }
-    self.status.update(function () {
+    self.status.update(() => {
       updateTimer = setTimeout(self.update, updateTime);
       self.updating(false);
     });
@@ -172,6 +172,66 @@ function WiFiPortalViewModel(baseHost, basePort)
       alert("Failed to clear manual override");
     }).always(() => {
       self.clearOverrideFetching(false);
+    });
+  };
+
+  // -----------------------------------------------------------------------
+  // Event: Update
+  // -----------------------------------------------------------------------
+
+  // Support for OTA update of the OpenEVSE
+  self.updateFetching = ko.observable(false);
+  self.updateComplete = ko.observable(false);
+  self.updateError = ko.observable("");
+  self.updateFilename = ko.observable("");
+  self.updateLoaded = ko.observable(0);
+  self.updateTotal = ko.observable(1);
+  self.updateProgress = ko.pureComputed(() => {
+    return (self.updateLoaded() / self.updateTotal()) * 100;
+  });
+
+  self.otaUpdate = () => {
+    if("" === self.updateFilename()) {
+      self.updateError("Filename not set");
+      return;
+    }
+
+    self.updateFetching(true);
+    self.updateError("");
+
+    var form = $("#upload_form")[0];
+    var data = new FormData(form);
+
+    $.ajax({
+      url: "/update",
+      type: "POST",
+      data: data,
+      contentType: false,
+      processData:false,
+      xhr: () => {
+        var xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener("progress", (evt) => {
+          if (evt.lengthComputable) {
+            self.updateLoaded(evt.loaded);
+            self.updateTotal(evt.total);
+          }
+        }, false);
+        return xhr;
+      }
+    }).done((msg) => {
+      console.log(msg);
+      if("OK" === msg) {
+        self.updateComplete(true);
+        setTimeout(() => {
+          location.reload();
+        }, 2500);
+      } else {
+        self.updateError(msg);
+      }
+    }).fail(() => {
+      self.updateError("HTTP Update failed");
+    }).always(() => {
+      self.updateFetching(false);
     });
   };
 
