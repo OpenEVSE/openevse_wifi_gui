@@ -811,11 +811,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.saveCurrentShaper = function () {
     self.saveCurrentShaperFetching(true);
     self.saveCurrentShaperSuccess(false);
-    $.post(self.baseEndpoint() + "/saveshaper", {
-      enable: self.config.current_shaper_enabled(),
-      livepwr: self.config.mqtt_live_pwr(),
-      maxpwr: self.config.current_shaper_max_pwr()
-    }, function () {
+    $.post(self.baseEndpoint() + "/config", JSON.stringify({
+      current_shaper_enabled: self.config.current_shaper_enabled(),
+      mqtt_live_pwr: self.config.mqtt_live_pwr(),
+      current_shaper_max_pwr: self.config.current_shaper_max_pwr()
+    }), function () {
       self.saveCurrentShaperSuccess(true);
     }).fail(function () {
       alert("Failed to save Current Shaper config");
