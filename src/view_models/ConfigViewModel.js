@@ -20,6 +20,7 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_reject_unauthorized": true,
     "mqtt_reject_unauthorized_enable": false,
     "mqtt_topic": "",
+    "mqtt_retained": false,
     "mqtt_user": "",
     "mqtt_pass": "",
     "mqtt_solar": "",
