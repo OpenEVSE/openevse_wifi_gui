@@ -307,7 +307,7 @@
           </div>
 
           <div class="box380 right">
-            <h2>MQTT</h2>
+            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="mqtt.png" align="left" />MQTT</h2>
             <p>
               <input type="checkbox" id="mqtt_enabled" data-bind="checked: config.mqtt_enabled" />
               <label for="mqtt_enabled"><b>Enable MQTT</b></label>
@@ -377,6 +377,13 @@
               <input data-bind="textInput: config.mqtt_topic" type="text" autocapitalize="none"><br/>
               <span class="small-text">e.g 'openevse'</span>
             </p>
+            <div data-bind="visible: config.mqtt_enabled() ">
+              <b>Retain published data</b>
+              <label class="switch">
+                <input type="checkbox" data-bind="checked: config.mqtt_retained" />
+                <div class="slider round"></div>
+              </label>
+            </div>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Voltage topic:</b>
               <input data-bind="textInput: config.mqtt_vrms" type="text" autocapitalize="none" hint="emon/emonpi/vrms"><br>
@@ -493,7 +500,7 @@
               <span class="small-text">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tear on the EVSE.</span>
             </p>
 
-            <p data-bind="visible: isEcoModeAvailable">
+            <p>
               <button data-bind="click: divertGroup.save, text: (divertGroup.fetching() ? 'Saving' : (divertGroup.success() ? 'Saved' : 'Save')), disable: divertGroup.fetching">Save</button>
             </p>
           </div>
