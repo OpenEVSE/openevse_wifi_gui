@@ -5,7 +5,7 @@
 <head>
 
   <meta charset="utf-8">
-  <title>OpenEVSE</title>
+  <title data-bind="i18n: 'openevse'">OpenEVSE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="viewport" content="width=device-width, user-scalable=no" />
   <meta name="description" content="OpenEVSE">
@@ -28,46 +28,47 @@
     </div>
 
     <div class="container" data-bind="visible: !initialised()">
-      Loading, please wait... (<span data-bind="text: itemsLoaded"></span>/<span data-bind="text: itemsTotal"></span>)
+      <span data-bind="i18n: 'loading'"></span>(<span data-bind="text: itemsLoaded"></span>/<span data-bind="text: itemsTotal"></span>)
     </div>
 
     <div class="container" data-bind="visible: initialised" style="display: none">
 
       <div class="tabs">
         <input id="tab-3" type="radio" name="tab-group" data-bind="checked: tab" value="status" />
-        <label for="tab-3">OpenEVSE</label>
+        <label for="tab-3" data-bind="i18n: 'openevse'">OpenEVSE</label>
         <input id="tab-1" type="radio" name="tab-group" data-bind="checked: tab" value="system" />
-        <label for="tab-1">System</label>
+        <label for="tab-1" data-bind="i18n: 'system'">System</label>
         <input id="tab-2" type="radio" name="tab-group" data-bind="checked: tab" value="services" />
-        <label for="tab-2">Services</label>
+        <label for="tab-2" data-bind="i18n: 'services'">Services</label>
         <input id="tab-4" type="radio" name="tab-group" data-bind="checked: tab" value="rapi" />
         <label for="tab-4" data-bind="visible: developerMode() &amp;&amp; status.evse_connected()">RAPI</label>
         <input id="tab-5" type="radio" name="tab-group" data-bind="checked: tab" value="vehicle" />
-        <label for="tab-5">Vehicle</label>
+        <label for="tab-5" data-bind="i18n: 'vehicle'">Vehicle</label>
       </div>
 
       <div id="content">
         <!--TAB 1: System -->
         <div id="content-1" data-bind="visible: isSystem">
+
           <div class="box380 left">
-            <h2>WiFi Setup</h2>
-            <p><b>Mode:</b> <span id="mode" data-bind="text: status.fullMode"></span></p>
+            <h2 data-bind="i18n: 'wifisetup'">WiFi Setup</h2>
+            <p><b data-bind="i18n: 'mode'">Mode:</b> <span id="mode" data-bind="text: status.fullMode"></span></p>
 
             <div id="wired-view" data-bind="visible: status.isWired">
-              <p><b>IP Address:</b><br><a data-bind="text: status.ipaddress, attr: {href: 'http://'+status.ipaddress()}"></a></p>
+              <p><b data-bind="i18n: 'ip'">IP Address:</b><br><a data-bind="text: status.ipaddress, attr: {href: 'http://'+status.ipaddress()}"></a></p>
               <p>
-                <b>Successful packets:</b><br>
-                <span data-bind="text: status.packets_success"></span> of <span data-bind="text: status.packets_sent"></span>
+                <b data-bind="i18n: 'sfpackets'">Successful packets:</b><br>
+                <span data-bind="text: status.packets_success"></span><span data-bind="i18n: 'of'"> of </span><span data-bind="text: status.packets_sent"></span>
               </p>
-              <p><b>OpenEVSE</b></p>
-              <p><b>RAPI packets:</b><br><span data-bind="text: status.comm_success"></span> of <span data-bind="text: status.comm_sent"></span></p>
+              <p><b data-bind="i18n: 'openevse'">OpenEVSE</b></p>
+              <p><b data-bind="i18n: 'rapipackets'">RAPI packets:</b><br><span data-bind="text: status.comm_success"></span><span data-bind="i18n: 'of'"></span> of </span><span data-bind="text: status.comm_sent"></span></p>
             </div>
 
             <div id="client-view" data-bind="visible: !wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting() &amp;&amp; !status.isWired()">
               <table>
                 <tr>
-                  <th>Network</th>
-                  <th>RSSI dBm</th>
+                  <th data-bind="i18n: 'network'">Network</th>
+                  <th data-bind="i18n: 'rssi'"></thdata-bind>RSSI dBm</th>
                 </tr>
                 <tbody id="sta-ssid">
                   <tr data-bind="click: function () { wifi.forceConfig(true); }">
@@ -76,19 +77,19 @@
                   </tr>
                 </tbody>
               </table>
-              <button data-bind="click: function () { wifi.forceConfig(true); }">Change WiFi network</button>
-              <p><b>IP Address:</b><br><a data-bind="text: status.ipaddress, attr: {href: 'http://'+status.ipaddress()}"></a></p>
+              <button data-bind="i18n: 'changewifi', click: function () { wifi.forceConfig(true); }">Change WiFi network</button>
+              <p><b data-bind="i18n: 'ip'">IP Address:</b><br><a data-bind="text: status.ipaddress, attr: {href: 'http://'+status.ipaddress()}"></a></p>
               <p>
-                <b>Successful packets:</b><br>
-                <span data-bind="text: status.packets_success"></span> of <span data-bind="text: status.packets_sent"></span>
+                <b data-bind="i18n: 'sfpackets'">Successful packets:</b><br>
+                <span data-bind="text: status.packets_success"></span><span data-bind="i18n: 'of'"> of </span> <span data-bind="text: status.packets_sent"></span>
               </p>
-              <p><b>OpenEVSE</b></p>
-              <p><b>RAPI packets:</b><br><span data-bind="text: status.comm_success"></span> of <span data-bind="text: status.comm_sent"></span></p>
-              <button id="apoff" data-bind="visible: status.isWifiAccessPoint, click: wifi.turnOffAccessPoint, disable: wifi.turnOffAccessPointFetching">Turn off Access Point</button>
+              <p><b data-bind="i18n: 'openevse'">OpenEVSE</b></p>
+              <p><b data-bind="i18n: 'rapipackets'">RAPI packets:</b><br><span data-bind="text: status.comm_success"></span><span data-bind="i18n: 'of'"> of </span><span data-bind="text: status.comm_sent"></span></p>
+              <button id="apoff" data-bind="i18n: 'poffaccesspoint', visible: status.isWifiAccessPoint, click: wifi.turnOffAccessPoint, disable: wifi.turnOffAccessPointFetching">Turn off Access Point</button>
             </div>
 
             <div id="ap-view" data-bind="visible: wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting() &amp;&amp; !status.isWired()">
-              <p>Connect to network:</p>
+              <p data-bind="i18n: 'connect2net'">Connect to network:</p>
 
               <div id="wifiList">
                 <ul class="list-group" data-bind="foreach: scan.filteredResults, visible: 0 != scan.results().length">
@@ -99,134 +100,141 @@
                 </ul>
               </div>
 
-              <div data-bind="visible: 0 == scan.results().length">
+              <div data-bind="i18n: 'scanning', visible: 0 == scan.results().length">
                 Scanning...
               </div>
 
               <p>
-                <b>SSID:</b><br>
+                <b data-bind="i18n: 'ssid'">SSID:</b><br>
                 <input type="text" autocapitalize="none" data-bind="textInput: config.ssid">
               </p>
               <p>
-                <b>Passkey:</b><br>
+                <b data-bind="i18n: 'passkey'">Passkey:</b><br>
                 <input type="text" autocapitalize="none" data-bind="textInput: wifiPassword.value, attr: { type: wifiPassword.show() ? 'text' : 'password' }"><br/>
                 <div>
                   <input id="wifipassword" type="checkbox" data-bind="checked: wifiPassword.show" />
-                  <label for="wifipassword">Show password</label>
+                  <label for="wifipassword" data-bind="i18n: 'showpass'">Show password</label>
                 </div>
               </p>
               <p>
-                <button data-bind="click: wifi.saveNetwork, text: (wifi.saveNetworkFetching() ? 'Saving' : (wifi.saveNetworkSuccess() ? 'Saved' : 'Connect')), disable: wifi.saveNetworkFetching">Connect</button>
+                <button data-bind="i18n: 'connect', click: wifi.saveNetwork, text: (wifi.saveNetworkFetching() ? i18nextko.t('saving') : (wifi.saveNetworkSuccess() ? i18nextko.t('saved') : i18nextko.t('connect'))), disable: wifi.saveNetworkFetching">Connect</button>
               </p>
             </div>
 
             <div data-bind="visible: wifi.wifiConnecting">
-              <p>Connecting to WIFI Network...</p>
+              <p data-bind="i18n: 'connecting'">Connecting to WIFI Network...</p>
             </div>
           </div>
 
           <div class="box380 right">
-            <h2>Administration</h2>
+            <h2 data-bind="i18n: 'administration'">Administration</h2>
             <p>
-              <b>Username:</b><br>
+              <b data-bind="i18n: 'username'">Username:</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.www_username" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="">
-              <span class="small-text validMessage">15 characters max</span>
+              <span class="small-text validMessage" data-bind="i18n: '15max'">15 characters max</span>
             </p>
             <p>
-              <b>Password:</b><br>
+              <b data-bind="i18n: 'password'">Password:</b><br>
               <input type="password" autocapitalize="none" data-bind="textInput: wwwPassword.value, attr: { type: wwwPassword.show() ? 'text' : 'password' }" pattern=".{15}" title="The field requires 15 characters" maxlength="15" required="" /><br />
               <span>
                 <input id="wwwPassword" type="checkbox" data-bind="checked: wwwPassword.show" />
-                <label for="wwwPassword">Show password</label>
+                <label for="wwwPassword" data-bind="i18n: 'showpassword'">Show password</label>
               </span><br />
-              <span class="small-text validMessage">15 characters max</span><br>
-              <span class="small-text">Web interface HTTP authentication.</span><br><br>
-              <button data-bind="click: saveAdmin, text: (saveAdminFetching() ? 'Saving' : (saveAdminSuccess() ? 'Saved' : 'Save')), disable: saveAdminFetching">Save</button>
+              <span class="small-text validMessage" data-bind="i18n: '15max'" >15 characters max</span><br>
+              <span class="small-text" data-bind="i18n: 'httpauth'">Web interface HTTP authentication.</span><br><br>
+              <button data-bind="i18n: 'save', click: saveAdmin, text: (saveAdminFetching() ? i18nextko.t('saving') : (saveAdminSuccess() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: saveAdminFetching">Save</button>
             </p>
           </div>
 
+          <div class="box380 left">
+            <h2 data-bind="i18n: 'language'">Language</h2>
+            <select data-bind="options: languages, value: config.lang, valueAllowUnset: false">
+            </select>
+            <button data-bind="i18n: 'save', click: saveLang, text: (saveLangFetching() ? i18nextko.t('saving') : (saveLangSuccess() ? i18nextko.t('saved') : i18nextko.t('Save') )), disable: saveLangFetching">Save</button>
+          </div>
+
           <div class="box380 right">
-            <h2>WiFi Firmware</h2>
-            <p><b>Version: </b><span data-bind="text: config.version"></span></p>
+            <h2 data-bind="i18n: 'wififirmware'">WiFi Firmware</h2>
+            <p><b data-bind="i18n: 'version'"">Version: </b><span data-bind="text: config.version"></span></p>
             <div data-bind="visible: !updateFetching() && !updateComplete()">
               <form action="#" method="post" enctype="multipart/form-data" id="upload_form" data-bind="submit: otaUpdate">
                 <input type="file" name="update" data-bind="value: updateFilename">
-                <button data-bind="click: otaUpdate, text: (updateFetching() ? 'Updating...' : 'Update'), disable: ('' == updateFilename())">Update</button>
+                <button data-bind="i18n: 'update', click: otaUpdate, text: (updateFetching() ? i18nextko.t('updating') : i18nextko.t('update')), disable: ('' == updateFilename())">Update</button>
               </form>
             </div>
             <div data-bind="visible: (updateError() !== '')" class="box error">
-              <h4>Error:</h4>
+              <h4><span data-bind="i18n: 'error'">Error</span>:</h4>
               <span data-bind="text: updateError"></span>
             </div>
-            <div data-bind="visible: updateFetching() && !updateComplete()">
+            <div data-bind="i18n: 'updating', visible: updateFetching() && !updateComplete()">
               Updating... <br/>
               <div id="progressBack">
                 <div id="progressBar" data-bind="style: { width: updateProgress()+'%' }"></div>
               </div>
             </div>
-            <div  data-bind="visible: updateComplete">
+            <div  data-bind="i18n: 'complete', visible: updateComplete">
               Firmware update completed ok
             </div>
             <p>
-              <button data-bind="click: restart, text: (restartFetching() ? 'Restarting...' : 'Restart'), disable: restartFetching">Restart</button>
-              <button data-bind="click: factoryReset, text: (factoryResetFetching() ? 'Resetting...' : 'Factory Reset'), disable: factoryResetFetching">Factory Reset</button>
+              <button data-bind="i18n: 'restart', click: restart, text: (restartFetching() ? i18nextko.t('restarting') : i18nextko.t('restart')), disable: restartFetching">Restart</button>
+              <button data-bind="i18n: 'reset', click: factoryReset, text: (factoryResetFetching() ? i18nextko.t('resetting') : i18nextko.t('reset') ), disable: factoryResetFetching">Factory Reset</button>
             </p>
           </div>
 
           <div class="box380 left" data-bind="visible: advancedMode()">
-            <h2>Advanced Settings</h2>
+            <h2 data-bind="i18n: 'advsettings'">Advanced Settings</h2>
             <p data-bind="visible: false !== config.hostname()">
-              <b>Hostname:</b><br>
+              <b data-bind="i18n: 'hostname'">Hostname:</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.hostname" pattern=".{31}" title="The field max 31 characters" maxlength="31" required="">
-              <span class="small-text validMessage">31 characters max</span>
+              <span class="small-text validMessage" data-bind="i18n: '31max'">31 characters max</span>
             </p>
             <p data-bind="visible: false !== config.sntp_hostname()">
-              <b>NTP Server:</b><br>
+              <b data-bind="i18n: 'ntpserver'">NTP Server:</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname" pattern=".{31}">
             </p>
             <p>
-              <button data-bind="click: advancedGroup.save, text: (advancedGroup.fetching() ? 'Saving' : (advancedGroup.success() ? 'Saved' : 'Save')), disable: advancedGroup.fetching">Save</button>
+              <button data-bind="i18n: 'save', click: advancedGroup.save, text: (advancedGroup.fetching() ? i18nextko.t('saving') : (advancedGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: advancedGroup.fetching">Save</button>
             </p>
           </div>
 
           <div class="box380 right" data-bind="visible: false !== status.rfid_failure()">
-            <h2>RFID</h2>
-            <b>Enabled: </b>
+            <h2 data-bind="i18n: 'rfid'">RFID</h2>
+            <b data-bind="i18n: 'enabled'">Enabled: </b>
             <label class="switch">
               <input type="checkbox" data-bind="checked: config.rfid_enabled, click: function() {rfidGroup.save(); return true;}" />
               <div class="slider round"></div>
             </label>
-            <span data-bind="visible: status.rfid_failure() && config.rfid_enabled()" style="color:darkred; margin-left: 8px">Reader not found</span>
+            <span data-bind="i18n: 'rfidnotfound', visible: status.rfid_failure() && config.rfid_enabled()" style="color:darkred; margin-left: 8px">Reader not found</span>
             <br>
             <div data-bind="visible: config.rfid_storage() != ''">
-              <h3>Registered tags</h3>
+              <h3 data-bind="i18n: 'rfidregistered'">Registered tags</h3>
               <div id="stored_tags_list">
                 <ul class="list-group" data-bind="foreach: config.rfid_storage().split(',')">
                   <li class="list-group-item" data-bind="visible: $data">
                     <span data-bind="text: $data" style="font-family: 'Courier New', monospace;"></span>
-                    <span style="float: right"><a style="cursor: pointer;" data-bind="click: $parent.removeRFIDTag">Remove</a></span>
+                    <span style="float: right"><a style="cursor: pointer;" data-bind="i18n: 'remove', click: $parent.removeRFIDTag">Remove</a></span>
                   </li>
                 </ul>
               </div>
-              <button data-bind="click: clearRFIDTags">Clear tags</button>
+              <button data-bind="i18n: 'rfidclear', click: clearRFIDTags">Clear tags</button>
             </div>
             <div>
               <!--b>UID:</b><br>
               <input style="float: left" type="text" autocapitalize="none" data-bind="textInput: config.sntp_hostname"><br>
               <button onclick="window.open('term.html?debug');">Add</button-->
               <div data-bind="visible: config.rfid_enabled">
-                <h3>Manage scanned tag</h3>
-                <button data-bind="click: waitForRFID, disable: status.rfid_waiting() > 0">Scan</button>
+                <h3 data-bind="i18n: 'rfidmanage'">Manage scanned tag</h3>
+                <button data-bind="i18n: 'rfidscan', click: waitForRFID, disable: status.rfid_waiting() > 0">Scan</button>
                 <div data-bind="visible: status.rfid_waiting() > 0">
-                  <b>Place your RFID tag on the scanner... <span data-bind="text: (status.rfid_waiting() >= 5 ? status.rfid_waiting() : 'waiting')"></span></b>
+                  <b data-bind="i18n: 'rfidplace'">Place your RFID tag on the scanner... <span data-bind="text: (status.rfid_waiting() >= 5 ? status.rfid_waiting() : i18nextko.t('waiting'))"></span></b>
                 </div>
                 <div data-bind="visible: status.rfid_input()">
-                  <b>Tag scanned successfully!</b>
-                  <h3>UID: <span data-bind="text: status.rfid_input"></span></h3>
+                  <b data-bind="i18n: 'rfidscanned'">Tag scanned successfully!</b>
+                  <h3 data-bind="i18n: 'rfiduid'">UID: <span data-bind="text: status.rfid_input"></span></h3>
                   <div>
-                    <span data-bind="text: config.rfid_storage().split(',').includes(status.rfid_input()) ? 'The tag is already registered' : 'The tag is not registered'"></span><br>
-                    <button data-bind="visible: !config.rfid_storage().split(',').includes(status.rfid_input()), click: function(data, event) { addRFIDTag(status.rfid_input()); status.rfid_input('') }">Register tag</button>
-                    <button data-bind="visible:  config.rfid_storage().split(',').includes(status.rfid_input()), click: function(data, event) { removeRFIDTag(status.rfid_input()); status.rfid_input('') }">Remove tag</button>
+                    <span data-bind="text: config.rfid_storage().split(',').includes(status.rfid_input()) ? i18nextko.t('rfidalregistered') : i18nextko.t('rfidnotregistered')"></span><br>
+                    <button data-bind="i18n: 'rfidregister', visible: !config.rfid_storage().split(',').includes(status.rfid_input()), click: function(data, event) { addRFIDTag(status.rfid_input()); status.rfid_input('') }">Register tag</button>
+                    <button data-bind="i18n: 'rfidremove', visible:  config.rfid_storage().split(',').includes(status.rfid_input()), click: function(data, event) { removeRFIDTag(status.rfid_input()); status.rfid_input('') }">Remove tag</button>
                   </div>
                 </div>
               </div>
@@ -234,18 +242,18 @@
           </div>
 
           <div class="box380 left">
-            <h2>Developer Mode</h2>
+            <h2 data-bind="i18n: 'devmode'">Developer Mode</h2>
             <div>
-              <b>Enabled: </b>
+              <b data-bind="i18n: 'enabled'">Enabled: </b>
               <label class="switch">
                 <input type="checkbox" data-bind="checked: developerMode">
                 <div class="slider round"></div>
               </label>
             </div>
-            <h3>Serial Consoles</h3>
+            <h3 data-bind="i18n: 'serialconsoles'">Serial Consoles</h3>
             <div>
-              <button onclick="window.open('term.html?debug');">Debug</button>
-              <button onclick="window.open('term.html?evse');">OpenEVSE</button>
+              <button onclick="window.open('term.html?debug');" data-bind="i18n: 'debug'"">Debug</button>
+              <button onclick="window.open('term.html?evse');" data-bind="i18n: 'openevse'">OpenEVSE</button>
             </div>
           </div>
         </div>
@@ -254,13 +262,13 @@
         <!--TAB 2: Services -->
         <div id="content-2" data-bind="visible: isServices">
           <div class="box380 left">
-            <h2>Energy Monitoring <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="emoncms.jpg" align="left" /></h2>
+            <h2><span data-bind="i18n: 'emoncms'">Energy Monitoring</span> <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="emoncms.jpg" align="left" /></h2>
             <p>
               <input type="checkbox" id="emoncms_enabled" data-bind="checked: config.emoncms_enabled" />
-              <label for="emoncms_enabled"><b>Enable Emoncms</b></label>
+              <label for="emoncms_enabled"><b data-bind="i18n: 'emoncmsenable'">Enable Emoncms</b></label>
             </p>
             <div data-bind="visible: config.emoncms_enabled">
-              <div><b>Emoncms Server*:</b></div>
+              <div><b data-bind="i18n: 'emoncmsserver'">Emoncms Server*:</b></div>
               <div data-bind="css: { protocol: config.http_supported_protocols().length > 0 }">
                 <select data-bind="visible: config.http_supported_protocols().length > 0,
                   options: config.http_supported_protocols,
@@ -277,62 +285,66 @@
               </div>
             </div>
             <p data-bind="visible: config.emoncms_enabled">
-              <b>Emoncms Node*:</b><br>
+              <b data-bind="i18n: 'emoncmsnode'">Emoncms Node*:</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_node">
             </p>
             <p data-bind="visible: config.emoncms_enabled">
-              <b>Emoncms write-apikey*:</b><br />
+              <b data-bind="i18n: 'emoncmsapi'">Emoncms write-apikey*:</b><br />
               <input type="password" autocapitalize="none" data-bind="textInput: emoncmsApiKey.value, attr: { type: emoncmsApiKey.show() ? 'text' : 'password' }" /><br />
               <span>
                 <input id="emoncmsApiKey" type="checkbox" data-bind="checked: emoncmsApiKey.show" />
-                <label for="emoncmsApiKey">Show password</label>
+                <label for="emoncmsApiKey" data-bind="i18n: 'showpass'">Show password</label>
               </span>
             </p>
             <p data-bind="visible: config.emoncms_enabled && config.http_supported_protocols().length === 0">
-              <b>Emoncms SSL SHA-1 Fingerprint (optional):</b><br>
+              <b data-bind="i18n: 'emoncmsssltitle'">Emoncms SSL SHA-1 Fingerprint (optional):</b><br>
               <input type="text" autocapitalize="none" data-bind="textInput: config.emoncms_fingerprint"><br>
-              <br><span class="small-text">HTTPS will be enabled if present e.g:</span>
+              <br><span class="small-text" data-bind="i18n: 'emoncmshttps'">HTTPS will be enabled if present e.g:</span>
               <span class="small-text">
                 7D:82:15:BE:D7:BC:72:58:87:7D:8E:40:D4:80:BA:1A:9F:8B:8D:DA
               </span>
             </p>
             <p>
-              <button data-bind="click: saveEmonCms, text: (saveEmonCmsFetching() ? 'Saving' : (saveEmonCmsSuccess() ? 'Saved' : 'Save')), disable: saveEmonCmsFetching">Save</button>
+              <button data-bind="i18n: 'save', click: saveEmonCms, text: (saveEmonCmsFetching() ? i18nextko.t('saving') : (saveEmonCmsSuccess() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: saveEmonCmsFetching">Save</button>
             </p>
             <p>
-              <span data-bind="visible: config.emoncms_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.emoncms_connected() ? 'Yes' : 'No'"></span></b></span>
-              <span data-bind="visible: config.emoncms_enabled() &amp;&amp; 1 === status.emoncms_connected()"><b>&nbsp; Successful posts:&nbsp;<span data-bind="text: status.packets_success"></span></b></span>
+              <span data-bind="visible: config.emoncms_enabled"><b>&nbsp; <span data-bind="i18n: 'connected'">Connected:</span>&nbsp;<span data-bind="text: 1 === status.emoncms_connected() ? i18nextko.t('yes') : i18nextko.t('no')"></span></b></span>
+              <span data-bind="visible: config.emoncms_enabled() &amp;&amp; 1 === status.emoncms_connected()"><b>&nbsp; <span data-bind="i18n: 'emoncmssuccess'">Successful posts:</span>&nbsp;<span data-bind="text: status.packets_success"></span></b></span>
             </p>
             <p data-bind="visible: config.emoncms_enabled() &amp;&amp; 0 === status.emoncms_connected() &amp;&amp; false !== status.emoncms_message(), text: status.emoncms_message"></p>
           </div>
           <!-- MQTT -->  
           <div class="box380 right">
-            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="mqtt.png" align="left" />MQTT</h2>
+            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="mqtt.png" align="left" /><span data-bind="i18n: 'mqtt'"">MQTT</span></h2>
             <p>
               <input type="checkbox" id="mqtt_enabled" data-bind="checked: config.mqtt_enabled" />
-              <label for="mqtt_enabled"><b>Enable MQTT</b></label>
+              <label for="mqtt_enabled"><b data-bind="i18n: 'mqttenable'">Enable MQTT</b></label>
               <span class="info" data-bind="click: toggle.bind($data, showMqttInfo)"></span>
             </p>
             <div class="box" data-bind="visible: showMqttInfo">
               <div>
-                Status published to:<br/>
-                <span class="small-text">{base-topic}/{status} value</span><br>
-                <span class="small-text">e.g. <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/amp 16</span><br>
+                <span data-bind="i18n: 'mqttstatuspub'">Status published to:</span><br/>
+                <span class="small-text" data-bind="i18n: 'mqttstatusval'">{base-topic}/{status} value</span><br>
+                <span class="small-text"><span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/amp 16</span><br>
               </div>
               <p>
-                RAPI control subscribes to:<br/>
-                <span class="small-text">{base-topic}/rapi/in/{command} value</span><br>
-                <span class="small-text">e.g. <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/rapi/in/$SC 16</span><br>
-                <span class="small-text">e.g. <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/rapi/in/$GC</span><br>
+                <a href="https://openevse.stoplight.io/docs/openevse-wifi-v4/c2NoOjIwNzU1Mjkx-evse-claim"><span class="small-text" data-bind="i18n: 'mqttraspi'">RAPI over MQTT is deprecated. Use /claim or /override API</span></a><br>
+                Claim<br/>
+                <span class="small-text">{base-topic}/claim/set <a href="https://openevse.stoplight.io/docs/openevse-wifi-v4/c2NoOjIwNzU1Mjkx-evse-claim" target="_blank">{json}</a></span><br>
+                <span class="small-text">get claim: <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/claim</span><br>
+                <span class="small-text">set claim: <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/claim/set {'charge_current': 30, 'state': 'active'} </span><br>
+                <span class="small-text">release claim: <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/claim/set release</span><br>
               </p>
               <p>
-                RAPI response published to:<br/>
-                <span class="small-text">{base-topic}/rapi/out response</span><br>
-                <span class="small-text">e.g. <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/rapi/out $OK 6 32</span><br>
+                Override<br/>
+                <span class="small-text">{base-topic}/override/set <a href="https://openevse.stoplight.io/docs/openevse-wifi-v4/13661f6589784-get-the-manual-override-status" target="_blank">{json]</a></span><br>
+                <span class="small-text">get override: <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/override</span><br>
+                <span class="small-text">set override: <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/override/set {'charge_current': 30, 'state': 'active'}</span><br>
+                <span class="small-text">clear override: <span data-bind="text: '' !== config.mqtt_topic() ? config.mqtt_topic() : 'openevse'"></span>/override clear</span><br>
               </p>
             </div>
             <div data-bind="visible: config.mqtt_enabled">
-              <b>Host*:</b><br>
+              <b data-bind="i18n: 'host'">Host*:</b><br>
               <div data-bind="css: { protocol: config.mqtt_supported_protocols().length > 0 }">
                 <select data-bind="visible: config.mqtt_protocol_enable,
                                     options: config.mqtt_supported_protocols,
@@ -345,210 +357,210 @@
               </div>
             </div>
             <p data-bind="visible: config.mqtt_enabled() &amp;&amp; config.mqtt_port_enable()">
-              <b>Port*:</b><br>
+              <b data-bind="i18n: 'port'">Port*:</b><br>
               <input data-bind="textInput: config.mqtt_port" type="number" min="0" max="65535" autocapitalize="none"><br/>
             </p>
             <div data-bind="visible: config.mqtt_enabled() &amp;&amp; config.mqtt_reject_unauthorized_enable() &amp;&amp; advancedMode()">
-              <b>Reject self-signed certificates:</b>
+              <b data-bind="i18n: 'rejectcert'">Reject self-signed certificates:</b>
               <label class="switch">
                 <input type="checkbox" data-bind="checked: config.mqtt_reject_unauthorized" />
                 <div class="slider round"></div>
               </label>
             </div>
             <div data-bind="visible: config.mqtt_enabled() &amp;&amp; !config.mqtt_reject_unauthorized()" class="box warning" style="margin-top: 20px;">
-              <h4>Warning!!</h4>
-              Certificate validation is disabled, although the connection to MQTT server will be encrypted the connection is still
-              vulnerable to man-in-the-middle attacks.
+              <h4 data-bind="i18n: 'warning'">Warning!!</h4>
+              <span data-bind="i18n: 'mqttcerts'">Certificate validation is disabled, although the connection to MQTT server will be encrypted the connection is still
+              vulnerable to man-in-the-middle attacks.</span>
             </div>
             <p data-bind="visible: config.mqtt_enabled">
-              <b>Username:</b><span> blank - no authentication</span>
+              <b data-bind="i18n: 'username'">Username:</b><span data-bind="i18n: 'blank'"> blank - no authentication</span>
               <input data-bind="textInput: config.mqtt_user" type="text" autocapitalize="none">
             </p>
             <p data-bind="visible: config.mqtt_enabled">
-              <b>Password:</b><span> blank - no authentication</span>
+              <b data-bind="i18n: 'password'">Password:</b><span data-bind="i18n: 'blank'"> blank - no authentication</span>
               <input type="password" autocapitalize="none" data-bind="textInput: mqttPassword.value, attr: { type: mqttPassword.show() ? 'text' : 'password' }" /><br />
               <span>
                 <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
-                <label for="mqttPassword">Show password</label>
+                <label for="mqttPassword" data-bind="i18n: 'showpass'">Show password</label>
               </span>
             </p>
             <p data-bind="visible: config.mqtt_enabled">
-              <b>Base-topic*:</b><br>
+              <b data-bind="i18n: 'basetopic'">Base-topic*:</b><br>
               <input data-bind="textInput: config.mqtt_topic" type="text" autocapitalize="none"><br/>
               <span class="small-text">e.g 'openevse'</span>
             </p>
             <div data-bind="visible: config.mqtt_enabled() ">
-              <b>Retain published data</b>
+              <b data-bind="i18n: 'retain'">Retain published data</b>
               <label class="switch">
                 <input type="checkbox" data-bind="checked: config.mqtt_retained" />
                 <div class="slider round"></div>
               </label>
             </div>
             <p data-bind="visible: config.mqtt_enabled">
-              <b>Voltage topic:</b>
+              <b data-bind="i18n: 'voltagetop'">Voltage topic:</b>
               <input data-bind="textInput: config.mqtt_vrms" type="text" autocapitalize="none" hint="emon/emonpi/vrms"><br>
-              <span class="small-text">Voltage MQTT topic to improve power calculations</span>
+              <span class="small-text" data-bind="i18n: 'voltagedesc'">Voltage MQTT topic to improve power calculations</span>
             </p>
             <p>
-              <button data-bind="click: mqttGroup.save, text: (mqttGroup.fetching() ? 'Saving' : (mqttGroup.success() ? 'Saved' : 'Save')), disable: mqttGroup.fetching">Save</button>
-              <span data-bind="visible: config.mqtt_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.mqtt_connected() ? 'Yes' : 'No'"></span></b></span>
+              <button data-bind="i18n: 'save', click: mqttGroup.save, text: (mqttGroup.fetching() ? i18nextko.t('saving') : (mqttGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: mqttGroup.fetching">Save</button>
+              <span data-bind="visible: config.mqtt_enabled"><b>&nbsp; <span data-bind="i18n: 'connected'"> Connected:</span>&nbsp;<span data-bind="text: 1 === status.mqtt_connected() ? i18nextko.t('yes') : i18nextko.t('no')"></span></b></span>
             </p>
           </div>
           <!-- Current Shaper -->
           <div class="box380 left">
-            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="shaper.png" align="left" />Current Shaper</h2>
+            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="shaper.png" align="left" /><span data-bind="i18n: 'shaper'">Current Shaper</span></h2>
             <p>
               <input type="checkbox" id="current_shaper_enabled" data-bind="checked: config.current_shaper_enabled" />
-              <label for="current_shaper_enabled"><b>Enable Current Shaper</b></label>
+              <label for="current_shaper_enabled"><b data-bind="i18n: 'shaperenable'">Enable Current Shaper</b></label>
             </p>
-            <p data-bind="visible: config.current_shaper_enabled">
+            <p data-bind="i18n: 'shaperdesc', visible: config.current_shaper_enabled">
               Throttle charge current following your house loads to prevent exceeding what your energy plan can deliver.<br>
             </p>
             <p data-bind="visible: config.current_shaper_enabled">
-              <b>Max power allowed (in W):</b><br>
+              <b data-bind="i18n: 'shapermaxpow'">Max power allowed (in W):</b><br>
               <input data-bind="textInput: config.current_shaper_max_pwr" type="number" />
             </p>
             <p data-bind="visible: config.current_shaper_enabled">
-              <b>Live power load MQTT Topic (in W)</b>
+              <b data-bind="i18n: 'shaperlivepow'">Live power load MQTT Topic (in W):</b>
               <input data-bind="textInput: config.mqtt_live_pwr" type="text" />
             </p>
             <p>
-              <button data-bind="click: saveCurrentShaper, text: (saveCurrentShaperFetching() ? 'Saving' : (saveCurrentShaperSuccess() ? 'Saved' : 'Save')), disable: saveCurrentShaperFetching">Save</button>
+              <button data-bind="i18n: 'save', click: saveCurrentShaper, text: (saveCurrentShaperFetching() ? i18nextko.t('saving') : (saveCurrentShaperSuccess() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: saveCurrentShaperFetching">Save</button>
             </p>
           </div>
 
           <!-- Ohm -->
           <div class="box380 left">
-            <h2>OhmConnect <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="ohm.jpg" align=left></h2>
+            <h2><span data-bind="i18n: 'ohm'">OhmConnect</span><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="ohm.jpg" align=left></h2>
             <p>
               <input type="checkbox" id="ohm_enabled" data-bind="checked: config.ohm_enabled" />
-              <label for="ohm_enabled"><b>Enable OhmConnect</b></label>
-              <a href="https://ohm.co/openevse" rel="nofollow">Click Here to Join</a>
+              <label for="ohm_enabled"><b data-bind="i18n: 'ohmenable'">Enable OhmConnect</b></label>
+              <a href="https://ohm.co/openevse" rel="nofollow" data-bind="i18n: 'ohmclick'">Click Here to Join</a>
             </p>
-            <p data-bind="visible: config.ohm_enabled">
+            <p data-bind="i18n: 'ohmdesc', visible: config.ohm_enabled">
               OhmConnect monitors real-time conditions on the electricity grid. When dirty and unsustainable power plants turn
               on, our users receive a notification to save energy.
             </p>
             <p data-bind="visible: config.ohm_enabled">
-              <b>Ohm Hour:</b> <span data-bind="text: status.ohm_hour"></span>
+              <b data-bind="i18n: 'ohmhour'">Ohm Hour:</b> <span data-bind="text: status.ohm_hour"></span>
             </p>
             <p data-bind="visible: config.ohm_enabled">
-              <b>Ohm key:</b><br>
+              <b data-bind="i18n: 'ohmkey'">Ohm key:</b><br>
               <input data-bind="textInput: config.ohmkey" type="text" autocapitalize="none">
             </p>
             <p data-bind="visible: config.ohm_enabled">
-              <strong>USA - California only</strong>
+              <strong data-bind="i18n: 'ohmusa'">USA - California only</strong>
             </p>
             <p data-bind="visible: config.ohm_enabled">
-              Ohm Key can be obtained by logging in to OhmConnect, enter Settings and locate the link in "Open Source Projects".<br/>
-              Example: https://login.ohmconnect.com/verify-ohm-hour/OpnEoVse<br/>
-              <b>Key: </b>OpnEoVse
+              <span data-bind="i18n: 'ohmkeydesc'">Ohm Key can be obtained by logging in to OhmConnect, enter Settings and locate the link in "Open Source Projects".<br/>
+              Example: https://login.ohmconnect.com/verify-ohm-hour/OpnEoVse</span><br/>
+              <b data-bind="i18n: 'key'">Key: </b>OpnEoVse
             </p>
             <p>
-              <button data-bind="click: saveOhmKey, text: (saveOhmKeyFetching() ? 'Saving' : (saveOhmKeySuccess() ? 'Saved' : 'Save')), disable: saveOhmKeyFetching">Save</button>
+              <button data-bind="i18n: 'save', click: saveOhmKey, text: (saveOhmKeyFetching() ? i18nextko.t('saving') : (saveOhmKeySuccess() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: saveOhmKeyFetching">Save</button>
             </p>
           </div>
 
           <!-- Divert Mode -->
           <div class="box380 right">
-            <h2>Solar PV divert <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="solar.png" align=left></h2>
+            <h2><span data-bind="i18n: 'divert'">Solar PV divert</span><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="solar.png" align=left></h2>
 
             <p data-bind="visible: config.mqtt_enabled">
               <input type="checkbox" id="divert_enabled" data-bind="checked: config.divert_enabled" />
-              <label for="divert_enabled"><b>Enable Solar PV Divert</b></label>
+              <label for="divert_enabled"><b data-bind="i18n: 'divertenable'">Enable Solar PV Divert</b></label>
               <span class="info" data-bind="click: toggle.bind($data, showSolarDivert)"></span>
             </p>
 
             <div class="box error" data-bind="visible: !config.mqtt_enabled()">
-              <h4>MQTT not enabled.</h4>
-              Solar PV Divert requires an SolarPV-gen or Grid (+I/-E) feed to be delivered via MQTT.
+              <h4 data-bind="i18n: 'nomqtt'">MQTT not enabled.</h4>
+              <span data-bind="i18n: 'divertnomqttdesc'">Solar PV Divert requires an SolarPV-gen or Grid (+I/-E) feed to be delivered via MQTT.</span>
             </div>
 
             <div class="box" data-bind="visible: showSolarDivert()">
-              <div>Dynamically adjust charge rate based on solar PV generation or excess power (grid export).</div>
+              <div data-bind="i18n: 'divertdesc1'">Dynamically adjust charge rate based on solar PV generation or excess power (grid export).</div>
               <p>
                 <ul>
-                  <li><span class="small-text">If only solar PV feed available: charge rate is modulated based on <b>solar PV generation.</b></span></li>
-                  <li><span class="small-text">If grid +I/-E (positive Import / negative Export) feed is available: charge rate will be modulated by available  <b>excess power.</b></span></li>
-                  <li><span class="small-text">If EVSE is sleeping: charging will begin when solar PV / excess power > min charge rate.</span></li>
-                  <li><span class="small-text">Charging will pause if the excess power drops below the min charge rate for a period of time.</span></li>
+                  <li><span class="small-text" data-bind="i18n: 'divertdesc2'">If only solar PV feed available: charge rate is modulated based on <b>solar PV generation.</b></span></li>
+                  <li><span class="small-text" data-bind="i18n: 'divertdesc3'">If grid +I/-E (positive Import / negative Export) feed is available: charge rate will be modulated by available  <b>excess power.</b></span></li>
+                  <li><span class="small-text" data-bind="i18n: 'divertdesc4'">If EVSE is sleeping: charging will begin when solar PV / excess power > min charge rate.</span></li>
+                  <li><span class="small-text" data-bind="i18n: 'divertdesc5'">Charging will pause if the excess power drops below the min charge rate for a period of time.</span></li>
                 </ul>
-                <span class="small-text"><i>Note: It's assumed that EVSE power is included in the grid feed</i></span><br>
+                <span class="small-text"><i data-bind="i18n: 'divertnote'">Note: It's assumed that EVSE power is included in the grid feed</i></span><br>
               </p>
             </div>
 
             <p data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
               <br>
-              <span data-bind="visible: divertFeedType() === 'solar'"><b>Solar:</b></span>
-              <span data-bind="visible: divertFeedType() === 'grid_ie'"><b>Grid Import/Export:</b></span>
+              <span data-bind="visible: divertFeedType() === 'solar'"><b data-bind="i18n: 'divertsolar'">Solar:</b></span>
+              <span data-bind="visible: divertFeedType() === 'grid_ie'"><b data-bind="i18n: 'divertgrid'">Grid Import/Export:</b></span>
               <span data-bind="text: divertFeedType() === 'grid_ie' ? status.grid_ie() : status.solar()"></span>W -
               <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
-              <span data-bind="visible: ecoMode"> | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
+              <span data-bind="visible: ecoMode"> | <b data-bind="i18n: 'chargerate'">Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A</span>
             </p>
 
             <div data-bind="visible: config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
-              <b>Feed*:</b><br>
+              <b data-bind="i18n: 'divertfeed'">Feed*:</b><br>
               <div class="divert">
                 <select data-bind="value: divertFeedType">
-                  <option value="solar">SolarPV-gen</option>
-                  <option value="grid_ie">Grid (+I/-E)</option>
+                  <option value="solar" data-bind="i18n: 'divertsolar2'">SolarPV-gen</option>
+                  <option value="grid_ie" data-bind="i18n: 'divertgrid2'">Grid (+I/-E)</option>
                 </select>
                 <input data-bind="textInput: divertFeedValue" type="text" autocapitalize="none"><br/>
-                <span data-bind="visible: divertFeedType() === 'solar'" class="small-text">Solar PV MQTT topic to modulate charge rate based on solar</span>
-                <span data-bind="visible: divertFeedType() === 'grid_ie'" class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
+                <span data-bind="i18n: 'divertsolar2desc', visible: divertFeedType() === 'solar'" class="small-text" >Solar PV MQTT topic to modulate charge rate based on solar</span>
+                <span data-bind="i18n: 'divertgrid2desc', visible: divertFeedType() === 'grid_ie'" class="small-text">Grid (+I/-E) MQTT topic to modulate charge rate based on <b>excess power</b></span>
               </div>
             </div>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled() &amp;&amp; divertFeedType() === 'grid_ie'">
-              <b>Required PV power ratio:</b><br>
+              <b data-bind="i18n: 'divertpvpratio'">Required PV power ratio:</b><br>
               <input data-bind="textInput: config.divert_PV_ratio" type="number" autocapitalize="none" hint="1.1" min="0.05" max="1.5" step="0.01"><br>
-              <span class="small-text">The fraction of PV current that suffices to start charging or increment current </span>
+              <span class="small-text" data-bind="i18n: 'divertpvpratiodesc'">The fraction of PV current that suffices to start charging or increment current </span>
             </p>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
-              <b>Divert smoothing attack:</b><br>
+              <b data-bind="i18n: 'divertsmoothatt'">Divert smoothing attack:</b><br>
               <input data-bind="textInput: config.divert_attack_smoothing_factor" type="number" autocapitalize="none" hint="0.4" min="0" max="1" step="0.01"><br>
-              <span class="small-text">The amount of the new feed value to add to the divert available power rolling average </span>
+              <span class="small-text" data-bind="i18n: 'divertsmoothattdesc'">The amount of the new feed value to add to the divert available power rolling average </span>
             </p>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
-              <b>Divert smoothing decay:</b><br>
+              <b data-bind="i18n: 'divertsmoothdec'">Divert smoothing decay:</b><br>
               <input data-bind="textInput: config.divert_decay_smoothing_factor" type="number" autocapitalize="none" hint="0.05" min="0" max="1" step="0.01"><br>
-              <span class="small-text">The amount of the new feed value to remove to the divert available power rolling average </span>
+              <span class="small-text" data-bind="i18n: 'divertsmoothdecdesc'">The amount of the new feed value to remove to the divert available power rolling average </span>
             </p>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
-              <b>Minimum charge time:</b><br>
+              <b data-bind="i18n: 'divertmintime'">Minimum charge time:</b><br>
               <input data-bind="textInput: config.divert_min_charge_time" type="number" autocapitalize="none" hint="600" min="0" max="100000" step="10"><br>
-              <span class="small-text">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tear on the EVSE.</span>
+              <span class="small-text" data-bind="i18n: 'divertmintimedesc'">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tear on the EVSE.</span>
             </p>
 
             <p>
-              <button data-bind="click: divertGroup.save, text: (divertGroup.fetching() ? 'Saving' : (divertGroup.success() ? 'Saved' : 'Save')), disable: divertGroup.fetching">Save</button>
+              <button data-bind="i18n: 'save', click: divertGroup.save, text: (divertGroup.fetching() ? i18nextko.t('saving') : (divertGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: divertGroup.fetching">Save</button>
             </p>
           </div>
 
           <div class="box380 left">
-            <h2>OCPP 1.6<img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="arduinoocpp.png" align=left></h2>
+            <h2><span data-bind="i18n: 'ocpp'">OCPP 1.6</span><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="arduinoocpp.png" align=left></h2>
             <p>
               <input type="checkbox" id="ocpp_enabled" data-bind="checked: config.ocpp_enabled" />
-              <label for="ocpp_enabled"><b>Enable OCPP</b></label>
+              <label for="ocpp_enabled"><b data-bind="i18n: 'ocppenable'">Enable OCPP</b></label>
             </p>
             <div data-bind="visible: config.ocpp_enabled">
-              <b>Central System URL*:</b><br>
+              <b data-bind="i18n: 'ocppserver'">Central System URL*:</b><br>
               <input data-bind="textInput: config.ocpp_server" type="text" autocapitalize="none"><br/>
               <span class="small-text">e.g 'wss://ocpp.my-cpms.com/steve/websocket/CentralSystemService'</span>
             </div>
             <p data-bind="visible: config.ocpp_enabled">
-              <b>Charge box ID*:</b>
+              <b data-bind="i18n: 'ocppid'">Charge box ID*:</b>
               <input data-bind="textInput: config.ocpp_chargeBoxId" type="text" autocapitalize="none">
             </p>
             <p data-bind="visible: config.ocpp_enabled">
-              <b>ID Tag*:</b>
+              <b data-bind="i18n: 'ocppidtag'">ID Tag*:</b>
               <input data-bind="textInput: config.ocpp_idTag" type="text" autocapitalize="none">
             </p>
             <p data-bind="visible: config.ocpp_enabled">
-              <b>Transaction start point:</b><br>
+              <b data-bind="i18n: 'ocppspoint'">Transaction start point:</b><br>
               <select data-bind="visible: config.ocpp_enabled,
                                     options: config.supported_tx_start_points,
                                     optionsText: function(item) {
@@ -557,19 +569,19 @@
                                     value: config.tx_start_point"></select>
             </p>
             <p data-bind="visible: config.ocpp_enabled">
-              <b>Access control:</b><br>
+              <b data-bind="i18n: 'ocppacccont'">Access control:</b><br>
               <span>
                 <input id="ocpp_suspend_evse" type="checkbox" data-bind="checked: config.ocpp_suspend_evse" />
-                <label for="ocpp_suspend_evse">OCPP can suspend EVSE</label>
+                <label for="ocpp_suspend_evse" data-bind="i18n: 'ocppsuspend'">OCPP can suspend EVSE</label>
               </span><br>
               <span>
                 <input id="ocpp_energize_plug" type="checkbox" data-bind="checked: config.ocpp_energize_plug" />
-                <label for="ocpp_energize_plug">OCPP can energize plug</label>
+                <label for="ocpp_energize_plug" data-bind="i18n: 'ocppenergize'">OCPP can energize plug</label>
               </span>
             </p>
             <p>
-              <button data-bind="click: ocppGroup.save, text: (ocppGroup.fetching() ? 'Saving' : (ocppGroup.success() ? 'Saved' : 'Save')), disable: ocppGroup.fetching">Save</button>
-              <span data-bind="visible: config.ocpp_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.ocpp_connected() ? 'Yes' : 'No'"></span></b></span>
+              <button data-bind="i18n: 'save', click: ocppGroup.save, text: (ocppGroup.fetching() ? i18nextko.t('saving') : (ocppGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: ocppGroup.fetching">Save</button>
+              <span data-bind="visible: config.ocpp_enabled"><b>&nbsp;<span data-bind="i18n: 'connected'"> Connected:</span>&nbsp;<span data-bind="text: 1 === status.ocpp_connected() ? i18nextko.t('yes') : i18nextko.t('no')"></span></b></span>
             </p>
           </div>        
         </div>
@@ -584,13 +596,13 @@
 
           <!-- Session Status -->
           <div data-bind="visible: status.isError" class="box box-full left error">
-            <h4>EVSE Error</h4>
+            <h4 data-bind="i18n: 'evseerror'">EVSE Error</h4>
             <span data-bind="text: status.estate"></span>
           </div>
 
           <div data-bind="visible: !status.evse_connected()" class="box box-full left error">
-            <h4>EVSE Error</h4>
-            <span>OpenEVSE not responding or not connected</span>
+            <h4 data-bind="i18n: 'evseerror'">EVSE Error</h4>
+            <span data-bind="i18n: 'evseerrordesc1'">OpenEVSE not responding or not connected</span>
           </div>
 
           <div data-bind="visible: !status.isError() &amp;&amp; status.evse_connected(),
@@ -600,15 +612,15 @@
                                  sleeping: status.isPaused() &amp;&amp; 0 == status.vehicle(),
                                  sleeping_connected: status.isPaused() &amp;&amp; 1 == status.vehicle() }"
                class="box box-full left">
-            <h2 class="left">Status</h2>
+            <h2 class="left" data-bind="i18n: 'status'">Status</h2>
             <h2 class="right" data-bind="text: status.estate"></h2>
 
             <table>
               <tr>
-                <th>Current</th>
-                <th>Energy</th>
-                <th>Temp</th>
-                <th>Elapsed</th>
+                <th data-bind="i18n: 'current'">Current</th>
+                <th data-bind="i18n: 'energy'">Energy</th>
+                <th data-bind="i18n: 'temp'">Temp</th>
+                <th data-bind="i18n: 'elapsed'">Elapsed</th>
               </tr>
               <tr>
                 <td><span data-bind="text: scaleString(status.amp(), 1000, 2) + ' A'"></span></td>
@@ -620,55 +632,55 @@
 
             <div data-bind="visible: ecoMode() &amp;&amp; isEcoModeAvailable()">
               <br>
-              <span data-bind="visible: haveSolar"><b>Solar:</b></span>
-              <span data-bind="visible: haveGridIe"><b>Grid Import/Export:</b></span>
+              <span data-bind="visible: haveSolar"><b data-bind="i18n: 'divertsolar'">Solar:</b></span>
+              <span data-bind="visible: haveGridIe"><b data-bind="i18n: 'divertgrid'">Grid Import/Export:</b></span>
               <span data-bind="text: haveGridIe() ? status.grid_ie() : status.solar()"></span>W -
               <span data-bind="text: formatUpdate(openevse.time.divert_update()), css: updateClass(openevse.time.divert_update())"></span>
               |
-              <span data-bind="visible: status.isReady()"><b>Vehicle not connected</b></span>
-              <span data-bind="visible: status.isSleeping() || (status.isConnected() &amp;&amp; !status.isCharging())"><b>Waiting for solar</b></span>
-              <span data-bind="visible: status.isCharging()"><b>Charging from solar</b></span>
-              <!--span data-bind="visible: status.isCharging()"><b>Fast charging</b></span-->
+              <span data-bind="visible: status.isReady()"><b data-bind="i18n: 'evnocon'">Vehicle not connected</b></span>
+              <span data-bind="visible: status.isSleeping() || (status.isConnected() &amp;&amp; !status.isCharging())"><b data-bind="i18n: 'divertwait'">Waiting for solar</b></span>
+              <span data-bind="visible: status.isCharging()"><b data-bind="i18n: 'divertcharge'">Charging from solar</b></span>
+
               <span data-bind="visible: status.isCharging()">
-                | <b>Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A
+                | <b data-bind="i18n: 'chargerate'">Charge rate:</b> <span data-bind="text: status.charge_rate"></span>A
               </span>
               <span data-bind="visible: advancedMode">
                 <br/>
-                <b>Active:</b> <span data-bind="text: status.divert_active() ? 'yes' : 'no'"></span>
-                | <b>Voltage:</b> <span data-bind="text: parseFloat(status.voltage()).toFixed(1)"></span>V
-                <span data-bind="visible: status.available_current() !== false">| <b>Available Current:</b> <span data-bind="text: parseFloat(status.available_current()).toFixed(2)"></span>A</span>
-                <span data-bind="visible: status.smoothed_available_current() !== false">| <b>Smoothed Current:</b> <span data-bind="text: parseFloat(status.smoothed_available_current()).toFixed(2)"></span>A</span>
-                <span data-bind="visible: status.min_charge_end() !== false">| <b>Min time remaining:</b> <span data-bind="text: status.min_charge_end"></span></span>
+                <b data-bind="i18n: 'active'">Active:</b> <span data-bind="text: status.divert_active() ? i18nextko.t('yes') : i18nextko.t('no')"></span>
+                | <b data-bind="i18n: 'voltage'">Voltage:</b> <span data-bind="text: parseFloat(status.voltage()).toFixed(1)"></span>V
+                <span data-bind="visible: status.available_current() !== false">| <b data-bind="i18n: 'avcur'">Available Current:</b> <span data-bind="text: parseFloat(status.available_current()).toFixed(2)"></span>A</span>
+                <span data-bind="visible: status.smoothed_available_current() !== false">| <b data-bind="i18n: 'smcur'">Smoothed Current:</b> <span data-bind="text: parseFloat(status.smoothed_available_current()).toFixed(2)"></span>A</span>
+                <span data-bind="visible: status.min_charge_end() !== false">| <b data-bind="i18n: 'mintimerem'">Min time remaining:</b> <span data-bind="text: status.min_charge_end"></span></span>
               </span>
             </div>
 
             <div data-bind="visible: advancedMode() &amp;&amp; schedule_plan.active">
               <br>
-              <b>Current Event:</b> <span data-bind="text: schedule_plan.current_event_type"></span>, <span data-bind="text: schedule_plan.current_event_time"></span> |
-              <b>Next Event:</b> <span data-bind="text: schedule_plan.next_event_type"></span>, <span data-bind="text: schedule_plan.next_event_time"></span>
+              <b data-bind="i18n: 'curevent'">Current Event:</b> <span data-bind="text: schedule_plan.current_event_type"></span>, <span data-bind="text: schedule_plan.current_event_time"></span> |
+              <b data-bind="i18n: 'nxtevent'">Next Event:</b> <span data-bind="text: schedule_plan.next_event_type"></span>, <span data-bind="text: schedule_plan.next_event_time"></span>
             </div>
           </div>
 
           <!-- Session Options -->
           <div class="box380 left" data-bind="visible: status.evse_connected">
-            <h2>Charge Options</h2>
+            <h2 data-bind="i18n: 'chargeopt'">Charge Options</h2>
 
             <div data-bind="visible: isEcoModeAvailable">
-              <span data-bind="css: {selected: !ecoMode() }">Normal (fast)</span>
+              <span data-bind="i18n: 'modenml', css: {selected: !ecoMode() }">Normal (fast)</span>
               <label class="switch">
                 <input type="checkbox" data-bind="checked: ecoMode" />
                 <div class="slider round"></div>
               </label>
-              <span data-bind="css: {selected: ecoMode }">Eco (PV divert)</span><br/>
+              <span data-bind="i18n: 'modeeco',css: {selected: ecoMode }">Eco (PV divert)</span><br/>
             </div>
 
             <p data-bind="visible: !status.isError() &amp;&amp; !ecoMode()">
-              <h3 data-bind="visible: status.manual_override">Manual Override</h3>
-              <button data-bind="click: setOverride,
+              <h3 data-bind="i18n: 'manoverride', visible: status.manual_override">Manual Override</h3>
+              <button data-bind="i18n: 'start', click: setOverride,
                                  enable: !setOverrideFetching(),
                                  visible: !status.manual_override(),
                                  text: status.isPaused() ? 'Start' : 'Pause'">Start</button>
-              <button data-bind="click: clearOverride,
+              <button data-bind="i18n: 'clear', click: clearOverride,
                                  enable: !clearOverrideFetching(),
                                  visible: status.manual_override()">Clear</button>
             </p>
@@ -676,7 +688,7 @@
             <span data-bind="visible: !status.isError() &amp;&amp; !ecoMode()">
               <hr \>
               <p>
-                <b>Time limit:</b><br\>
+                <b data-bind="i18n: 'timelimit'">Time limit:</b><br\>
                 <select data-bind="options: openevse.timeLimits,
                                    optionsText: 'name',
                                    optionsValue: 'value',
@@ -686,7 +698,7 @@
               </p>
 
               <p>
-                <b>Energy limit:</b><br\>
+                <b data-bind="i18n: 'energylimit'">Energy limit:</b><br\>
                 <select data-bind="options: openevse.chargeLimits,
                                    optionsText: 'name',
                                    optionsValue: 'value',
@@ -698,27 +710,28 @@
 
             <hr> <br>
             <div data-bind="with: schedule">
-              <b>Timer:</b><br>
-                Start: <input type="time" data-bind="value: delayTimerStart, disable: $root.status.isError" />
+              <b data-bind="i18n: 'timer'">Timer:</b><br>
+                <span  data-bind="i18n: 'start'">Start</span>:<input type="time" data-bind="value: delayTimerStart, disable: $root.status.isError" />
                 &nbsp;&nbsp;
-                Stop: <input type="time" data-bind="value: delayTimerStop, disable: $root.status.isError" /><br/>
-                <span class="small-text" data-bind="visible: $root.config.scheduler_start_window() !== false &amp;&amp; $root.config.scheduler_start_window() > 0">
-                A random delay of up to +/-<span data-bind="text: Math.round($root.config.scheduler_start_window() / 60)"></span> minutes will be applied to the start time to help prevent sudden
-                load increases on the grid.
-                <br />
+                  <span data-bind="i18n: 'stop'">Stop</span>: <input type="time" data-bind="value: delayTimerStop, disable: $root.status.isError" /><br/>
+                  <span class="small-text" data-bind="visible: $root.config.scheduler_start_window() !== false &amp;&amp; $root.config.scheduler_start_window() > 0">
+                    <span data-bind="i18n: 'delaydesc1'">A random delay of up to +/-</span>
+                    <span data-bind="text: Math.round($root.config.scheduler_start_window() / 60)"></span>
+                    <span data-bind="i18n: 'delaydesc2'">minutes will be applied to the start time to help prevent sudden load increases on the grid.</span>
+                    <br />
                 </span>
                 <br />
                 <span data-bind="visible: $root.advancedMode() &amp;&amp; delayTimerEnabled()">
-                <b>Random start adjust:</b><br/>
-                <input type="number" data-bind="value: $root.config.scheduler_start_window" min="0" max="1800" step="60" style="width: 80%" /> seconds<br />
+                <b data-bind="i18n: 'delayadj'">Random start adjust:</b><br/>
+                <input type="number" data-bind="value: $root.config.scheduler_start_window" min="0" max="1800" step="60" style="width: 80%" /> <span data-bind="i18n: 'seconds'">seconds</span><br />
                 <br />
                 </span>
-                <button data-bind="text: delayTimerEnabled() ? 'Update' : 'Set',
+                <button data-bind="i18n: 'set', text: delayTimerEnabled() ? 'Update' : 'Set',
                                    enable: !updatingDelayTimer() &amp;&amp;
                                            delayTimerValid() &amp;&amp;
                                            !$root.status.isError(),
                                    click: startDelayTimer">Set</button>
-                <button data-bind="visible: delayTimerEnabled(),
+                <button data-bind="i18n: 'cancel', visible: delayTimerEnabled(),
                                    enable: !updatingDelayTimer() &amp;&amp;
                                            !$root.status.isError(),
                                    click: stopDelayTimer">Cancel</button>
@@ -727,18 +740,18 @@
 
           <!-- Energy -->
           <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
-            <h2>Energy</h2>
+            <h2 data-bind="i18n: 'energy'">Energy</h2>
             <table>
               <tr>
-                <th>Energy</th>
+                <th data-bind="i18n: 'energy'">Energy</th>
                 <th></th>
               </tr>
               <tr>
-                <td>This Session:</td>
+                <td data-bind="i18n: 'session'">This Session:</td>
                 <td><span data-bind="text: scaleString(status.session_energy(), 1000, 2)+ ' kWh'"></span></td>
               </tr>
               <tr>
-                <td>Total:</td>
+                <td data-bind="i18n: 'total'">Total:</td>
                 <td><span data-bind="text: scaleString(status.total_energy(), 1, 2)+ ' kWh'"></span></td>
               </tr>
             </table>
@@ -746,38 +759,38 @@
 
           <!-- Sensor Values -->
           <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
-            <h2>Sensor Values</h2>
+            <h2 data-bind="i18n: 'sensorval'">Sensor Values</h2>
             <table>
               <tr>
-                <th>Sensor</th>
-                <th>Value</th>
+                <th data-bind="i18n: 'sensor'">Sensor</th>
+                <th data-bind="i18n: 'value'">Value</th>
               </tr>
               <tr>
-                <td>Pilot:</td>
+                <td data-bind="i18n: 'pilot'">Pilot:</td>
                 <td><span data-bind="text: status.pilot() + ' A'"></span></td>
               </tr>
               <tr>
-                <td>Current Now:</td>
+                <td data-bind="i18n: 'curnow'">Current Now:</td>
                 <td><span data-bind="text: scaleString(status.amp(), 1000, 2) + ' A'"></span></td>
               </tr>
               <tr data-bind="visible: false !== status.voltage()">
-                <td>Voltage:</td>
+                <td data-bind="i18n: 'voltage'">Voltage:</td>
                 <td><span data-bind="text: scaleString(status.voltage(), 1, 2) + ' V'"></span></td>
               </tr>
               <tr data-bind="visible: false !== status.temp1()">
-                <td>Temp1:</td>
+                <td><span data-bind="i18n: 'temp'">Temp</span>1:</td>
                 <td><span data-bind="text: scaleString(status.temp1(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
               <tr data-bind="visible: false !== status.temp2()">
-                <td>Temp2:</td>
+                <td><span data-bind="i18n: 'temp'">Temp</span>2:</td>
                 <td><span data-bind="text: scaleString(status.temp2(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
               <tr data-bind="visible: false !== status.temp3()">
-                <td>Temp3:</td>
+                <td><span data-bind="i18n: 'temp'">Temp</span>3:</td>
                 <td><span data-bind="text: scaleString(status.temp3(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
               <tr data-bind="visible: false !== status.temp4()">
-                <td>Temp4:</td>
+                <td><span data-bind="i18n: 'temp'">Temp</span>4:</td>
                 <td><span data-bind="text: scaleString(status.temp4(), 10, 1) + ' &deg;C'"></span></td>
               </tr>
             </table>
@@ -785,34 +798,34 @@
 
           <!-- Settings -->
           <div class="box380 setup" data-bind="visible: status.evse_connected, css: { right: !advancedMode(), left: advancedMode() }">
-            <h2>Setup</h2>
+            <h2 data-bind="i18n: 'setup'">Setup</h2>
             <p data-bind="visible: !openevse.time.hasRTC()">
-              <b>Time: No RTC detected</b>
+              <b data-bind="i18n: 'rtc'">Time: No RTC detected</b>
             </p>
             <p data-bind="with: openevse.time, visible: openevse.time.hasRTC()">
-              <b>Time:</b><br/>
+              <b><span data-bind="i18n: 'time'">Time</span>:</b><br/>
               <input type="date" data-bind="value: date, disable: automaticTime" />
               <input type="time" data-bind="value: time, disable: automaticTime" /><br/>
             </p>
             <p data-bind="visible: openevse.time.hasRTC() && false !== config.time_zone() && 'ntp' === timeSource()">
-              <b>Time zone:</b><br/>
+              <b data-bind="i18n: 'timezone'">Time zone:</b><br/>
               <select data-bind="options: zones.zones,
                         optionsText: 'name',
                         optionsValue: 'value',
                         value: time_zone"></select>
             </p>
             <div data-bind="visible: openevse.time.hasRTC()">
-              Set time from
+              <span data-bind="i18n: 'settimefrom'">Set time from</span>
               <select data-bind="value: timeSource" style="width: 100px">
-                <option value="manual">Manual</option>
-                <option value="browser">Browser</option>
-                <option value="ntp" data-bind="visible: false !== config.sntp_hostname()">NTP</option>
+                <option value="manual" data-bind="i18n: 'manual'">Manual</option>
+                <option value="browser" data-bind="i18n: 'browser'">Browser</option>
+                <option value="ntp" data-bind="i18n: 'ntp', visible: false !== config.sntp_hostname()">NTP</option>
               </select>
               <button data-bind="click: setTime, text: (setTimeFetching() ? 'Saving' : (setTimeSuccess() ? 'Saved' : 'Set time')), disable: setTimeFetching">Set time</button>
             </div>
             <hr>
             <p>
-              <b>Service Level:</b><br/>
+              <b data-bind="i18n: 'servicelev'">Service Level:</b><br/>
               <select data-bind="options: openevse.serviceLevels,
                                  optionsText: 'name',
                                  optionsValue: 'value',
@@ -822,7 +835,7 @@
             </p>
 
             <p>
-              <b>Max Current:</b><br/>
+              <b data-bind="i18n: 'maxcur'">Max Current:</b><br/>
               <select data-bind="options: openevse.currentLevels,
                                   optionsText: 'name',
                                   optionsValue: 'value',
@@ -834,37 +847,37 @@
 
           <!-- Current -->
           <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
-            <h2>Current</h2>
+            <h2 data-bind="i18n: 'current'">Current</h2>
             <table>
               <tr>
-                <th>Name</th>
+                <th data-bind="i18n: 'name'">Name</th>
                 <th>
                 </th>
               </tr>
               <tr>
-                <td>Service Level:</td>
+                <td data-bind="i18n: 'servicelev'">Service Level:</td>
                 <td>
                   <span data-bind="text: status.service_level"></span>
                 </td>
               </tr>
               <tr>
-                <td>Level <span data-bind="text: status.service_level"></span> Minimum:</td>
+                <td><span  data-bind="i18n: 'level'">Level</span>&nbsp;<span data-bind="text: status.service_level"></span>&nbsp;<span data-bind="i18n: 'min'">Minimum:</span></td>
                 <td>
                   <span data-bind="text: config.min_current_hard() + ' A'"></span>
                 </td>
               </tr>
               <tr>
-                <td>Level <span data-bind="text: status.service_level"></span> Maximum:</td>
+                <td><span data-bind="i18n: 'level'">Level</span>&nbsp;<span data-bind="text: status.service_level"></span>&nbsp;<span data-bind="i18n: 'max'">Maximum:</span></td>
                 <td>
                   <span data-bind="text: config.max_current_hard() + ' A'"></span>
                 </td>
               </tr>
               <tr>
-                <td>Sensor Scale:</td>
+                <td data-bind="i18n: 'ssrscale'">Sensor Scale:</td>
                 <td><span data-bind="text: config.scale"></span></td>
               </tr>
               <tr>
-                <td>Sensor Offset:</td>
+                <td data-bind="i18n: 'ssroff'">Sensor Offset:</td>
                 <td><span data-bind="text: config.offset"></span></td>
               </tr>
             </table>
@@ -872,24 +885,24 @@
 
           <!-- Safety -->
           <div class="box380 left" data-bind="visible: status.evse_connected() &amp;&amp; (advancedMode() || !config.all_tests_enabled())">
-            <h2>Safety<span class="info" data-bind="click: toggle.bind($data, showSafety)"></span></h2>
+            <h2 data-bind="i18n: 'safety'">Safety<span class="info" data-bind="click: toggle.bind($data, showSafety)"></span></h2>
 
-            <div class="box" data-bind="visible: showSafety()">
+            <div class="box" data-bind="visible: showSafety()" data-bind="i18n: 'safetydesc'">
               Hardware safety checks. Enable dev mode (System > Developer Mode) to enable/disable or use the physical LCD + menu button.
             </div>
 
             <div data-bind="visible: !config.all_tests_enabled()" class="box warning">
-              <h4>Warning!!</h4>
-              Not all the safety tests are enabled, please take extra care before charging your vehicle.
+              <h4 data-bind="i18n: 'warning'">Warning!!</h4>
+              <span data-bind="i18n: 'safetywarn'">Not all the safety tests are enabled, please take extra care before charging your vehicle.</span>
             </div>
 
             <table>
               <tr>
-                <th>Test</th>
-                <th>Status</th>
+                <th data-bind="i18n: 'test'">Test</th>
+                <th data-bind="i18n: 'status'">Status</th>
               </tr>
               <tr data-bind="css: {error: 9 === status.state() }">
-                <td>GFI Self Test:</td>
+                <td data-bind="i18n: 'gfcitest'">GFCI Self Test:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
                     <input type="checkbox" data-bind="checked: config.gfci_check" />
@@ -899,7 +912,7 @@
                 </td>
               </tr>
               <tr data-bind="css: {error: 7 === status.state() }">
-                <td>Ground Monitoring:</td>
+                <td data-bind="i18n: 'gndmon'">Ground Monitoring:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
                     <input type="checkbox" data-bind="checked: config.ground_check" />
@@ -909,7 +922,7 @@
                 </td>
               </tr>
               <tr data-bind="css: {error: 8 === status.state() }">
-                <td>Stuck Contact Detection:</td>
+                <td data-bind="i18n: 'stckctdec'">Stuck Contact Detection:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
                     <input type="checkbox" data-bind="checked: config.relay_check" />
@@ -919,7 +932,7 @@
                 </td>
               </tr>
               <tr data-bind="css: {error: 10 === status.state() }">
-                <td>Temperature Monitoring:</td>
+                <td data-bind="i18n: 'tempmon'">Temperature Monitoring:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
                     <input type="checkbox" data-bind="checked: config.temp_check" />
@@ -929,7 +942,7 @@
                 </td>
               </tr>
               <tr data-bind="css: {error: 5 === status.state() }">
-                <td>Diode Check:</td>
+                <td data-bind="i18n: 'diodechk'">Diode Check:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
                     <input type="checkbox" data-bind="checked: config.diode_check" />
@@ -939,7 +952,7 @@
                 </td>
               </tr>
               <tr data-bind="css: {error: 4 === status.state() }">
-                <td>Vent Required:</td>
+                <td data-bind="i18n: 'ventrq'">Vent Required:</td>
                 <td>
                   <label class="switch" data-bind="visible: developerMode">
                     <input type="checkbox" data-bind="checked: config.vent_check" />
@@ -949,19 +962,19 @@
                 </td>
               </tr>
               <tr>
-                <th>Error</th>
-                <th>Count</th>
+                <th data-bind="i18n: 'error'">Error</th>
+                <th data-bind="i18n: 'count'">Count</th>
               </tr>
               <tr>
-                <td>GFCI:</td>
+                <td data-bind="i18n: 'gfci'">GFCI:</td>
                 <td><span data-bind="text: status.gfcicount"></span></td>
               </tr>
               <tr>
-                <td>No Ground:</td>
+                <td data-bind="i18n: 'nognd'">No Ground:</td>
                 <td><span data-bind="text: status.nogndcount"></span></td>
               </tr>
               <tr>
-                <td>Stuck Contact:</td>
+                <td data-bind="i18n: 'stkct'">Stuck Contact:</td>
                 <td><span data-bind="text: status.stuckcount"></span></td>
               </tr>
             </table>
@@ -969,14 +982,14 @@
 
           <!-- Hardware -->
           <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
-            <h2>Hardware</h2>
+            <h2 data-bind="i18n: 'hardware'">Hardware</h2>
             <table>
               <tr>
-                <th>OpenEVSE</th>
+                <th data-bind="i18n: 'openevse'">OpenEVSE</th>
                 <th></th>
               </tr>
               <tr>
-                <td>Firmware:</td>
+                <td data-bind="i18n: 'firmware'">Firmware:</td>
                 <td><span data-bind="text: config.firmware"></span></td>
               </tr>
               <tr>
@@ -985,47 +998,47 @@
                 </td>
               </tr>
               <tr>
-                <th>OpenEVSE WiFi</th>
+                <th data-bind="i18n: 'openevsewifi'">OpenEVSE WiFi</th>
                 <th></th>
               </tr>
               <tr data-bind="visible: false !== config.buildenv()">
-                <td>Firmware config:</td>
+                <td data-bind="i18n: 'fwconf'">Firmware config:</td>
                 <td><span data-bind="text: config.buildenv"></span></td>
               </tr>
               <tr>
-                <td>Firmware version:</td>
+                <td data-bind="i18n: 'fwver'">Firmware version:</td>
                 <td><span data-bind="text: config.version"></span></td>
               </tr>
               <tr data-bind="visible: false !== config.espinfo()">
-                <td>ESP info:</td>
+                <td data-bind="i18n: 'espinfo'">ESP info:</td>
                 <td><span data-bind="text: config.espinfo"></span></td>
               </tr>
               <tr>
-                <td>Flash Size:</td>
+                <td data-bind="i18n: 'flashsz'">Flash Size:</td>
                 <td><span data-bind="text: scaleString(config.espflash(), 1024, 0) + 'K'"></span></td>
               </tr>
               <tr>
-                <td>Free RAM:</td>
+                <td data-bind="i18n: 'freeram'">Free RAM:</td>
                 <td><span data-bind="text: scaleString(status.free_heap(), 1024, 0) + 'K'"></span></td>
               </tr>
               <tr>
                 <td colspan="2">
-                  <button data-bind="click: restart, text: (restartFetching() ? 'Restarting...' : 'Restart'), disable: restartFetching">Restart</button>
+                  <button data-bind="i18n: 'restart', click: restart, text: (restartFetching() ? i18nextko.t('restarting') : i18nextko.t('restart')), disable: restartFetching">Restart</button>
                 </td>
               </tr>
             </table>
           </div>
 
           <div class="box380 right" data-bind="visible: advancedMode() &amp;&amp; status.evse_connected()">
-            <h2>Vehicle Settings</h2>
-            <h3>Pause status <span class="info" data-bind="click: toggle.bind($data, showVehiclePauseStatus)"></span></h3>
-            <div class="box" data-bind="visible: showVehiclePauseStatus()">
+            <h2 data-bind="i18n: 'evsettings'">Vehicle Settings</h2>
+            <h3><span data-bind="i18n: 'evpause'">Pause status </span><span class="info" data-bind="click: toggle.bind($data, showVehiclePauseStatus)"></span></h3>
+            <div class="box" data-bind="i18n: 'evpausedesc', visible: showVehiclePauseStatus()">
               Some vehicles will shutdown if left in sleep mode (pilot signal enable) and then can not be woken up by timers/PV divert. Changing the
               pause state to disable should resolve this issue, however this removes the ability for the charger to detect if a vehicle is connected
               when paused.
             </div>
             <div>
-              <span data-bind="css: {selected: !config.pause_uses_disabled() }">Sleep</span>
+              <span data-bind="i18n: 'sleep', css: {selected: !config.pause_uses_disabled() }">Sleep</span>
               <label class="switch">
                 <input type="checkbox" data-bind="checked: config.pause_uses_disabled" />
                 <div class="slider round"></div>
@@ -1037,20 +1050,20 @@
           <div class="box380" data-bind="visible: status.evse_connected,
                                          css: { right: !advancedMode() &amp;&amp; !config.all_tests_enabled(),
                                                 left: advancedMode() || config.all_tests_enabled() }">
-            <h2>Display</h2>
+            <h2 data-bind="i18n: 'display'">Display</h2>
             <div>
-              <span data-bind="css: {selected: !advancedMode() }">Simple</span>
+              <span data-bind="i18n: 'simple', css: {selected: !advancedMode() }">Simple</span>
               <label class="switch">
                 <input type="checkbox" data-bind="checked: advancedMode" />
                 <div class="slider round"></div>
               </label>
-              <span data-bind="css: {selected: advancedMode }">Advanced</span><br/>
+              <span data-bind="i18n: 'advanced', css: {selected: advancedMode }">Advanced</span><br/>
             </div>
 
             <hr/>
 
             <p data-bind="visible: config.led_brightness() !== false">
-              <b>LED Brightness:</b><br\>
+              <b data-bind="i18n: 'brightness'">LED Brightness:</b><br\>
               <span class="rangeslidercontainer">
                 <input type="range" min="0" max="255" class="rangeslider"
                        data-bind="value: config.led_brightness,
@@ -1067,16 +1080,16 @@
           </div>
 
           <div class="box box-full left">
-            <h2 class="left">History</h2>
+            <h2 class="left" data-bind="i18n: 'history'">History</h2>
 
             <table>
               <thead>
                 <tr>
-                  <th>Time</th>
-                  <th>Type</th>
-                  <th>Status</th>
-                  <th>Energy</th>
-                  <th>Temp</th>
+                  <th data-bind="i18n: 'time'">Time</th>
+                  <th data-bind="i18n: 'type'">Type</th>
+                  <th data-bind="i18n: 'status'">Status</th>
+                  <th data-bind="i18n: 'energy'">Energy</th>
+                  <th data-bind="i18n: 'temp'">Temp</th>
                 </tr>
               </thead>
               <tbody data-bind="foreach: logs.events">
@@ -1090,7 +1103,7 @@
               </tbody>
               <tfoot data-bind="visible: logs.hasMore, disable: logs.fetchingBlock">
                 <tr>
-                  <td colspan="5" data-bind="click: logs.updateNext, clickBubble: false" style="text-align: center;">Load more</td>
+                  <td colspan="5" data-bind="click: logs.updateNext, clickBubble: false" style="text-align: center;"><span style="cursor: pointer" data-bind="i18n: 'loadmore'">Load more</span></td>
                 </tr>
               </tfoot>
             </table>
@@ -1256,27 +1269,27 @@
         <!--TAB 5: Vehicle -->
         <div id="content-5" data-bind="visible: isVehicle">
           <div class="box380 left">
-            <h2>Setup</h2>
+            <h2 data-bind="i18n: 'setup'">Setup</h2>
             <select data-bind="value: vehicle.type">
-              <option value="none">None</option>
-              <option value="tesla">Tesla</option>
+              <option value="none" data-bind="i18n: 'none'">None</option>
+              <option value="tesla" data-bind="i18n: 'tesla'">Tesla</option>
               <!-- option value="ovms">OVMS</option -->
-              <option value="mqtt">MQTT</option>
+              <option value="mqtt" data-bind="i18n: 'mqtt'">MQTT</option>
             </select>
 
             <div data-bind="visible: 'none' == vehicle.type()">
-              <p>Select the vehicle connection type</p>
+              <p data-bind="i18n: 'selectevcon'">Select the vehicle connection type</p>
             </div>
 
             <div data-bind="visible: 'tesla' == vehicle.type()">
               <hr/>
-              <h3>Tesla</h3>
+              <h3 data-bind="i18n: 'tesla'">Tesla</h3>
               <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; !vehicle.tesla.advanced()">
-                <b>Username:</b>
+                <b data-bind="i18n: 'username'">Username:</b>
                 <input data-bind="textInput: vehicle.tesla.username" type="text" autocapitalize="none">
               </p>
               <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; !vehicle.tesla.advanced()">
-                <b>Password:</b>
+                <b data-bind="i18n: 'password'">Password:</b>
                 <input type="password" autocapitalize="none" data-bind="textInput: vehicle.tesla.password" /><br />
                 <!--span>
                   <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
@@ -1284,7 +1297,7 @@
                 </span-->
               </p>
               <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; vehicle.tesla.advanced()">
-                <b>Access token</b>
+                <b data-bind="i18n: 'accesstoken'">Access token</b>
                 <input data-bind="textInput: config.tesla_access_token" type="password" autocapitalize="none">
                 <!--span>
                   <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
@@ -1292,7 +1305,7 @@
                 </span-->
               </p>
               <p data-bind="visible: !vehicle.tesla.have_credentials() &amp;&amp; vehicle.tesla.advanced()">
-                <b>Refresh token</b>
+                <b data-bind="i18n: 'reftoken'">Refresh token</b>
                 <input data-bind="textInput: config.tesla_refresh_token" type="password" autocapitalize="none">
                 <!--span>
                   <input id="mqttPassword" type="checkbox" data-bind="checked: mqttPassword.show" />
@@ -1300,16 +1313,19 @@
                 </span-->
               </p>
               <div class="box" data-bind="visible: showTeslaAdvancedInfo()">
-                The Tesla login may break from time-to-time as Tesla change their login API, hopefully OpenEVSE will be able to resolve the
-                issue on <a href="https://github.com/OpenEVSE/ESP32_WiFi_V4.x/tree/master/tesla_login" target="_blank">our server</a>,
-                but should the login fail you can use a 3rd Party app to generate the appropriate tokens.
+                T<span data-bind="i18n: 'teslalogindesc1'">The Tesla login may break from time-to-time as Tesla change their login API, hopefully OpenEVSE will be able to resolve the
+                issue on </span>
+                <a href="https://github.com/OpenEVSE/ESP32_WiFi_V4.x/tree/master/tesla_login" target="_blank">
+                  <span data-bind="i18n: 'teslalogindesc2'">our server</span>
+                </a>,
+                <span data-bind="i18n: 'teslalogindesc3'">but should the login fail you can use a 3rd Party app to generate the appropriate tokens.</span>
 
                 <ul>
-                  <li><b>Apple</b>: <a href="https://apps.apple.com/us/app/auth-app-for-tesla/id1552058613" target="_blank">Auth app for Tesla</a></li>
-                  <li><b>Andriod</b>: <a href="https://play.google.com/store/apps/details?id=net.leveugle.teslatokens&hl=en_GB&gl=US" target="_blank">Tesla Tokens</a></li>
+                  <li><b data-bind="i18n: 'apple'">Apple</b>: <a href="https://apps.apple.com/us/app/auth-app-for-tesla/id1552058613" target="_blank">Auth app for Tesla</a></li>
+                  <li><b data-bind="i18n: 'android'">Android</b>: <a href="https://play.google.com/store/apps/details?id=net.leveugle.teslatokens&hl=en_GB&gl=US" target="_blank">Tesla Tokens</a></li>
                 </ul>
 
-                These can be entered in the `Advanced` section as an alternative method of logging in.
+                <span data-bind="i18n: 'teslalogindesc4'">These can be entered in the `Advanced` section as an alternative method of logging in.</span>
               </div>
               <p data-bind="visible: vehicle.tesla.have_credentials()">
                 <select data-bind="options: vehicle.tesla.vehicles,
@@ -1319,74 +1335,78 @@
                   visible: vehicle.tesla.vehicles().length > 0">
                 </select>
                 <span data-bind="visible: 0 == vehicle.tesla.vehicles().length">
-                  Fetching vehicle info ...
+                  <span data-bind="i18n: 'evfetching'"></span>>Fetching vehicle info ...</span>
                 </span>
               </p>
             </div>
 
             <div data-bind="visible: 'ovms' == vehicle.type()">
               <hr/>
-              <h3>Open Vehicle Monitoring System</h3>
+              <h3 data-bind="i18n: 'ovms'">Open Vehicle Monitoring System</h3>
 
             </div>
 
             <div data-bind="visible: 'mqtt' == vehicle.type()">
               <hr/>
-              <h3>MQTT</h3>
+              <h3 data-bind="i18n: 'mqtt'">MQTT</h3>
 
               <div class="box error" data-bind="visible: !config.mqtt_enabled()">
-                <h4>MQTT not enabled.</h4>
-                You need to enable MQTT on the <a href="#services">Services</a> tab.
+                <h4 data-bind="i18n: 'nomqtt'">MQTT not enabled.</h4>
+                <span data-bind="i18n: 'nomqttdesc'">You need to enable MQTT on the <a href="#services">Services</a> tab.</span>
               </div>
 
               <p data-bind="visible: config.mqtt_enabled()">
-                <b>State of Charge topic:</b><br>
+                <b data-bind="i18n: 'soctopic'">State of Charge topic:</b><br>
                 <input data-bind="textInput: config.mqtt_vehicle_soc" type="text" autocapitalize="none"><br>
-                <span class="small-text">The battery level of charge as a percentage</span>
+                <span class="small-text" data-bind="i18n: 'socdesc'">The battery level of charge as a percentage</span>
               </p>
 
               <div data-bind="visible: config.mqtt_enabled()">
-                <b>Range topic:</b><br>
+                <b data-bind="i18n: 'rangetopic'">Range topic:</b><br>
                 <div class="divert">
                   <input data-bind="textInput: config.mqtt_vehicle_range" type="text" autocapitalize="none">
                   <select data-bind="value: vehicle.mqtt_vehicle_range_units">
-                    <option value="km">km</option>
-                    <option value="mi">miles</option>
+                    <option value="km" data-bind="i18n: 'km'">km</option>
+                    <option value="mi" data-bind="i18n: 'miles'">miles</option>
                   </select><br/>
-                  <span class="small-text">The range (on electric) of the vehicle based on the current battery level</span>
+                  <span class="small-text" data-bind="i18n: 'rangedesc'">The range (on electric) of the vehicle based on the current battery level</span>
                 </div>
               </div>
 
               <p data-bind="visible: config.mqtt_enabled()">
-                <b>Time to charge topic:</b><br>
+                <b data-bind="i18n: 'timetopic'">Time to charge topic:</b><br>
                 <input data-bind="textInput: config.mqtt_vehicle_eta" type="text" autocapitalize="none"><br>
-                <span class="small-text">The time until the battery is fully charged in seconds</span>
+                <span class="small-text" data-bind="i18n: 'timedesc'">The time until the battery is fully charged in seconds</span>
               </p>
 
             </div>
 
             <p data-bind="">
-              <button data-bind="visible: vehicle.show_save(),
+              <button data-bind="i18n: 'save',
+                                 visible: vehicle.show_save(),
                                  click: vehicleStateGroup.save,
-                                 text: (vehicleStateGroup.fetching() ? 'Saving' : (vehicleStateGroup.success() ? 'Saved' : 'Save')),
+                                 text: (vehicleStateGroup.fetching() ? i18nextko.t('saving') : (vehicleStateGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))),
                                  disable: vehicleStateGroup.fetching">
                 Save
               </button>
-              <button data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
-                                  click: vehicle.tesla.login,
-                                  text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Login')),
-                                  disable: vehicle.tesla.fetching">
+              <button data-bind="i18n: 'login',
+                                 visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
+                                 click: vehicle.tesla.login,
+                                 text: (vehicle.tesla.fetching() ? i18nextko.t('saving') : (vehicle.tesla.success() ? i18nextko.t('saved') : i18nextko.t('login'))),
+                                 disable: vehicle.tesla.fetching">
                 Login
               </button>
-              <button data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
+              <button data-bind="i18n: 'advanced',
+                                 visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
                                  click: vehicle.tesla.showAdvanced">
                 Advanced
               </button>
               <span class="info" data-bind="visible: !vehicle.tesla.have_credentials() && !vehicle.show_save(),
                                             click: toggle.bind($data, showTeslaAdvancedInfo)"></span>
-              <button data-bind="visible: vehicle.tesla.have_credentials(),
+              <button data-bind="i18n: 'logout',
+                                 visible: vehicle.tesla.have_credentials(),
                                  click: vehicle.tesla.logout,
-                                 text: (vehicle.tesla.fetching() ? 'Saving' : (vehicle.tesla.success() ? 'Saved' : 'Logout')),
+                                 text: (vehicle.tesla.fetching() ? i18nextko.t('saving') : (vehicle.tesla.success() ? i18nextko.t('saved') : i18nextko.t('logout'))),
                                  disable: vehicle.tesla.fetching">
                 Logout
               </button>
@@ -1395,27 +1415,27 @@
           </div>
 
           <div class="box380 right error" data-bind="visible: false !== status.tesla_error()">
-            <h4>Error</h4>
+            <h4 data-bind="i18n: 'error'">Error</h4>
             <span data-bind="text: status.tesla_error"></span>
           </div>
 
           <div class="box380 right" data-bind="visible: vehicle.has_status">
-            <h2>Status</h2>
+            <h2 data-bind="i18n: 'status'">Status</h2>
             <table>
               <tr>
-                <th>Status</th>
+                <th data-bind="i18n: 'status'">Status</th>
                 <th><span data-bind="text: formatUpdate(openevse.time.vehicle_state_update()), css: updateClass(openevse.time.vehicle_state_update())"></span></th>
               </tr>
               <tr data-bind="visible: false !== status.battery_level()">
-                <td>Battery Level:</td>
+                <td data-bind="i18n: 'battlvl'">Battery Level:</td>
                 <td><span data-bind="text: status.battery_level()+ '%'"></span></td>
               </tr>
               <tr data-bind="visible: false !== status.battery_range()">
-                <td>Battery Range:</td>
+                <td data-bind="i18n: 'battrng'">Battery Range:</td>
                 <td><span data-bind="text: status.battery_range() + ' ' + (vehicle.mqtt_vehicle_range_units())"></span></td>
               </tr>
               <tr data-bind="visible: false !== status.time_to_full_charge()">
-                <td>Time to full charge:</td>
+                <td data-bind="i18n: 'timefchg'">Time to full charge:</td>
                 <td><span data-bind="text: new Date(status.time_to_full_charge() * 1000).toISOString().substr(11, 8)"></span></td>
               </tr>
             </table>
@@ -1427,7 +1447,7 @@
       <!--end content-->
 
       <div id="footer">
-        <br><b> Powered by <a href="http://www.openevse.com">OpenEVSE</a> and <a href="https://openenergymonitor.org">OpenEnergyMonitor</a></b>
+        <br><b> Powered by <a href="http://www.openevse.com" data-bind="i18n: 'openevse'">OpenEVSE</a> and <a href="https://openenergymonitor.org">OpenEnergyMonitor</a></b>
         <br>
         <b>Version: </b>V<span data-bind="text: config.version"></span>
       </div>
@@ -1438,6 +1458,8 @@
   <!--end page -->
   <script src="lib.js"></script>
   <script src="home.js"></script>
+  <script src="localisation.js"></script>
+  
 </body>
 
 </html>

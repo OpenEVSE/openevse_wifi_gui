@@ -27,6 +27,7 @@ var mergeOptions = {
       "node_modules/jquery/dist/jquery.js",
       "node_modules/knockout/build/output/knockout-latest.js",
       "node_modules/knockout-mapping/dist/knockout.mapping.js",
+      "node_modules/i18next-ko/lib/i18next-ko.bundle.js",
       "src/view_models/BaseViewModel.js",
       "src/view_models/ConfigViewModel.js",
       "src/view_models/StateHelperViewModel.js",
@@ -59,6 +60,9 @@ var mergeOptions = {
     "wifi_portal.js": [
       "src/view_models/WiFiPortalViewModel.js",
       "src/wifi_portal.js"
+    ],
+    "localisation.js": [
+      "src/localisation.js"
     ]
   },
 };

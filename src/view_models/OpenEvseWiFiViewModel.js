@@ -390,7 +390,22 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       });
     }
   };
-
+  // -----------------------------------------------------------------------
+  // Event: Language save
+  // -----------------------------------------------------------------------
+  self.saveLangFetching = ko.observable(false);
+  self.saveLangSuccess = ko.observable(false);
+  self.saveLang = function () {
+    self.saveLangFetching(true);
+    self.saveLangSuccess(false);
+    $.post(self.baseEndpoint() + "/config", JSON.stringify({ lang: self.config.lang() }), function () {
+      self.saveLangSuccess(true);
+    }).fail(function () {
+      alert("Failed to save Lang config");
+    }).always(function () {
+      self.saveLangFetching(false);
+    });
+  };
   // -----------------------------------------------------------------------
   // Event: Admin save
   // -----------------------------------------------------------------------
@@ -1060,4 +1075,10 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     }
     return def;
   };
+
+  self.config.lang = ko.observable('en');
+  self.config.lang.subscribe(function (value) {
+    i18nextko.setLanguage(value);
+  })
+  self.languages = ['en', 'fr'];
 }

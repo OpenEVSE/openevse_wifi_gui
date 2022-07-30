@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "GUI for the OpenEVSE WiFi module",
   "dependencies": {
+    "i18next-ko": "^3.0.1",
     "jquery": "^3.5.1",
     "knockout": "^3.5.1",
     "knockout-mapping": "^2.6.0"
