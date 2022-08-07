@@ -20,11 +20,13 @@ function ConfigViewModel(baseEndpoint) {
     "mqtt_reject_unauthorized": true,
     "mqtt_reject_unauthorized_enable": false,
     "mqtt_topic": "",
+    "mqtt_retained": false,
     "mqtt_user": "",
     "mqtt_pass": "",
     "mqtt_solar": "",
     "mqtt_grid_ie": "",
     "mqtt_vrms": "",
+    "mqtt_live_pwr": "",
     "mqtt_enabled": 0,
     "mqtt_vehicle_soc": "",
     "mqtt_vehicle_range": "",
@@ -71,6 +73,8 @@ function ConfigViewModel(baseEndpoint) {
     "divert_attack_smoothing_factor": 0.4,
     "divert_decay_smoothing_factor": 0.05,
     "divert_min_charge_time": 600,
+    "current_shaper_enabled": false,
+    "current_shaper_max_pwr": 9000,
     "charge_mode": "full",
     "pause_uses_disabled": false,
     "led_brightness": false,
@@ -104,6 +108,7 @@ function ConfigViewModel(baseEndpoint) {
   this.mqtt_solar.subscribe((v) => { trim(this.mqtt_solar, v); });
   this.mqtt_grid_ie.subscribe((v) => { trim(this.mqtt_grid_ie, v); });
   this.mqtt_vrms.subscribe((v) => { trim(this.mqtt_vrms, v); });
+  this.mqtt_live_pwr.subscribe((v) => { trim(this.mqtt_live_pwr, v); });
   this.ohmkey.subscribe((v) => { trim(this.ohmkey, v); });
   this.www_username.subscribe((v) => { trim(this.www_username, v); });
   this.hostname.subscribe((v) => { trim(this.hostname, v); });

@@ -305,9 +305,9 @@
             </p>
             <p data-bind="visible: config.emoncms_enabled() &amp;&amp; 0 === status.emoncms_connected() &amp;&amp; false !== status.emoncms_message(), text: status.emoncms_message"></p>
           </div>
-
+          <!-- MQTT -->  
           <div class="box380 right">
-            <h2>MQTT</h2>
+            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="mqtt.png" align="left" />MQTT</h2>
             <p>
               <input type="checkbox" id="mqtt_enabled" data-bind="checked: config.mqtt_enabled" />
               <label for="mqtt_enabled"><b>Enable MQTT</b></label>
@@ -377,6 +377,13 @@
               <input data-bind="textInput: config.mqtt_topic" type="text" autocapitalize="none"><br/>
               <span class="small-text">e.g 'openevse'</span>
             </p>
+            <div data-bind="visible: config.mqtt_enabled() ">
+              <b>Retain published data</b>
+              <label class="switch">
+                <input type="checkbox" data-bind="checked: config.mqtt_retained" />
+                <div class="slider round"></div>
+              </label>
+            </div>
             <p data-bind="visible: config.mqtt_enabled">
               <b>Voltage topic:</b>
               <input data-bind="textInput: config.mqtt_vrms" type="text" autocapitalize="none" hint="emon/emonpi/vrms"><br>
@@ -387,7 +394,30 @@
               <span data-bind="visible: config.mqtt_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.mqtt_connected() ? 'Yes' : 'No'"></span></b></span>
             </p>
           </div>
+          <!-- Current Shaper -->
+          <div class="box380 left">
+            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="shaper.png" align="left" />Current Shaper</h2>
+            <p>
+              <input type="checkbox" id="current_shaper_enabled" data-bind="checked: config.current_shaper_enabled" />
+              <label for="current_shaper_enabled"><b>Enable Current Shaper</b></label>
+            </p>
+            <p data-bind="visible: config.current_shaper_enabled">
+              Throttle charge current following your house loads to prevent exceeding what your energy plan can deliver.<br>
+            </p>
+            <p data-bind="visible: config.current_shaper_enabled">
+              <b>Max power allowed (in W):</b><br>
+              <input data-bind="textInput: config.current_shaper_max_pwr" type="number" />
+            </p>
+            <p data-bind="visible: config.current_shaper_enabled">
+              <b>Live power load MQTT Topic (in W)</b>
+              <input data-bind="textInput: config.mqtt_live_pwr" type="text" />
+            </p>
+            <p>
+              <button data-bind="click: saveCurrentShaper, text: (saveCurrentShaperFetching() ? 'Saving' : (saveCurrentShaperSuccess() ? 'Saved' : 'Save')), disable: saveCurrentShaperFetching">Save</button>
+            </p>
+          </div>
 
+          <!-- Ohm -->
           <div class="box380 left">
             <h2>OhmConnect <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="ohm.jpg" align=left></h2>
             <p>
@@ -421,7 +451,7 @@
 
           <!-- Divert Mode -->
           <div class="box380 right">
-            <h2>Solar PV divert</h2>
+            <h2>Solar PV divert <img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="solar.png" align=left></h2>
 
             <p data-bind="visible: config.mqtt_enabled">
               <input type="checkbox" id="divert_enabled" data-bind="checked: config.divert_enabled" />
@@ -493,7 +523,7 @@
               <span class="small-text">The minimum amount of time (seconds) to charge the car once enabled via the Solar PV divert. This can help minimise wear and tear on the EVSE.</span>
             </p>
 
-            <p data-bind="visible: isEcoModeAvailable">
+            <p>
               <button data-bind="click: divertGroup.save, text: (divertGroup.fetching() ? 'Saving' : (divertGroup.success() ? 'Saved' : 'Save')), disable: divertGroup.fetching">Save</button>
             </p>
           </div>
@@ -541,8 +571,12 @@
               <button data-bind="click: ocppGroup.save, text: (ocppGroup.fetching() ? 'Saving' : (ocppGroup.success() ? 'Saved' : 'Save')), disable: ocppGroup.fetching">Save</button>
               <span data-bind="visible: config.ocpp_enabled"><b>&nbsp; Connected:&nbsp;<span data-bind="text: 1 === status.ocpp_connected() ? 'Yes' : 'No'"></span></b></span>
             </p>
-          </div>
+          </div>        
         </div>
+        
+
+
+
         <!--end TAB 2-->
 
         <!--TAB 3: OpenEVSE -->
