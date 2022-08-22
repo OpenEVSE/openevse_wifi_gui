@@ -55,6 +55,12 @@ function WiFiPortalViewModel(baseHost, basePort)
 
           self.status.connect();
 
+          self.status.config_version.subscribe(() => {
+            self.config.update(() => {
+              self.status.update();
+            });
+          });
+
           self.config.min_current_hard.subscribe(() => {
             self.generateCurrentList();
           });
