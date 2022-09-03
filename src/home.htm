@@ -61,14 +61,14 @@
                 <span data-bind="text: status.packets_success"></span><span data-bind="i18n: 'of'"> of </span><span data-bind="text: status.packets_sent"></span>
               </p>
               <p><b data-bind="i18n: 'openevse'">OpenEVSE</b></p>
-              <p><b data-bind="i18n: 'rapipackets'">RAPI packets:</b><br><span data-bind="text: status.comm_success"></span><span data-bind="i18n: 'of'"></span> of </span><span data-bind="text: status.comm_sent"></span></p>
+              <p><b data-bind="i18n: 'rapipackets'">RAPI packets:</b><br><span data-bind="text: status.comm_success"></span><span data-bind="i18n: 'of'"></span> of <span data-bind="text: status.comm_sent"></span></p>
             </div>
 
             <div id="client-view" data-bind="visible: !wifi.canConfigure() &amp;&amp; !wifi.wifiConnecting() &amp;&amp; !status.isWired()">
               <table>
                 <tr>
                   <th data-bind="i18n: 'network'">Network</th>
-                  <th data-bind="i18n: 'rssi'"></thdata-bind>RSSI dBm</th>
+                  <th data-bind="i18n: 'rssi'">RSSI dBm</th>
                 </tr>
                 <tbody id="sta-ssid">
                   <tr data-bind="click: function () { wifi.forceConfig(true); }">
@@ -155,7 +155,7 @@
 
           <div class="box380 right">
             <h2 data-bind="i18n: 'wififirmware'">WiFi Firmware</h2>
-            <p><b data-bind="i18n: 'version'"">Version: </b><span data-bind="text: config.version"></span></p>
+            <p><b data-bind="i18n: 'version'">Version: </b><span data-bind="text: config.version"></span></p>
             <div data-bind="visible: !updateFetching() && !updateComplete()">
               <form action="#" method="post" enctype="multipart/form-data" id="upload_form" data-bind="submit: otaUpdate">
                 <input type="file" name="update" data-bind="value: updateFilename">
@@ -252,7 +252,7 @@
             </div>
             <h3 data-bind="i18n: 'serialconsoles'">Serial Consoles</h3>
             <div>
-              <button onclick="window.open('term.html?debug');" data-bind="i18n: 'debug'"">Debug</button>
+              <button onclick="window.open('term.html?debug');" data-bind="i18n: 'debug'">Debug</button>
               <button onclick="window.open('term.html?evse');" data-bind="i18n: 'openevse'">OpenEVSE</button>
             </div>
           </div>
@@ -315,7 +315,7 @@
           </div>
           <!-- MQTT -->  
           <div class="box380 right">
-            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="mqtt.png" align="left" /><span data-bind="i18n: 'mqtt'"">MQTT</span></h2>
+            <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="mqtt.png" align="left" /><span data-bind="i18n: 'mqtt'">MQTT</span></h2>
             <p>
               <input type="checkbox" id="mqtt_enabled" data-bind="checked: config.mqtt_enabled" />
               <label for="mqtt_enabled"><b data-bind="i18n: 'mqttenable'">Enable MQTT</b></label>
@@ -431,7 +431,7 @@
 
           <!-- Ohm -->
           <div class="box380 left">
-            <h2><span data-bind="i18n: 'ohm'">OhmConnect</span><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="ohm.jpg" align=left></h2>
+            <h2><span data-bind="i18n: 'ohm'">OhmConnect</span><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="ohm.jpg" align="left"></h2>
             <p>
               <input type="checkbox" id="ohm_enabled" data-bind="checked: config.ohm_enabled" />
               <label for="ohm_enabled"><b data-bind="i18n: 'ohmenable'">Enable OhmConnect</b></label>
@@ -463,7 +463,7 @@
 
           <!-- Divert Mode -->
           <div class="box380 right">
-            <h2><span data-bind="i18n: 'divert'">Solar PV divert</span><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="solar.png" align=left></h2>
+            <h2><span data-bind="i18n: 'divert'">Solar PV divert</span><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="solar.png" align="left"></h2>
 
             <p data-bind="visible: config.mqtt_enabled">
               <input type="checkbox" id="divert_enabled" data-bind="checked: config.divert_enabled" />
@@ -482,7 +482,7 @@
                 <ul>
                   <li><span class="small-text" data-bind="i18n: 'divertdesc2'">If only solar PV feed available: charge rate is modulated based on <b>solar PV generation.</b></span></li>
                   <li><span class="small-text" data-bind="i18n: 'divertdesc3'">If grid +I/-E (positive Import / negative Export) feed is available: charge rate will be modulated by available  <b>excess power.</b></span></li>
-                  <li><span class="small-text" data-bind="i18n: 'divertdesc4'">If EVSE is sleeping: charging will begin when solar PV / excess power > min charge rate.</span></li>
+                  <li><span class="small-text" data-bind="i18n: 'divertdesc4'">If EVSE is sleeping: charging will begin when solar PV / excess power is greater than min charge rate.</span></li>
                   <li><span class="small-text" data-bind="i18n: 'divertdesc5'">Charging will pause if the excess power drops below the min charge rate for a period of time.</span></li>
                 </ul>
                 <span class="small-text"><i data-bind="i18n: 'divertnote'">Note: It's assumed that EVSE power is included in the grid feed</i></span><br>
@@ -541,7 +541,7 @@
           </div>
 
           <div class="box380 left">
-            <h2><span data-bind="i18n: 'ocpp'">OCPP 1.6</span><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="arduinoocpp.png" align=left></h2>
+            <h2><span data-bind="i18n: 'ocpp'">OCPP 1.6</span><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="arduinoocpp.png" align="left"></h2>
             <p>
               <input type="checkbox" id="ocpp_enabled" data-bind="checked: config.ocpp_enabled" />
               <label for="ocpp_enabled"><b data-bind="i18n: 'ocppenable'">Enable OCPP</b></label>
@@ -688,7 +688,7 @@
             <span data-bind="visible: !status.isError() &amp;&amp; !ecoMode()">
               <hr \>
               <p>
-                <b data-bind="i18n: 'timelimit'">Time limit:</b><br\>
+                <b data-bind="i18n: 'timelimit'">Time limit:</b><br>
                 <select data-bind="options: openevse.timeLimits,
                                    optionsText: 'name',
                                    optionsValue: 'value',
@@ -698,7 +698,7 @@
               </p>
 
               <p>
-                <b data-bind="i18n: 'energylimit'">Energy limit:</b><br\>
+                <b data-bind="i18n: 'energylimit'">Energy limit:</b><br>
                 <select data-bind="options: openevse.chargeLimits,
                                    optionsText: 'name',
                                    optionsValue: 'value',
@@ -887,8 +887,8 @@
           <div class="box380 left" data-bind="visible: status.evse_connected() &amp;&amp; (advancedMode() || !config.all_tests_enabled())">
             <h2 data-bind="i18n: 'safety'">Safety<span class="info" data-bind="click: toggle.bind($data, showSafety)"></span></h2>
 
-            <div class="box" data-bind="visible: showSafety()" data-bind="i18n: 'safetydesc'">
-              Hardware safety checks. Enable dev mode (System > Developer Mode) to enable/disable or use the physical LCD + menu button.
+            <div class="box" data-bind="i18n: 'safetydesc', visible: showSafety()">
+              Hardware safety checks. Enable dev mode (System / Developer Mode) to enable/disable or use the physical LCD + menu button.
             </div>
 
             <div data-bind="visible: !config.all_tests_enabled()" class="box warning">
@@ -1063,7 +1063,7 @@
             <hr/>
 
             <p data-bind="visible: config.led_brightness() !== false">
-              <b data-bind="i18n: 'brightness'">LED Brightness:</b><br\>
+              <b data-bind="i18n: 'brightness'">LED Brightness:</b><br>
               <span class="rangeslidercontainer">
                 <input type="range" min="0" max="255" class="rangeslider"
                        data-bind="value: config.led_brightness,
@@ -1115,11 +1115,11 @@
         <!--TAB 4: RAPI -->
         <div id="content-4" data-bind="visible: isRapi() &amp;&amp; status.evse_connected()">
           <div class="box box-full left">
-            <form method='get' action='r' data-bind="with: rapi">
+            <form method="get" action="r" data-bind="with: rapi">
               <p>
                 <b>RAPI Command:</b>
                 <div data-bind="html: history"></div>
-                <input type="text" autocapitalize="none" name='rapi' length='32' data-bind="textInput: cmd" />
+                <input type="text" autocapitalize="none" name="rapi" length="32" data-bind="textInput: cmd" />
               </p>
               <p>
                 <button data-bind="click: send, disable: rapiSend">Send</button>
@@ -1335,7 +1335,7 @@
                   visible: vehicle.tesla.vehicles().length > 0">
                 </select>
                 <span data-bind="visible: 0 == vehicle.tesla.vehicles().length">
-                  <span data-bind="i18n: 'evfetching'"></span>>Fetching vehicle info ...</span>
+                  <span data-bind="i18n: 'evfetching'">Fetching vehicle info ...</span>
                 </span>
               </p>
             </div>
