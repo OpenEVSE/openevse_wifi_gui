@@ -93,6 +93,7 @@ i18nextko.init({
 		'voltagetop': 'Voltage topic:',
 		'voltagedesc': 'Voltage MQTT topic to improve power calculations',
 		'shaper': 'Current Shaper',
+		'shaperenable': 'Enable Current Shaper',
 		'shaperdesc': 'Throttle charge current following your house loads to prevent exceeding what your energy plan can deliver.<br>',
 		'shapermaxpow': 'Max power allowed (in W):',
 		'shaperlivepow': 'Live power load MQTT Topic (in W):',
