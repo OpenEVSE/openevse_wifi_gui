@@ -7,6 +7,7 @@ function ConfigViewModel(baseEndpoint) {
   BaseViewModel.call(this, {
     "ssid": "",
     "pass": "",
+    "lang": "en",
     "emoncms_server": "data.openevse.com/emoncms",
     "emoncms_apikey": "",
     "emoncms_node": "",
@@ -113,6 +114,7 @@ function ConfigViewModel(baseEndpoint) {
   this.www_username.subscribe((v) => { trim(this.www_username, v); });
   this.hostname.subscribe((v) => { trim(this.hostname, v); });
   this.sntp_hostname.subscribe((v) => { trim(this.sntp_hostname, v); });
+  this.lang.subscribe((v) => { trim(this.lang, v); });
 
   // Derived config
   this.all_tests_enabled = ko.pureComputed(() => {
