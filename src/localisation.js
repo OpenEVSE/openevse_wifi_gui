@@ -221,7 +221,7 @@ i18nextko.init({
 		'espinfo': 'ESP info:',
 		'flashsz': 'Flash Size:',
 		'freeram': 'Free RAM:',
-		'evsettings': 'Vehicule Settings',
+		'evsettings': 'Vehicle Settings',
 		'evpause': 'Pause status',
 		'evpausedesc': 'Some vehicles will shutdown if left in sleep mode (pilot signal enable) and then can not be woken up by timers/PV divert. Changing the pause state to disable should resolve this issue, however this removes the ability for the charger to detect if a vehicle is connected when paused.',
 		'sleep': 'Sleep',
