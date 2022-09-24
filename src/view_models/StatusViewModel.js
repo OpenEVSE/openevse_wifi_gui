@@ -51,6 +51,7 @@ function StatusViewModel(baseEndpoint) {
     "solar": 0,
     "grid_ie": 0,
     "charge_rate": 0,
+    "trigger_current": false,
     "available_current": false,
     "smoothed_available_current": false,
     "divert_update": 0,
