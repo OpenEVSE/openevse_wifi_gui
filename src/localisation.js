@@ -257,7 +257,11 @@ i18nextko.init({
 		'logout': 'Logout',
 		'battlvl': 'Battery Level:',
 		'battrng': 'Battery Range:',
-		'timefchg': 'Time to full charge:'
+		'timefchg': 'Time to full charge:',
+		'http': 'HTTP',
+		'httppush': 'HTTP Push (Always Active)',
+		'httppushinfo': 'To update manually vehicule data, send HTTP POST request to:',
+		'httppushinfo2': 'containing json data in body:'
 
 	  }
 	},
@@ -519,7 +523,11 @@ i18nextko.init({
 		'logout': 'Déconnecter',
 		'battlvl': 'Niveau Batterie:',
 		'battrng': 'Autonomie Batterie:',
-		'timefchg': 'Temps de charge complète restant:'
+		'timefchg': 'Temps de charge complète restant:',
+		'http': 'HTTP',
+		'httppush': 'Push HTTP (Toujours actif)',
+		'httppushinfo': 'Pour mettre à jours manuellement les données véhicule, envoyer une requête HTTP POST vers:',
+		'httppushinfo2': 'contenant ce modèle json dans body:'
 		}
 	}
   }, "en", ko);
