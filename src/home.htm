@@ -684,10 +684,10 @@
 
             <p data-bind="visible: !status.isError() &amp;&amp; !ecoMode()">
               <h3 data-bind="i18n: 'manoverride', visible: status.manual_override">Manual Override</h3>
-              <button data-bind="i18n: 'start', click: setOverride,
+              <button data-bind="click: setOverride,
                                  enable: !setOverrideFetching(),
                                  visible: !status.manual_override(),
-                                 text: status.isPaused() ? 'Start' : 'Pause'">Start</button>
+                                 text: status.isPaused() ? i18nextko.t('start') : i18nextko.t('pause')"></button>
               <button data-bind="i18n: 'clear', click: clearOverride,
                                  enable: !clearOverrideFetching(),
                                  visible: status.manual_override()">Clear</button>
@@ -1298,7 +1298,7 @@
                     <b>http://{OPENEVSE IP}/status</b>
                     <br>
                   </p>
-                  
+
                   <div data-bind="i18n: 'httppushinfo2'">
                     containing json data in body:
                   </div>
@@ -1309,7 +1309,7 @@
   "time_to_full_charge": int // charge ETA (sec)
 }
                     </pre>
-                  
+
                 </div>
               </p>
 
