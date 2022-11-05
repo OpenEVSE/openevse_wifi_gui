@@ -1287,8 +1287,33 @@
 
             <div data-bind="visible: 'none' == vehicle.type()">
               <p data-bind="i18n: 'selectevcon'">Select the vehicle connection type</p>
-            </div>
+              <hr/>
+              <h3 data-bind="i18n: 'httppush'">HTTP Push</h3>
+              <p>
 
+                <div>
+                  <p>
+                    <span data-bind="i18n: 'httppushinfo'">To update manually vehicule data, send HTTP POST request to:</span>
+                    <br>
+                    <b>http://{OPENEVSE IP}/status</b>
+                    <br>
+                  </p>
+                  
+                  <div data-bind="i18n: 'httppushinfo2'">
+                    containing json data in body:
+                  </div>
+                    <pre id="json">
+{
+  "battery_level": int, // SOC (%)
+  "battery_range": int, // Range (km/miles)
+  "time_to_full_charge": int // charge ETA (sec)
+}
+                    </pre>
+                  
+                </div>
+              </p>
+
+            </div>
             <div data-bind="visible: 'tesla' == vehicle.type()">
               <hr/>
               <h3 data-bind="i18n: 'tesla'">Tesla</h3>
