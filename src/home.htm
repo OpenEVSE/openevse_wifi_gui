@@ -313,7 +313,7 @@
             </p>
             <p data-bind="visible: config.emoncms_enabled() &amp;&amp; 0 === status.emoncms_connected() &amp;&amp; false !== status.emoncms_message(), text: status.emoncms_message"></p>
           </div>
-          <!-- MQTT -->  
+          <!-- MQTT -->
           <div class="box380 right">
             <h2><img src="data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="mqtt.png" align="left" /><span data-bind="i18n: 'mqtt'">MQTT</span></h2>
             <p>
@@ -583,9 +583,9 @@
               <button data-bind="i18n: 'save', click: ocppGroup.save, text: (ocppGroup.fetching() ? i18nextko.t('saving') : (ocppGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: ocppGroup.fetching">Save</button>
               <span data-bind="visible: config.ocpp_enabled"><b>&nbsp;<span data-bind="i18n: 'connected'"> Connected:</span>&nbsp;<span data-bind="text: 1 === status.ocpp_connected() ? i18nextko.t('yes') : i18nextko.t('no')"></span></b></span>
             </p>
-          </div>        
+          </div>
         </div>
-        
+
 
 
 
@@ -648,8 +648,16 @@
                 <br/>
                 <b data-bind="i18n: 'active'">Active:</b> <span data-bind="text: status.divert_active() ? i18nextko.t('yes') : i18nextko.t('no')"></span>
                 | <b data-bind="i18n: 'voltage'">Voltage:</b> <span data-bind="text: parseFloat(status.voltage()).toFixed(1)"></span>V
-                <span data-bind="visible: status.available_current() !== false">| <b data-bind="i18n: 'avcur'">Available Current:</b> <span data-bind="text: parseFloat(status.available_current()).toFixed(2)"></span>A</span>
-                <span data-bind="visible: status.smoothed_available_current() !== false">| <b data-bind="i18n: 'smcur'">Smoothed Current:</b> <span data-bind="text: parseFloat(status.smoothed_available_current()).toFixed(2)"></span>A</span>
+                <span data-bind="visible: status.available_current() !== false">
+                  | <b data-bind="i18n: 'avcur'">Available Current:</b> <span data-bind="text: parseFloat(status.available_current()).toFixed(2)"></span>A
+                </span>
+                <span data-bind="visible: status.smoothed_available_current() !== false">
+                  | <b data-bind="i18n: 'smcur'">Smoothed Current:</b>
+                  <span data-bind="style: { color: (status.smoothed_available_current() >= status.trigger_current()) ? 'green' : 'red'}">
+                    <span data-bind="text: parseFloat(status.smoothed_available_current()).toFixed(2)"></span>A /
+                    <span data-bind="text: parseFloat(status.trigger_current()).toFixed(2)"></span>A
+                  </span>
+                </span>
                 <span data-bind="visible: status.min_charge_end() !== false">| <b data-bind="i18n: 'mintimerem'">Min time remaining:</b> <span data-bind="text: status.min_charge_end"></span></span>
               </span>
             </div>
@@ -1460,7 +1468,7 @@
   <script src="lib.js"></script>
   <script src="home.js"></script>
   <script src="localisation.js"></script>
-  
+
 </body>
 
 </html>
