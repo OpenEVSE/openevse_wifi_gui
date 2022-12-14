@@ -121,7 +121,7 @@ function StatusViewModel(baseEndpoint) {
   // -----------------------------------------------------------------------
   self.wsEndpoint = ko.pureComputed(function () {
     let base = new URL(baseEndpoint(), location.href);
-    var endpoint = ("https" === base.protocol ? "wss://" : "ws://") + base.hostname;
+    var endpoint = ("https:" === base.protocol ? "wss://" : "ws://") + base.hostname;
     if(80 !== base.port) {
       endpoint += ":"+base.port;
     }
