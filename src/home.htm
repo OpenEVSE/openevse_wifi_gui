@@ -556,17 +556,8 @@
               <input data-bind="textInput: config.ocpp_chargeBoxId" type="text" autocapitalize="none">
             </p>
             <p data-bind="visible: config.ocpp_enabled">
-              <b data-bind="i18n: 'ocppidtag'">ID Tag*:</b>
-              <input data-bind="textInput: config.ocpp_idTag" type="text" autocapitalize="none">
-            </p>
-            <p data-bind="visible: config.ocpp_enabled">
-              <b data-bind="i18n: 'ocppspoint'">Transaction start point:</b><br>
-              <select data-bind="visible: config.ocpp_enabled,
-                                    options: config.supported_tx_start_points,
-                                    optionsText: function(item) {
-                                      if (item === 'tx_pending') {return 'StartTransaction pending';} else if (item === 'tx_accepted') {return 'StartTransaction accepted';} else {return 'only RemoteStartTransaction';}
-                                    },
-                                    value: config.tx_start_point"></select>
+              <b data-bind="i18n: 'ocppauthkey'">Authorization Key:</b>
+              <input data-bind="textInput: config.ocpp_authkey" type="text" autocapitalize="none" placeholder="Basic-Authentication Key">
             </p>
             <p data-bind="visible: config.ocpp_enabled">
               <b data-bind="i18n: 'ocppacccont'">Access control:</b><br>
