@@ -604,10 +604,12 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       ocpp_enabled: self.config.ocpp_enabled(),
       ocpp_server: self.config.ocpp_server(),
       ocpp_chargeBoxId: self.config.ocpp_chargeBoxId(),
-      ocpp_idTag: self.config.ocpp_idTag(),
-      tx_start_point: self.config.tx_start_point(),
+      ocpp_authkey: self.config.ocpp_authkey(),
       ocpp_suspend_evse: self.config.ocpp_suspend_evse(),
-      ocpp_energize_plug: self.config.ocpp_energize_plug()
+      ocpp_energize_plug: self.config.ocpp_energize_plug(),
+      ocpp_auth_auto: self.config.ocpp_auth_auto(),
+      ocpp_idtag: self.config.ocpp_idtag(),
+      ocpp_auth_offline: self.config.ocpp_auth_offline()
     };
   }).validate((ocpp) => {
 
@@ -638,6 +640,11 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
 
     if (validatedUrl.protocol !== "ws:" && validatedUrl.protocol !== "wss:") {
       alert("OCPP only allows ws: and wss: as protocol");
+      return false;
+    }
+
+    if (ocpp.ocpp_auth_auto == true && !ocpp.ocpp_idtag) {
+      alert("Auto-mode requires ID-Tag");
       return false;
     }
 

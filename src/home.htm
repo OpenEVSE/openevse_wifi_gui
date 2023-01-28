@@ -549,24 +549,27 @@
             <div data-bind="visible: config.ocpp_enabled">
               <b data-bind="i18n: 'ocppserver'">Central System URL*:</b><br>
               <input data-bind="textInput: config.ocpp_server" type="text" autocapitalize="none"><br/>
-              <span class="small-text">e.g 'wss://ocpp.my-cpms.com/steve/websocket/CentralSystemService'</span>
+              <span class="small-text" data-bind="i18n: 'ocppserverhint'">e.g 'wss://ocpp.my-cpms.com/steve/websocket/CentralSystemService'</span>
             </div>
             <p data-bind="visible: config.ocpp_enabled">
-              <b data-bind="i18n: 'ocppid'">Charge box ID*:</b>
-              <input data-bind="textInput: config.ocpp_chargeBoxId" type="text" autocapitalize="none">
+              <b data-bind="i18n: 'ocppid'">Charge box ID*:</b><br>
+              <input data-bind="textInput: config.ocpp_chargeBoxId" type="text" autocapitalize="none" placeholder="ChargeBoxId">
             </p>
             <p data-bind="visible: config.ocpp_enabled">
-              <b data-bind="i18n: 'ocppidtag'">ID Tag*:</b>
-              <input data-bind="textInput: config.ocpp_idTag" type="text" autocapitalize="none">
+              <b data-bind="i18n: 'ocppauthkey'">Authorization Key:</b>
+              <input data-bind="textInput: config.ocpp_authkey" type="text" autocapitalize="none" placeholder="Basic-Authentication Key">
             </p>
             <p data-bind="visible: config.ocpp_enabled">
-              <b data-bind="i18n: 'ocppspoint'">Transaction start point:</b><br>
-              <select data-bind="visible: config.ocpp_enabled,
-                                    options: config.supported_tx_start_points,
-                                    optionsText: function(item) {
-                                      if (item === 'tx_pending') {return 'StartTransaction pending';} else if (item === 'tx_accepted') {return 'StartTransaction accepted';} else {return 'only RemoteStartTransaction';}
-                                    },
-                                    value: config.tx_start_point"></select>
+              <b data-bind="i18n: 'ocppauth'">Charge Authorization:</b><br>
+              <span>
+                <input id="ocpp_auth_auto" type="checkbox" data-bind="checked: config.ocpp_auth_auto" />
+                <label for="ocpp_auth_auto" data-bind="i18n: 'ocppauthauto'">Authorize automatically</label>
+                <input data-bind="textInput: config.ocpp_idtag, visible: config.ocpp_auth_auto" type="text" autocapitalize="none" placeholder="ID-Tag (e.g. F4D1A7694ECD21)">
+              </span><br>
+              <span>
+                <input id="ocpp_auth_offline" type="checkbox" data-bind="checked: config.ocpp_auth_offline" />
+                <label for="ocpp_auth_offline" data-bind="i18n: 'ocppauthoffline'">Skip Authorization when offline</label>
+              </span>
             </p>
             <p data-bind="visible: config.ocpp_enabled">
               <b data-bind="i18n: 'ocppacccont'">Access control:</b><br>
