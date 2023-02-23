@@ -159,8 +159,8 @@
             </div>
           </p>
           <p>
-          <button data-bind="click: wifi.saveNetwork, text: (wifi.saveNetworkFetching() ? 'Saving' : (wifi.saveNetworkSuccess() ? 'Saved' : 'Connect')), disable: wifi.saveNetworkFetching">Connect</button>
-          </p>
+          <button data-bind="click: wifi.networkGroup.save, text: (wifi.networkGroup.fetching() ? 'Saving' : (wifi.networkGroup.success() ? 'Saved' : 'Connect')), disable: wifi.networkGroup.fetching">Connect</button>
+        </p>
           <p>Connecting to a local WiFi network is not essential. OpenEVSE can be configured and controlled while in standalone WiFi AP (Access Point) mode:</p>
           <div>
             <button onclick="window.location.href='/home.html'">WiFi Standalone Mode</button>

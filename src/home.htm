@@ -117,7 +117,7 @@
                 </div>
               </p>
               <p>
-                <button data-bind="i18n: 'connect', click: wifi.netGroup.save(), text: (wifi.netGroup.fetching() ? i18nextko.t('saving') : (wifi.netGroup.success() ? i18nextko.t('saved') : i18nextko.t('connect'))), disable: wifi.netGroup.fetching">Connect</button>
+                <button data-bind="i18n: 'connect', click: wifi.networkGroup.save, text: (wifi.networkGroup.fetching() ? i18nextko.t('saving') : (wifi.networkGroup.success() ? i18nextko.t('saved') : i18nextko.t('connect'))), disable: wifi.networkGroup.fetching">Connect</button>
               </p>
             </div>
 
@@ -142,7 +142,7 @@
               </span><br />
               <span class="small-text validMessage" data-bind="i18n: '15max'" >15 characters max</span><br>
               <span class="small-text" data-bind="i18n: 'httpauth'">Web interface HTTP authentication.</span><br><br>
-              <button data-bind="i18n: 'save', click: adminGroup.save(), text: (adminGroup.fetching() ? i18nextko.t('saving') : (adminGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: adminGroup.fetching">Save</button>
+              <button data-bind="i18n: 'save', click: adminGroup.save, text: (adminGroup.fetching() ? i18nextko.t('saving') : (adminGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: adminGroup.fetching">Save</button>
             </p>
           </div>
 
@@ -305,7 +305,7 @@
               </span>
             </p>
             <p>
-              <button data-bind="i18n: 'save', click: emoncmsGroup.save(), text: (emoncmsGroup.fetching() ? i18nextko.t('saving') : (emoncmsGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: emoncmsGroup.fetching">Save</button>
+              <button data-bind="i18n: 'save', click: emoncmsGroup.save, text: (emoncmsGroup.fetching() ? i18nextko.t('saving') : (emoncmsGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: emoncmsGroup.fetching">Save</button>
             </p>
             <p>
               <span data-bind="visible: config.emoncms_enabled"><b>&nbsp; <span data-bind="i18n: 'connected'">Connected:</span>&nbsp;<span data-bind="text: 1 === status.emoncms_connected() ? i18nextko.t('yes') : i18nextko.t('no')"></span></b></span>
@@ -457,7 +457,7 @@
               <b data-bind="i18n: 'key'">Key: </b>OpnEoVse
             </p>
             <p>
-              <button data-bind="i18n: 'save', click: ohmGroup.save(), text: (ohmGroup.fetching() ? i18nextko.t('saving') : (ohmGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: ohmGroup.fetching">Save</button>
+              <button data-bind="i18n: 'save', click: ohmGroup.save, text: (ohmGroup.fetching() ? i18nextko.t('saving') : (ohmGroup.success() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: ohmGroup.fetching">Save</button>
             </p>
           </div>
 

@@ -1,4 +1,4 @@
-/* global $, ko */
+/* global $, ko, ConfigGroupViewModel */
 /* exported WiFiConfigViewModel */
 
 function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
@@ -145,7 +145,10 @@ function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
   }).validate((net) => {
     if (net.ssid === "") {
       alert("Please select network");
+      return false;
     }
+
+    return true;
   }).done(() => {
     // HACK: Almost certainly won't get a status update with client connected set to false so manually clear it here
     self.status.wifi_client_connected(false);
@@ -156,36 +159,6 @@ function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
     // Wait for a new WiFi connection
     self.wifiConnecting(true);
   });
-
-
-
-  self.saveNetworkFetching = ko.observable(false);
-  self.saveNetworkSuccess = ko.observable(false);
-  self.saveNetwork = function () {
-    if (self.config.ssid() === "") {
-      alert("Please select network");
-    } else {
-      self.saveNetworkFetching(true);
-      self.saveNetworkSuccess(false);
-      $.post(self.baseEndpoint() + "/savenetwork", { ssid: self.config.ssid(), pass: self.config.pass() }, function () {
-        // HACK: Almost certainly won't get a status update with client connected set to false so manually clear it here
-        self.status.wifi_client_connected(false);
-
-        // Done with setting the config
-        self.forceConfig(false);
-
-        // Wait for a new WiFi connection
-        self.wifiConnecting(true);
-
-        // And indiccate the save was successful
-        self.saveNetworkSuccess(true);
-      }).fail(function () {
-        alert("Failed to save WiFi config");
-      }).always(function () {
-        self.saveNetworkFetching(false);
-      });
-    }
-  };
 
   // -----------------------------------------------------------------------
   // Event: Turn off Access Point
