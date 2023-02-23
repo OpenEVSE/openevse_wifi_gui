@@ -370,27 +370,6 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   });
 
   // -----------------------------------------------------------------------
-  // Event: WiFi Connect
-  // -----------------------------------------------------------------------
-  self.saveNetworkFetching = ko.observable(false);
-  self.saveNetworkSuccess = ko.observable(false);
-  self.saveNetwork = function () {
-    if (self.config.ssid() === "") {
-      alert("Please select network");
-    } else {
-      self.saveNetworkFetching(true);
-      self.saveNetworkSuccess(false);
-      $.post(self.baseEndpoint() + "/savenetwork", { ssid: self.config.ssid(), pass: self.config.pass() }, function () {
-        self.saveNetworkSuccess(true);
-        self.wifiConnecting(true);
-      }).fail(function () {
-        alert("Failed to save WiFi config");
-      }).always(function () {
-        self.saveNetworkFetching(false);
-      });
-    }
-  };
-  // -----------------------------------------------------------------------
   // Event: Language save
   // -----------------------------------------------------------------------
   self.saveLangFetching = ko.observable(false);
@@ -406,22 +385,16 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       self.saveLangFetching(false);
     });
   };
+
   // -----------------------------------------------------------------------
   // Event: Admin save
   // -----------------------------------------------------------------------
-  self.saveAdminFetching = ko.observable(false);
-  self.saveAdminSuccess = ko.observable(false);
-  self.saveAdmin = function () {
-    self.saveAdminFetching(true);
-    self.saveAdminSuccess(false);
-    $.post(self.baseEndpoint() + "/saveadmin", { user: self.config.www_username(), pass: self.config.www_password() }, function () {
-      self.saveAdminSuccess(true);
-    }).fail(function () {
-      alert("Failed to save Admin config");
-    }).always(function () {
-      self.saveAdminFetching(false);
-    });
-  };
+  self.adminGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      www_username: self.config.www_username(),
+      www_password: self.config.www_password()
+    };
+  });
 
   // -----------------------------------------------------------------------
   // Event: Advanced save
@@ -492,35 +465,29 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   // -----------------------------------------------------------------------
   // Event: Emoncms save
   // -----------------------------------------------------------------------
-  self.saveEmonCmsFetching = ko.observable(false);
-  self.saveEmonCmsSuccess = ko.observable(false);
-  self.saveEmonCms = function () {
-    var emoncms = {
-      enable: self.config.emoncms_enabled(),
-      server: self.config.emoncms_server(),
-      apikey: self.config.emoncms_apikey(),
-      node: self.config.emoncms_node(),
-      fingerprint: self.config.emoncms_fingerprint()
-    };
 
-    if (emoncms.enable && (emoncms.server === "" || emoncms.node === "")) {
+  self.emoncmsGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      emoncms_enabled: self.config.emoncms_enabled(),
+      emoncms_server: self.config.emoncms_server(),
+      emoncms_apikey: self.config.emoncms_apikey(),
+      emoncms_node: self.config.emoncms_node(),
+      emoncms_fingerprint: self.config.emoncms_fingerprint()
+    };
+  }).validate((emoncms) => {
+    if (emoncms.emoncms_enabled && (emoncms.emoncms_server === "" || emoncms.emoncms_node === "")) {
       alert("Please enter Emoncms server and node");
-    } else if (emoncms.enable && emoncms.apikey.length !== 32 && !self.emoncmsApiKey.isDummy()) {
+      return false;
+    } else if (emoncms.emoncms_enabled && emoncms.emoncms_apikey.length !== 32 && !self.emoncmsApiKey.isDummy()) {
       alert("Please enter valid Emoncms apikey");
-    } else if (emoncms.enable && emoncms.fingerprint !== "" && emoncms.fingerprint.length !== 59) {
+      return false;
+    } else if (emoncms.emoncms_enabled && emoncms.emoncms_fingerprint !== "" && emoncms.emoncms_fingerprint.length !== 59) {
       alert("Please enter valid SSL SHA-1 fingerprint");
-    } else {
-      self.saveEmonCmsFetching(true);
-      self.saveEmonCmsSuccess(false);
-      $.post(self.baseEndpoint() + "/saveemoncms", emoncms, function () {
-        self.saveEmonCmsSuccess(true);
-      }).fail(function () {
-        alert("Failed to save Admin config");
-      }).always(function () {
-        self.saveEmonCmsFetching(false);
-      });
+      return false;
     }
-  };
+
+    return true;
+  });
 
   // -----------------------------------------------------------------------
   // Event: MQTT save
@@ -808,22 +775,13 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   // -----------------------------------------------------------------------
   // Event: Save Ohm Connect Key
   // -----------------------------------------------------------------------
-  self.saveOhmKeyFetching = ko.observable(false);
-  self.saveOhmKeySuccess = ko.observable(false);
-  self.saveOhmKey = function () {
-    self.saveOhmKeyFetching(true);
-    self.saveOhmKeySuccess(false);
-    $.post(self.baseEndpoint() + "/saveohmkey", {
-      enable: self.config.ohm_enabled(),
-      ohm: self.config.ohmkey()
-    }, function () {
-      self.saveOhmKeySuccess(true);
-    }).fail(function () {
-      alert("Failed to save Ohm key config");
-    }).always(function () {
-      self.saveOhmKeyFetching(false);
-    });
-  };
+  self.ohmGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      ohm_enabled: self.config.ohm_enabled(),
+      ohmkey: self.config.ohmkey()
+    };
+  });
+
 
   // -----------------------------------------------------------------------
   // Event: Save Current Shaper

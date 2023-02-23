@@ -137,6 +137,28 @@ function WiFiConfigViewModel(baseEndpoint, config, status, scan) {
   // -----------------------------------------------------------------------
   // Event: WiFi Connect
   // -----------------------------------------------------------------------
+  self.networkGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
+    return {
+      ssid: self.config.ssid(),
+      pass: self.config.pass()
+    };
+  }).validate((net) => {
+    if (net.ssid === "") {
+      alert("Please select network");
+    }
+  }).done(() => {
+    // HACK: Almost certainly won't get a status update with client connected set to false so manually clear it here
+    self.status.wifi_client_connected(false);
+
+    // Done with setting the config
+    self.forceConfig(false);
+
+    // Wait for a new WiFi connection
+    self.wifiConnecting(true);
+  });
+
+
+
   self.saveNetworkFetching = ko.observable(false);
   self.saveNetworkSuccess = ko.observable(false);
   self.saveNetwork = function () {
