@@ -94,7 +94,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   var scanTime = 3 * 1000;
 
   // Get time update events
-  self.status.time.subscribe((time) => {
+  self.status.local_time.subscribe((time) => {
     self.openevse.time.timeUpdate(new Date(time));
   });
 
@@ -495,7 +495,7 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.mqttGroup = new ConfigGroupViewModel(self.baseEndpoint, () => {
     return {
       mqtt_enabled: self.config.mqtt_enabled(),
-      //does this has to fit there ? 
+      //does this has to fit there ?
       divert_enabled: self.config.divert_enabled(),
       mqtt_protocol: self.config.mqtt_protocol(),
       mqtt_server: self.config.mqtt_server(),
