@@ -60,6 +60,7 @@ function StatusViewModel(baseEndpoint) {
     "ota_update": false,
     "time": false,
     "offset": false,
+    "local_time": false,
     "service_level": false,
     "tesla_vehicle_count": false,
     "tesla_vehicle_id": false,

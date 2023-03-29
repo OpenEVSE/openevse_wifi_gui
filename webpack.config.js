@@ -114,7 +114,9 @@ module.exports = {
           "/schedule",
           "/override",
           "/tesla",
-          "/logs"
+          "/logs",
+          "/emeter",
+          "/time"
         ],
         target: openevseEndpoint
       },

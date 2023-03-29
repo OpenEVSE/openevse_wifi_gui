@@ -20,7 +20,7 @@ function OpenEvseViewModel(baseEndpoint, config, status) {
     self.openevse.setEndpoint(end);
   });
 
-  self.time = new TimeViewModel(status);
+  self.time = new TimeViewModel(status, config);
 
   self.createCurrentArray = (min, max) => {
     return Array((max - min) + 1).fill().map((_, i) => { return { name: (min+i)+" A", value: (min+i)}});
@@ -112,12 +112,6 @@ function OpenEvseViewModel(baseEndpoint, config, status) {
   // List of items to update on calling update(). The list will be processed one item at
   // a time.
   var updateList = [
-    function () {
-      if(false === status.time()) {
-        return self.openevse.time(self.time.timeUpdate);
-      }
-      return new DummyRequest();
-    },
     function () { return self.openevse.time_limit(function (limit) {
       self.selectTimeLimit(limit);
     }); },

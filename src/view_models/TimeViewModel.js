@@ -1,7 +1,7 @@
 /* global ko */
 /* exported TimeViewModel */
 
-function TimeViewModel(status)
+function TimeViewModel(status, config)
 {
   "use strict";
   var self = this;
@@ -41,6 +41,20 @@ function TimeViewModel(status)
   self.vehicleUpdateNow = ko.observable(new Date(0));
   self.vehicleUpdateLocal = ko.observable(new Date());
 
+  function getTimeOptions()
+  {
+    var opts = {};
+    if(config.time_zone() !== false)
+    {
+      var parts = config.time_zone().split("|",2);
+      if(2 == parts.length && "Default" !== parts[0]) {
+        opts.timeZone = parts[0];
+      }
+    }
+
+    return opts;
+  }
+
   self.date = ko.pureComputed({
     read: function () {
       if(null === self.nowTimedate()) {
@@ -48,7 +62,9 @@ function TimeViewModel(status)
       }
 
       var dt = self.nowTimedate();
-      return (dt.getFullYear())+"-"+addZero(dt.getMonth() + 1)+"-"+addZero(dt.getDate());
+      var dateString = dt.toLocaleDateString("en-GB", getTimeOptions());
+      var dateParts = dateString.split("/");
+      return dateParts[2]+"-"+dateParts[1]+"-"+dateParts[0];
     },
     write: function (val) {
       var dt = self.evseTimedate();
@@ -63,7 +79,7 @@ function TimeViewModel(status)
         return "--:--:--";
       }
       var dt = self.nowTimedate();
-      return addZero(dt.getHours())+":"+addZero(dt.getMinutes())+":"+addZero(dt.getSeconds());
+      return dt.toLocaleTimeString("en-GB", getTimeOptions());
     },
     write: function (val) {
       var parts = val.split(":");

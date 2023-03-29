@@ -48,7 +48,7 @@ function ZonesViewModel(baseEndpoint) {
     $.get(endpoint(), function (data) {
       var zones = [];
       for (const name in data) {
-        if (data.hasOwnProperty(name)) {
+        if (data.hasOwnProperty(name) && !name.startsWith("Etc/")) {
           zones.push({name:name, tz:data[name]});
         }
       }
