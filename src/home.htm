@@ -424,6 +424,22 @@
               <b data-bind="i18n: 'shaperlivepow'">Live power load MQTT Topic (in W):</b>
               <input data-bind="textInput: config.mqtt_live_pwr" type="text" />
             </p>
+            <p data-bind="visible: config.current_shaper_enabled">
+              <b data-bind="i18n: 'shaperminpausetime'">Minimum time staying in pause ( in s):</b>
+              <input data-bind="textInput: config.current_shaper_min_pause_time" type="number" min="0" max="600" step="1" />
+            </p>
+            <p data-bind="visible: config.current_shaper_enabled">
+              <b data-bind="i18n: 'shapermaxinterval'">Max time between live power data before entering failsafe (in s):</b>
+              <input data-bind="textInput: config.current_shaper_data_maxinterval" type="number" min="5" max="300" step="1"/>
+            </p>
+            <p>
+            <p data-bind="visible: config.current_shaper_enabled">
+              <b data-bind="i18n: 'shapersmoothing'">Input Filter Time constant (in s):</b>
+              <input data-bind="textInput: config.current_shaper_smoothing_time" type="number" hint="60" min="0" max="600" step="1"/>
+            </p>
+            <p data-bind="i18n: 'shapersmoothingsec', visible: config.current_shaper_enabled">
+              Time constant for the input filter used to get out of pause (in sec). Value of 0 means no filtering.<br>
+            </p>
             <p>
               <button data-bind="i18n: 'save', click: saveCurrentShaper, text: (saveCurrentShaperFetching() ? i18nextko.t('saving') : (saveCurrentShaperSuccess() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: saveCurrentShaperFetching">Save</button>
             </p>
@@ -518,15 +534,15 @@
             </p>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
-              <b data-bind="i18n: 'divertsmoothatt'">Divert smoothing attack:</b><br>
-              <input data-bind="textInput: config.divert_attack_smoothing_factor" type="number" autocapitalize="none" hint="0.4" min="0" max="1" step="0.01"><br>
-              <span class="small-text" data-bind="i18n: 'divertsmoothattdesc'">The amount of the new feed value to add to the divert available power rolling average </span>
+              <b data-bind="i18n: 'divertsmoothatt'">"Divert Smoothing Attack (sec):</b><br>
+              <input data-bind="textInput: config.divert_attack_smoothing_time" type="number" autocapitalize="none" hint="20" min="0" max="600" step="1"><br>
+              <span class="small-text" data-bind="i18n: 'divertsmoothattdesc'">The time constant value used for the input filter when increasing power (in sec). Value of 0 means no filtering</span>
             </p>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
-              <b data-bind="i18n: 'divertsmoothdec'">Divert smoothing decay:</b><br>
-              <input data-bind="textInput: config.divert_decay_smoothing_factor" type="number" autocapitalize="none" hint="0.05" min="0" max="1" step="0.01"><br>
-              <span class="small-text" data-bind="i18n: 'divertsmoothdecdesc'">The amount of the new feed value to remove to the divert available power rolling average </span>
+              <b data-bind="i18n: 'divertsmoothdec'">Divert smoothing decay (sec):</b><br>
+              <input data-bind="textInput: config.divert_decay_smoothing_time" type="number" autocapitalize="none" hint="0.05" min="0" max="1" step="0.01"><br>
+              <span class="small-text" data-bind="i18n: 'divertsmoothdecdesc'">The time constant value used for the input filter when decreasing power (in sec). Value of 0 means no filtering</span>
             </p>
 
             <p data-bind="visible: advancedMode() &amp;&amp; config.divert_enabled() &amp;&amp; config.mqtt_enabled()">
