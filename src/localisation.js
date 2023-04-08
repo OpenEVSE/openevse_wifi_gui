@@ -9,13 +9,13 @@ i18nextko.init({
       "system": "System",
       "services": "Services",
       "vehicle": "Vehicle",
-      "saving" : "Saving",
+      "saving": "Saving",
       "saved": "Saved",
       "save": "Save",
       "wifisetup": "Wifi Setup",
       "mode": "Mode:",
       "ip": "IP Address",
-      "sfpackets": "Successfull packets:",
+      "sfpackets": "Successful packets:",
       "rapipackets": "RAPI packets:",
       "network": "Network",
       "rssi": "RSSI dBm",
@@ -50,7 +50,7 @@ i18nextko.init({
       "hostname": "Hostname:",
       "ntpserver": "NTP Server:",
       "rfid": "RFID",
-      "enabled": "Enabled:",
+      "enabled": "Enabled",
       "rfidnotfound": "Reader not found",
       "rfidregistered": "Registered tags",
       "remove": "Remove",
@@ -183,7 +183,7 @@ i18nextko.init({
       "set": "Set",
       "cancel": "Cancel",
       "starting": "Starting",
-      "session" : "This session:",
+      "session": "This session:",
       "total": "Total:",
       "sensorval": "Sensor Values",
       "sensor": "Sensor",
@@ -195,6 +195,7 @@ i18nextko.init({
       "time": "Time",
       "timezone": "Time zone:",
       "settimefrom": "Set time from",
+      "settime": "Set time",
       "manual": "Manual",
       "browser": "Browser",
       "ntp": "NTP",
@@ -210,7 +211,8 @@ i18nextko.init({
       "safetydesc": "Hardware safety checks. Enable dev mode (System > Developer Mode) to enable/disable or use the physical LCD + menu button.",
       "safetywarn": "Not all the safety tests are enabled, please take extra care before charging your vehicle.",
       "test": "Test",
-      "gfcitest": ">GFCI Self Test:",
+      "gfcitest": "GFCI Self Test:",
+      "disabled": "Disabled",
       "gndmon": "Ground Monitoring:",
       "stckctdet": "Stuck Contact Detection",
       "tempmon": "Temperature Monitoring:",
@@ -239,6 +241,15 @@ i18nextko.init({
       "history": "History",
       "type": "Type",
       "loadmore": "Load more",
+      "rapicom": "RAPI Command:",
+      "send": "Send",
+      "rapigetcom": "RAPI Get Commands",
+      "get": "Get",
+      "description": "Description",
+      "read": "Read",
+      "rapisetcom": "RAPI Set Commands",
+      "rapisysfunc": "RAPI System Functions",
+      "function": "Function",
       "none": "None",
       "tesla": "Tesla",
       "selectevcon": "Select the vehicle connection type",
@@ -267,7 +278,7 @@ i18nextko.init({
       "timefchg": "Time to full charge:",
       "http": "HTTP",
       "httppush": "HTTP Push (Always Active)",
-      "httppushinfo": "To update manually vehicule data, send HTTP POST request to:",
+      "httppushinfo": "To update manually vehicle data, send HTTP POST request to:",
       "httppushinfo2": "containing json data in body:"
 
     }
@@ -321,7 +332,7 @@ i18nextko.init({
       "hostname": "Nom d'hôte:",
       "ntpserver": "Serveur NTP:",
       "rfid": "RFID",
-      "enabled": "Activé:",
+      "enabled": "Activé",
       "rfidnotfound": "Lecteur RFID non trouvé",
       "rfidregistered": "Badges enregistrés",
       "remove": "Retirer",
@@ -441,6 +452,7 @@ i18nextko.init({
       "chargeopt": "Options de Charge",
       "manoverride": "Contrôle Manuel",
       "start": "Démarrer",
+      "pause": "Pause",     //Missing translation
       "stop": "Arrêter",
       "clear": "Libérer",
       "timelimit": "Limite de Temps:",
@@ -452,7 +464,8 @@ i18nextko.init({
       "seconds": "secondes",
       "set": "Ajouter",
       "cancel": "Supprimer",
-      "session" : "Session Courante:",
+      "starting": "Starting",     //Missing translation
+      "session": "Session Courante:",
       "total": "Total:",
       "sensorval": "Données Capteurs",
       "sensor": "Capteur",
@@ -464,6 +477,7 @@ i18nextko.init({
       "time": "Date/Heure:",
       "timezone": "Fuseau horaire:",
       "settimefrom": "Régler l'heure depuis",
+      "settime": "Set time",     //No translation
       "manual": "Manuel",
       "browser": "Navigateur",
       "ntp": "NTP",
@@ -480,6 +494,7 @@ i18nextko.init({
       "safetywarn": "Tous les tests de sécurité ne sont pas activés, veuillez être vigilant avant de charger votre véhicule.",
       "test": "Test",
       "gfcitest": "autotest GFCI:",
+      "disabled": "Disabled",     //No translation
       "gndmon": "Contrôle de la Terre:",
       "stckctdet": "Détection Relai Collé",
       "tempmon": "Contrôle de la T°:",
@@ -508,6 +523,15 @@ i18nextko.init({
       "history": "Historique",
       "type": "Type",
       "loadmore": "Charger plus",
+      "rapicom": "RAPI Command:",     //No translation
+      "send": "Send",     //No translation
+      "rapigetcom": "RAPI Get Commands",     //No translation
+      "get": "Get",     //No translation
+      "description": "Description",     //No translation
+      "read": "Read",     //No translation
+      "rapisetcom": "RAPI Set Commands",     //No translation
+      "rapisysfunc": "RAPI System Functions",     //No translation
+      "function": "Function",     //No translation
       "none": "Aucun",
       "tesla": "Tesla",
       "selectevcon": "Selectionner le type de connection au véhicule",

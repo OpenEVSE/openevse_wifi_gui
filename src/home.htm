@@ -150,7 +150,7 @@
             <h2 data-bind="i18n: 'language'">Language</h2>
             <select data-bind="options: languages, value: config.lang, valueAllowUnset: false">
             </select>
-            <button data-bind="i18n: 'save', click: saveLang, text: (saveLangFetching() ? i18nextko.t('saving') : (saveLangSuccess() ? i18nextko.t('saved') : i18nextko.t('Save') )), disable: saveLangFetching">Save</button>
+            <button data-bind="i18n: 'save', click: saveLang, text: (saveLangFetching() ? i18nextko.t('saving') : (saveLangSuccess() ? i18nextko.t('saved') : i18nextko.t('save'))), disable: saveLangFetching">Save</button>
           </div>
 
           <div class="box380 right">
@@ -177,7 +177,7 @@
             </div>
             <p>
               <button data-bind="i18n: 'restart', click: restart, text: (restartFetching() ? i18nextko.t('restarting') : i18nextko.t('restart')), disable: restartFetching">Restart</button>
-              <button data-bind="i18n: 'reset', click: factoryReset, text: (factoryResetFetching() ? i18nextko.t('resetting') : i18nextko.t('reset') ), disable: factoryResetFetching">Factory Reset</button>
+              <button data-bind="i18n: 'reset', click: factoryReset, text: (factoryResetFetching() ? i18nextko.t('resetting') : i18nextko.t('reset')), disable: factoryResetFetching">Factory Reset</button>
             </p>
           </div>
 
@@ -737,7 +737,7 @@
                 <input type="number" data-bind="value: $root.config.scheduler_start_window" min="0" max="1800" step="60" style="width: 80%" /> <span data-bind="i18n: 'seconds'">seconds</span><br />
                 <br />
                 </span>
-                <button data-bind="i18n: 'set', text: delayTimerEnabled() ? 'Update' : 'Set',
+                <button data-bind="i18n: 'set', text: delayTimerEnabled() ? i18nextko.t('update') : i18nextko.t('set'),
                                    enable: !updatingDelayTimer() &amp;&amp;
                                            delayTimerValid() &amp;&amp;
                                            !$root.status.isError(),
@@ -832,7 +832,7 @@
                 <option value="browser" data-bind="i18n: 'browser'">Browser</option>
                 <option value="ntp" data-bind="i18n: 'ntp', visible: false !== config.sntp_hostname()">NTP</option>
               </select>
-              <button data-bind="click: setTime, text: (setTimeFetching() ? 'Saving' : (setTimeSuccess() ? 'Saved' : 'Set time')), disable: setTimeFetching">Set time</button>
+              <button data-bind="i18n: 'settime', click: setTime, text: (setTimeFetching() ? i18nextko.t('saving') : (setTimeSuccess() ? i18nextko.t('saved') : i18nextko.t('settime'))), disable: setTimeFetching">Set time</button>
             </div>
             <hr>
             <p>
@@ -919,7 +919,7 @@
                     <input type="checkbox" data-bind="checked: config.gfci_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: config.gfci_check() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.gfci_check() ? i18nextko.t('enabled') : i18nextko.t('disabled')"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 7 === status.state() }">
@@ -929,7 +929,7 @@
                     <input type="checkbox" data-bind="checked: config.ground_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: config.ground_check() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.ground_check() ? i18nextko.t('enabled') : i18nextko.t('disabled')"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 8 === status.state() }">
@@ -939,7 +939,7 @@
                     <input type="checkbox" data-bind="checked: config.relay_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: config.relay_check() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.relay_check() ? i18nextko.t('enabled') : i18nextko.t('disabled')"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 10 === status.state() }">
@@ -949,7 +949,7 @@
                     <input type="checkbox" data-bind="checked: config.temp_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: config.temp_check() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.temp_check() ? i18nextko.t('enabled') : i18nextko.t('disabled')"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 5 === status.state() }">
@@ -959,7 +959,7 @@
                     <input type="checkbox" data-bind="checked: config.diode_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: config.diode_check() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.diode_check() ? i18nextko.t('enabled') : i18nextko.t('disabled')"></span>
                 </td>
               </tr>
               <tr data-bind="css: {error: 4 === status.state() }">
@@ -969,7 +969,7 @@
                     <input type="checkbox" data-bind="checked: config.vent_check" />
                     <div class="slider round"></div>
                   </label>
-                  <span data-bind="text: config.vent_check() ? 'Enabled' : 'Disabled'"></span>
+                  <span data-bind="text: config.vent_check() ? i18nextko.t('enabled') : i18nextko.t('disabled')"></span>
                 </td>
               </tr>
               <tr>
@@ -1005,7 +1005,7 @@
               </tr>
               <tr>
                 <td colspan="2" data-bind="with: openevse">
-                  <button data-bind="click: restart, text: (restartFetching() ? 'Restarting...' : 'Restart'), disable: restartFetching">Restart</button>
+                  <button data-bind="i18n: 'restart', click: restart, text: (restartFetching() ? i18nextko.t('restarting') : i18nextko.t('restart')), disable: restartFetching">Restart</button>
                 </td>
               </tr>
               <tr>
@@ -1054,7 +1054,7 @@
                 <input type="checkbox" data-bind="checked: config.pause_uses_disabled" />
                 <div class="slider round"></div>
               </label>
-              <span data-bind="css: {selected: config.pause_uses_disabled }">Disable</span><br/>
+              <span data-bind="i18n: 'disabled', css: {selected: config.pause_uses_disabled }">Disabled</span><br/>
             </div>
           </div>
 
@@ -1128,24 +1128,24 @@
           <div class="box box-full left">
             <form method="get" action="r" data-bind="with: rapi">
               <p>
-                <b>RAPI Command:</b>
+                <h2 data-bind="i18n: 'rapicom'">RAPI Command:</h2>
                 <div data-bind="html: history"></div>
                 <input type="text" autocapitalize="none" name="rapi" length="32" data-bind="textInput: cmd" />
               </p>
               <p>
-                <button data-bind="click: send, disable: rapiSend">Send</button>
-                <button data-bind="click: clear">Clear</button>
+                <button data-bind="i18n: 'send', click: send, disable: rapiSend">Send</button>
+                <button data-bind="i18n: 'clear', click: clear">Clear</button>
               </p>
             </form>
           </div>
           <div class="box box-full left">
-            <h2>RAPI Get Commands</h2>
-            <button data-bind="click: rapi.read, disable: rapi.reading">Read</button>
+            <h2 data-bind="i18n: 'rapigetcom'">RAPI Get Commands</h2>
+            <button data-bind="i18n: 'read', click: rapi.read, disable: rapi.reading">Read</button>
             <table data-bind="with: rapi">
               <thead>
                 <tr>
-                  <th>Get</th>
-                  <th>Description</th>
+                  <th data-bind="i18n: 'get'">Get</th>
+                  <th data-bind="i18n: 'description'">Description</th>
                 </tr>
               </thead>
               <tbody data-bind="foreach: get_commands">
@@ -1179,11 +1179,11 @@
             </table>
           </div>
           <div class="box380 left">
-            <h2>RAPI Set Commands</h2>
+            <h2 data-bind="i18n: 'rapisetcom'">RAPI Set Commands</h2>
             <table>
               <tr>
-                <th>Set</th>
-                <th>Description</th>
+                <th data-bind="i18n: 'set'">Set</th>
+                <th data-bind="i18n: 'description'">Description</th>
               </tr>
               <tr>
                 <td>$S0</td>
@@ -1236,11 +1236,11 @@
             </table>
           </div>
           <div class="box380 right">
-            <h2>RAPI System Functions</h2>
+            <h2 data-bind="i18n: 'rapisysfunc'">RAPI System Functions</h2>
             <table>
               <tr>
-                <th>Function</th>
-                <th>Description</th>
+                <th data-bind="i18n: 'function'">Function</th>
+                <th data-bind="i18n: 'description'">Description</th>
               </tr>
               <tr>
                 <td>$FB</td>
