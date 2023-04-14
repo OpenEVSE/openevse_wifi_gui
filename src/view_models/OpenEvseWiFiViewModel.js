@@ -686,9 +686,9 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
       mqtt_solar: self.config.mqtt_solar(),
       mqtt_grid_ie: self.config.mqtt_grid_ie(),
       divert_PV_ratio: self.config.divert_PV_ratio(),
-      divert_attack_smoothing_factor: self.config.divert_attack_smoothing_factor(),
-      divert_decay_smoothing_factor: self.config.divert_decay_smoothing_factor(),
-      divert_min_charge_time: self.config.divert_min_charge_time()
+      divert_attack_smoothing_time: self.config.divert_attack_smoothing_time(),
+      divert_decay_smoothing_time: self.config.divert_decay_smoothing_time(),
+      divert_min_charge_time: self.config.divert_min_charge_time(),
     };
   }).validate((divert) => {
     if (divert.divert_enabled && divert.mqtt_solar === "" && divert.mqtt_grid_ie === "") {
@@ -794,7 +794,10 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
     $.post(self.baseEndpoint() + "/config", JSON.stringify({
       current_shaper_enabled: self.config.current_shaper_enabled(),
       mqtt_live_pwr: self.config.mqtt_live_pwr(),
-      current_shaper_max_pwr: self.config.current_shaper_max_pwr()
+      current_shaper_max_pwr: self.config.current_shaper_max_pwr(),
+      current_shaper_min_pause_time: self.config.current_shaper_min_pause_time(),
+      current_shaper_data_maxinterval: self.config.current_shaper_data_maxinterval(),
+      current_shaper_smoothing_time: self.config.current_shaper_smoothing_time
     }), function () {
       self.saveCurrentShaperSuccess(true);
     }).fail(function () {
