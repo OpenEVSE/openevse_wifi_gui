@@ -1045,5 +1045,5 @@ function OpenEvseWiFiViewModel(baseHost, basePort, baseProtocol)
   self.config.lang.subscribe(function (value) {
     i18nextko.setLanguage(value);
   })
-  self.languages = ['en', 'fr'];
+  self.languages = ['en', 'fr', 'hu'];
 }
